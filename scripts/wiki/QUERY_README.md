@@ -71,7 +71,7 @@ const accessibilityConcepts = await engine.findConcepts('accessibility');
 
 ### 4. Source Filtering
 
-Filter source summaries by author, date, or URL pattern.
+Filter source summaries by author, date, URL pattern, library name, or session ID.
 
 ```typescript
 // Find all sources
@@ -86,6 +86,12 @@ const recentSources = await engine.findSources({ date: '2024-01-15' });
 // Filter by URL pattern
 const w3Sources = await engine.findSources({ urlPattern: 'w3.org' });
 
+// Filter by library name (for ADR-generated sources)
+const angularSources = await engine.findSources({ libraryName: 'angular' });
+
+// Filter by session ID (for ADR-generated sources)
+const sessionSources = await engine.findSources({ sessionId: 'session-001' });
+
 // Combine filters
 const sources = await engine.findSources({
   author: 'W3C',
@@ -94,7 +100,58 @@ const sources = await engine.findSources({
 });
 ```
 
-### 5. Cross-Reference Context (Requirement 8.5)
+### 5. Research Decision Query (Requirement 13.1, 13.2, 13.3, 13.4, 13.5)
+
+Search for research decisions (ADR-generated Source_Summary pages) with specialized filtering and date-based ranking.
+
+```typescript
+// Find all research decisions
+const allDecisions = await engine.findResearchDecisions();
+
+// Find decisions by tag
+const adrDecisions = await engine.findResearchDecisions({ tag: 'adr' });
+const researchDecisions = await engine.findResearchDecisions({ tag: 'research' });
+
+// Find decisions related to a specific library
+const angularDecisions = await engine.findResearchDecisions({ 
+  libraryName: 'angular' 
+});
+
+// Find decisions from a specific research session
+const sessionDecisions = await engine.findResearchDecisions({ 
+  sessionId: 'session-001' 
+});
+
+// Combine filters
+const reactADRs = await engine.findResearchDecisions({
+  tag: 'adr',
+  libraryName: 'react',
+  maxResults: 10,
+});
+
+// Results are automatically sorted by decision date (most recent first)
+for (const decision of allDecisions) {
+  console.log(decision.frontmatter.title);
+  console.log(`Date: ${decision.frontmatter.date}`);
+  
+  // Access ADR-specific frontmatter
+  const frontmatter = decision.frontmatter as any;
+  console.log(`Status: ${frontmatter.status}`);
+  console.log(`Session: ${frontmatter.sessionId}`);
+  
+  // Session_Reference links are included in the content
+  // Extract them using regex or markdown parsing
+}
+```
+
+**Key Features:**
+- Automatically filters for Source_Summary pages with research/adr/decision tags
+- Supports searching by library name (finds decisions that mention the library)
+- Supports searching by session ID (finds decisions from specific research sessions)
+- Results are sorted by decision date (most recent first)
+- Includes Session_Reference links back to research context
+
+### 6. Cross-Reference Context (Requirement 8.5)
 
 Search results automatically include related pages for context, showing both outgoing links and backlinks.
 
@@ -113,7 +170,25 @@ for (const result of results) {
 }
 ```
 
-### 6. Backlink Discovery
+### 7. Date-Based Sorting
+
+Sort search results by date instead of relevance score.
+
+```typescript
+// Search with date sorting (most recent first)
+const results = await engine.search('library comparison', {
+  maxResults: 10,
+  sortByDate: true,
+});
+
+// Useful for finding recent research decisions
+for (const result of results) {
+  console.log(`${result.page.frontmatter.title}`);
+  console.log(`Date: ${result.page.frontmatter.date || result.page.frontmatter.created}`);
+}
+```
+
+### 8. Backlink Discovery
 
 Find all pages that link to a specific page.
 
@@ -150,8 +225,9 @@ Performs full-text search across all wiki content.
   - `includeRelatedPages` - Include related pages in results (default: true)
   - `caseSensitive` - Case-sensitive search (default: false)
   - `snippetLength` - Maximum snippet length (default: 150)
+  - `sortByDate` - Sort by date instead of relevance (default: false)
 
-**Returns:** Array of search results sorted by relevance
+**Returns:** Array of search results sorted by relevance (or date if sortByDate is true)
 
 ##### searchByTag(tag: string): Promise<WikiPage[]>
 
@@ -189,8 +265,23 @@ Finds source summary pages with optional filters.
   - `author` - Filter by author name
   - `date` - Filter by date (YYYY-MM-DD)
   - `urlPattern` - Filter by URL pattern
+  - `libraryName` - Filter by library name (for ADR-generated sources)
+  - `sessionId` - Filter by session ID (for ADR-generated sources)
 
 **Returns:** Array of source summary pages
+
+##### findResearchDecisions(options?: ResearchDecisionOptions): Promise<WikiPage[]>
+
+Finds research decisions (ADR-generated Source_Summary pages) with specialized filtering.
+
+**Parameters:**
+- `options` - Optional search configuration
+  - `tag` - Filter by specific tag (e.g., 'adr', 'research', 'decision')
+  - `libraryName` - Filter by library name mentioned in the decision
+  - `sessionId` - Filter by research session ID
+  - `maxResults` - Maximum number of results (default: 50)
+
+**Returns:** Array of research decision pages sorted by date (most recent first)
 
 ##### findBacklinks(pagePath: string): Promise<WikiPage[]>
 
@@ -222,6 +313,7 @@ interface SearchOptions {
   includeRelatedPages?: boolean; // Include related pages
   caseSensitive?: boolean;     // Case-sensitive search
   snippetLength?: number;      // Max snippet length
+  sortByDate?: boolean;        // Sort by date instead of relevance
 }
 ```
 
@@ -232,6 +324,19 @@ interface SourceFilters {
   author?: string;             // Filter by author
   date?: string;               // Filter by date (YYYY-MM-DD)
   urlPattern?: string;         // Filter by URL pattern
+  libraryName?: string;        // Filter by library name (ADR sources)
+  sessionId?: string;          // Filter by session ID (ADR sources)
+}
+```
+
+#### ResearchDecisionOptions
+
+```typescript
+interface ResearchDecisionOptions {
+  tag?: string;                // Filter by tag (e.g., 'adr', 'research')
+  libraryName?: string;        // Filter by library name
+  sessionId?: string;          // Filter by session ID
+  maxResults?: number;         // Max results to return (default: 50)
 }
 ```
 
@@ -240,12 +345,14 @@ interface SourceFilters {
 See the example scripts for complete demonstrations:
 
 - `query-example.ts` - Basic usage examples for all query methods
+- `query-research-decisions-example.ts` - Research decision query examples
 - `query-integration-example.ts` - Complete workflow demonstration
 
 Run examples:
 
 ```bash
 npx tsx scripts/wiki/query-example.ts
+npx tsx scripts/wiki/query-research-decisions-example.ts
 npx tsx scripts/wiki/query-integration-example.ts
 ```
 
@@ -275,6 +382,11 @@ This implementation satisfies the following requirements:
 - **Requirement 8.3**: Name-based search support
 - **Requirement 8.4**: Relevance ranking for search results
 - **Requirement 8.5**: Cross-reference links in query results for context
+- **Requirement 13.1**: Support searching by tag "research" or "adr"
+- **Requirement 13.2**: Support searching by library name to find related decisions
+- **Requirement 13.3**: Return Source_Summary pages generated from ADRs
+- **Requirement 13.4**: Include Session_Reference links in search results
+- **Requirement 13.5**: Rank results by decision date (most recent first)
 - **Requirement 13.5**: Support for Obsidian #tag syntax in addition to frontmatter tags
 
 ## Architecture

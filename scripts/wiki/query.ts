@@ -50,6 +50,9 @@ export interface SearchOptions {
   
   /** Maximum length of content snippets */
   snippetLength?: number;
+  
+  /** Whether to sort results by date (most recent first) */
+  sortByDate?: boolean;
 }
 
 /**
@@ -64,6 +67,12 @@ export interface SourceFilters {
   
   /** Filter by URL pattern */
   urlPattern?: string;
+  
+  /** Filter by library name (for ADR-generated sources) */
+  libraryName?: string;
+  
+  /** Filter by session ID (for ADR-generated sources) */
+  sessionId?: string;
 }
 
 /**
@@ -107,6 +116,7 @@ export class QueryEngine {
       includeRelatedPages = true,
       caseSensitive = false,
       snippetLength = 150,
+      sortByDate = false,
     } = options;
     
     if (!query.trim()) {
@@ -131,8 +141,21 @@ export class QueryEngine {
       }
     }
     
-    // Sort by score (descending)
-    scoredResults.sort((a, b) => b.score - a.score);
+    // Sort by score (descending) or by date if requested
+    if (sortByDate) {
+      scoredResults.sort((a, b) => {
+        const dateA = a.page.frontmatter.date || a.page.frontmatter.created;
+        const dateB = b.page.frontmatter.date || b.page.frontmatter.created;
+        
+        if (!dateA && !dateB) return b.score - a.score;
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+      });
+    } else {
+      scoredResults.sort((a, b) => b.score - a.score);
+    }
     
     // Take top results
     const topResults = scoredResults.slice(0, maxResults);
@@ -245,7 +268,7 @@ export class QueryEngine {
   /**
    * Finds source summary pages with optional filters.
    * 
-   * @param filters - Optional filters for author, date, URL
+   * @param filters - Optional filters for author, date, URL, library name, session ID
    * @returns Array of source summary pages
    * 
    * @example
@@ -260,6 +283,12 @@ export class QueryEngine {
    * 
    * // Get sources by date
    * const dateSources = await engine.findSources({ date: '2024-01-01' });
+   * 
+   * // Get ADR sources by library name
+   * const librarySources = await engine.findSources({ libraryName: 'angular' });
+   * 
+   * // Get ADR sources by session ID
+   * const sessionSources = await engine.findSources({ sessionId: 'session-001' });
    * ```
    */
   async findSources(filters?: SourceFilters): Promise<WikiPage[]> {
@@ -281,6 +310,27 @@ export class QueryEngine {
       if (filters.urlPattern && page.frontmatter.url) {
         const regex = new RegExp(filters.urlPattern, 'i');
         if (!regex.test(page.frontmatter.url)) {
+          return false;
+        }
+      }
+      
+      if (filters.libraryName) {
+        const normalizedLibrary = filters.libraryName.toLowerCase();
+        const inTitle = page.frontmatter.title.toLowerCase().includes(normalizedLibrary);
+        const inTags = page.frontmatter.tags.some(t => t.toLowerCase().includes(normalizedLibrary));
+        const inContent = page.content.toLowerCase().includes(normalizedLibrary);
+        
+        if (!inTitle && !inTags && !inContent) {
+          return false;
+        }
+      }
+      
+      if (filters.sessionId) {
+        const frontmatter = page.frontmatter as any;
+        const hasSessionId = frontmatter.sessionId === filters.sessionId;
+        const inContent = page.content.includes(filters.sessionId);
+        
+        if (!hasSessionId && !inContent) {
           return false;
         }
       }
@@ -324,6 +374,118 @@ export class QueryEngine {
     }
     
     return backlinks;
+  }
+  
+  /**
+   * Searches for research decisions (ADR-generated Source_Summary pages).
+   * 
+   * Supports searching by:
+   * - Tags: "research", "adr", "decision"
+   * - Library name: finds decisions related to specific libraries
+   * - Session ID: finds decisions from specific research sessions
+   * 
+   * Results are ranked by decision date (most recent first) and include
+   * Session_Reference links back to research context.
+   * 
+   * @param options - Search options
+   * @returns Array of research decision pages sorted by date
+   * 
+   * @example
+   * ```typescript
+   * const engine = new QueryEngine();
+   * 
+   * // Find all research decisions
+   * const allDecisions = await engine.findResearchDecisions();
+   * 
+   * // Find decisions by tag
+   * const adrDecisions = await engine.findResearchDecisions({ tag: 'adr' });
+   * 
+   * // Find decisions related to a library
+   * const angularDecisions = await engine.findResearchDecisions({ libraryName: 'angular' });
+   * 
+   * // Find decisions from a specific session
+   * const sessionDecisions = await engine.findResearchDecisions({ sessionId: 'session-001' });
+   * ```
+   */
+  async findResearchDecisions(options: {
+    tag?: string;
+    libraryName?: string;
+    sessionId?: string;
+    maxResults?: number;
+  } = {}): Promise<WikiPage[]> {
+    const { tag, libraryName, sessionId, maxResults = 50 } = options;
+    
+    // Load all pages
+    const pages = await this.loadAllPages();
+    
+    // Filter for Source_Summary pages with research/adr tags
+    let results = pages.filter(page => {
+      // Must be a source page
+      if (page.frontmatter.type !== 'source') {
+        return false;
+      }
+      
+      // Must have at least one research-related tag
+      const hasResearchTag = page.frontmatter.tags.some(t => 
+        ['research', 'adr', 'decision'].includes(t.toLowerCase())
+      );
+      
+      if (!hasResearchTag) {
+        return false;
+      }
+      
+      return true;
+    });
+    
+    // Apply tag filter if specified
+    if (tag) {
+      const normalizedTag = tag.toLowerCase();
+      results = results.filter(page => 
+        page.frontmatter.tags.some(t => t.toLowerCase() === normalizedTag)
+      );
+    }
+    
+    // Apply library name filter if specified
+    if (libraryName) {
+      const normalizedLibrary = libraryName.toLowerCase();
+      results = results.filter(page => {
+        // Check if library name appears in title, tags, or content
+        const inTitle = page.frontmatter.title.toLowerCase().includes(normalizedLibrary);
+        const inTags = page.frontmatter.tags.some(t => t.toLowerCase().includes(normalizedLibrary));
+        const inContent = page.content.toLowerCase().includes(normalizedLibrary);
+        
+        return inTitle || inTags || inContent;
+      });
+    }
+    
+    // Apply session ID filter if specified
+    if (sessionId) {
+      results = results.filter(page => {
+        // Check frontmatter for sessionId field
+        const frontmatter = page.frontmatter as any;
+        if (frontmatter.sessionId === sessionId) {
+          return true;
+        }
+        
+        // Also check content for session reference
+        return page.content.includes(sessionId);
+      });
+    }
+    
+    // Sort by date (most recent first)
+    results.sort((a, b) => {
+      const dateA = a.frontmatter.date || a.frontmatter.created;
+      const dateB = b.frontmatter.date || b.frontmatter.created;
+      
+      if (!dateA && !dateB) return 0;
+      if (!dateA) return 1;
+      if (!dateB) return -1;
+      
+      return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
+    
+    // Limit results
+    return results.slice(0, maxResults);
   }
   
   /**

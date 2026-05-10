@@ -227,4 +227,67 @@ export interface MaintenanceReport {
     /** Overall health score (0-100) */
     healthScore: number;
   };
+  
+  /** ADR-specific maintenance findings (optional) */
+  adrFindings?: {
+    /** Broken session references in ADR pages */
+    brokenSessionReferences: {
+      /** Page with broken session reference */
+      page: string;
+      
+      /** Session ID that cannot be found */
+      sessionId: string;
+      
+      /** Validation errors */
+      errors: string[];
+      
+      /** Suggested corrective actions */
+      suggestedActions: string[];
+    }[];
+    
+    /** Duplicate library entity pages */
+    duplicateLibraries: {
+      /** Library name */
+      libraryName: string;
+      
+      /** Entity pages for this library */
+      entityPages: string[];
+      
+      /** ADRs that reference this library */
+      referencedByADRs: string[];
+      
+      /** Suggested consolidation action */
+      suggestedAction: string;
+    }[];
+    
+    /** Superseded research decisions */
+    supersededDecisions: {
+      /** Page with superseded decision */
+      page: string;
+      
+      /** Decision title */
+      title: string;
+      
+      /** Decision status */
+      status: string;
+      
+      /** Page that supersedes this decision (if known) */
+      supersededBy?: string;
+      
+      /** Recommendation for handling */
+      recommendation: string;
+    }[];
+    
+    /** Broken cross-references in ADR pages */
+    adrCrossReferenceIssues: {
+      /** Page with broken cross-references */
+      page: string;
+      
+      /** Broken link targets */
+      brokenLinks: string[];
+      
+      /** Suggested corrective actions */
+      suggestedActions: string[];
+    }[];
+  };
 }

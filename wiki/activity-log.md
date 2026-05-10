@@ -6,6 +6,216 @@ This log records all wiki operations in reverse chronological order (newest firs
 
 ## 2026-05-10 19:03
 
+### Ingested: comprehensive.md
+- Generated: [[Test Entity]], [[Test Concept]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Test Concept]]
+- Type: concept
+- Source: comprehensive.md
+- Tags: test
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Test Entity]]
+- Type: entity
+- Source: comprehensive.md
+- Tags: test
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: angular-aria-guide.md
+- Generated: [[Angular Aria Guide 2024 05 10]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Angular ARIA Guide]]
+- Type: source
+- Source: angular-aria-guide.md
+- Tags: angular, accessibility
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: progressive-enhancement.md
+- Generated: [[Progressive Enhancement]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Progressive Enhancement]]
+- Type: concept
+- Source: progressive-enhancement.md
+- Tags: web-development, accessibility
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: angular-cdk.md
+- Generated: [[Angular Cdk]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Angular CDK]]
+- Type: entity
+- Source: angular-cdk.md
+- Tags: angular, accessibility
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: articles/article1.md
+- Generated: [[Entity 1]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Entity 1]]
+- Type: entity
+- Source: articles/article1.md
+- Tags: test
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: articles/article3.md
+- Generated: [[Entity 3]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Entity 3]]
+- Type: entity
+- Source: articles/article3.md
+- Tags: test
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: articles/article2.md
+- Generated: [[Entity 2]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Entity 2]]
+- Type: entity
+- Source: articles/article2.md
+- Tags: test
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: articles/article1.md
+- Generated: [[Entity 1]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Entity 1]]
+- Type: entity
+- Source: articles/article1.md
+- Tags: test
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: articles/comprehensive.md
+- Generated: [[Test Entity]], [[Test Concept]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Test Concept]]
+- Type: concept
+- Source: articles/comprehensive.md
+- Tags: test
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Test Entity]]
+- Type: entity
+- Source: articles/comprehensive.md
+- Tags: test
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: articles/angular-aria-guide.md
+- Generated: [[Angular Aria Guide 2024 05 10]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Angular ARIA Guide]]
+- Type: source
+- Source: articles/angular-aria-guide.md
+- Tags: angular, accessibility
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: articles/progressive-enhancement.md
+- Generated: [[Progressive Enhancement]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Progressive Enhancement]]
+- Type: concept
+- Source: articles/progressive-enhancement.md
+- Tags: web-development, accessibility
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: articles/angular-cdk.md
+- Generated: [[Angular Cdk]]
+
+---
+
+## 2026-05-10 19:03
+
+### Created: [[Angular CDK]]
+- Type: entity
+- Source: articles/angular-cdk.md
+- Tags: angular, accessibility
+
+---
+
+## 2026-05-10 19:03
+
 ### Created: [[ADR with Broken References]]
 - Type: source
 - Source: /home/adrian-romanski/projects/demo/deep-dive-angular-aria/raw/research-decisions/decision.adr.md

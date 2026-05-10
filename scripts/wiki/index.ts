@@ -41,3 +41,10 @@ export * from './maintenance';
 
 // Git integration
 export * from './git-integration';
+
+// ADR integration modules
+export * from './adr-copier';
+export * from './adr-metadata-extractor';
+export * from './adr-generator-extensions';
+export * from './research-session-linker';
+export * from './adr-workflow';
