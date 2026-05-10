@@ -1,0 +1,80 @@
+{
+  "name": "deep-dive-angular-aria",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/deep-dive-angular-aria/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/deep-dive-angular-aria",
+        "browser": "apps/deep-dive-angular-aria/src/main.ts",
+        "tsConfig": "apps/deep-dive-angular-aria/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/deep-dive-angular-aria/public"
+          }
+        ],
+        "styles": ["apps/deep-dive-angular-aria/src/styles.scss"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "deep-dive-angular-aria:build:production"
+        },
+        "development": {
+          "buildTarget": "deep-dive-angular-aria:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {}
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "deep-dive-angular-aria:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/deep-dive-angular-aria/browser",
+        "spa": true
+      }
+    }
+  }
+}
