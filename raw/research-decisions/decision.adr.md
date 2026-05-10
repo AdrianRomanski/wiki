@@ -1,19 +1,19 @@
 ---
-title: "Minimal ADR"
+title: "ADR with Broken References"
 date: 2024-05-10
 status: Accepted
-context: "Research Session test-minimal-session"
+context: "Research Session test-broken-ref-session"
 ---
 
-# Minimal ADR
+# ADR with Broken References
 
 ## Context and Problem Statement
 
-This is a minimal ADR with only required fields.
+This ADR references non-existent research artifacts.
 
 ## Decision Drivers
 
-- Simplicity
+- Testing error handling
 
 ## Considered Options
 
@@ -25,4 +25,10 @@ This is a minimal ADR with only required fields.
 
 ### Rationale
 
-It's simple.
+For testing purposes.
+
+## Research Links
+
+- [Comparison Report](./nonexistent-comparison.md)
+- [Final Report](./nonexistent-final.md)
+- [Prototype: Test](./prototypes/nonexistent/)
