@@ -4,6 +4,49 @@ This log records all wiki operations in reverse chronological order (newest firs
 
 ---
 
+## 2026-05-10 19:02
+
+### Created: [[Custom solution]]
+- Type: entity
+- Source: /home/adrian-romanski/projects/demo/deep-dive-angular-aria/raw/research-decisions/decision.adr.md
+- Tags: research, adr, library, angular, accessibility, focus-management, keyboard-navigation
+
+---
+
+## 2026-05-10 19:02
+
+### Created: [[focus-trap]]
+- Type: entity
+- Source: /home/adrian-romanski/projects/demo/deep-dive-angular-aria/raw/research-decisions/decision.adr.md
+- Tags: research, adr, library, angular, accessibility, focus-management, keyboard-navigation
+
+---
+
+## 2026-05-10 19:02
+
+### Created: [[@angular/cdk/a11y]]
+- Type: entity
+- Source: /home/adrian-romanski/projects/demo/deep-dive-angular-aria/raw/research-decisions/decision.adr.md
+- Tags: research, adr, library, angular, accessibility, focus-management, keyboard-navigation
+
+---
+
+## 2026-05-10 19:02
+
+### Created: [[Choose Focus Trap Library for Keyboard Navigation]]
+- Type: source
+- Source: /home/adrian-romanski/projects/demo/deep-dive-angular-aria/raw/research-decisions/decision.adr.md
+- Tags: research, adr, decision, angular, accessibility, focus-management, keyboard-navigation
+
+---
+
+## 2026-05-10 19:02
+
+### Ingested: /home/adrian-romanski/projects/demo/deep-dive-angular-aria/raw/research-decisions/decision.adr.md
+- Generated: [[Choose Focus Trap Library For Keyboard Navigation 2024 05 10]], [[Angular Cdk A11y]], [[Focus Trap]], [[Custom Solution]]
+
+---
+
 ## 2026-05-10 17:15
 
 ### Created: [[Standalone Components]]

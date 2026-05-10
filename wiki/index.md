@@ -22,10 +22,13 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 *Entity pages describe specific things: libraries, tools, components, APIs*
 
+- [[@angular/cdk/a11y]] - Library evaluated in Choose Focus Trap Library for Keyboard Navigation
 - [[Angular CDK]] - The Angular Component Dev Kit provides behavior primitives.
+- [[Custom solution]] - Library evaluated in Choose Focus Trap Library for Keyboard Navigation
 - [[Entity 1]] - First entity
 - [[Entity 2]] - Second entity
 - [[Entity 3]] - Third entity
+- [[focus-trap]] - Library evaluated in Choose Focus Trap Library for Keyboard Navigation
 - [[Test Entity]] - An entity for testing
 
 ## Concepts
@@ -48,6 +51,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 - [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
 - [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
 - [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
+- [[Choose Focus Trap Library for Keyboard Navigation]] (2024-05-10) - Research decision: @angular/cdk/a11y
 
 ## Navigation
 
@@ -59,7 +63,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 ## Statistics
 
-- **Total Pages**: 16 (5 entities, 3 concepts, 8 sources)
+- **Total Pages**: 20 (8 entities, 3 concepts, 9 sources)
 - **Last Updated**: 2026-05-10
 - **Wiki Health**: 100/100 ✓
 
