@@ -52,6 +52,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 - [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
 - [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
 - [[Choose Focus Trap Library for Keyboard Navigation]] (2024-05-10) - Research decision: @angular/cdk/a11y
+- [[Minimal ADR]] (2024-05-10) - Research decision: Option A
 
 ## Navigation
 
@@ -63,7 +64,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 ## Statistics
 
-- **Total Pages**: 20 (8 entities, 3 concepts, 9 sources)
+- **Total Pages**: 21 (8 entities, 3 concepts, 10 sources)
 - **Last Updated**: 2026-05-10
 - **Wiki Health**: 100/100 ✓
 

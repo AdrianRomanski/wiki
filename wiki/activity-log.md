@@ -4,6 +4,22 @@ This log records all wiki operations in reverse chronological order (newest firs
 
 ---
 
+## 2026-05-10 19:03
+
+### Created: [[Minimal ADR]]
+- Type: source
+- Source: /home/adrian-romanski/projects/demo/deep-dive-angular-aria/raw/research-decisions/decision.adr.md
+- Tags: research, adr, decision
+
+---
+
+## 2026-05-10 19:03
+
+### Ingested: /home/adrian-romanski/projects/demo/deep-dive-angular-aria/raw/research-decisions/decision.adr.md
+- Generated: [[Minimal Adr 2024 05 10]]
+
+---
+
 ## 2026-05-10 19:02
 
 ### Created: [[Custom solution]]
