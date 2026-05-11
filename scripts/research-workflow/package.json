@@ -1,0 +1,20 @@
+{
+  "name": "@deep-dive-angular-aria/research-workflow",
+  "version": "0.1.0",
+  "description": "Structured 4-phase workflow system for library research and comparison",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
+  },
+  "keywords": [
+    "research",
+    "workflow",
+    "library-comparison",
+    "decision-making"
+  ],
+  "author": "",
+  "license": "MIT"
+}

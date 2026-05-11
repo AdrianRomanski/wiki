@@ -1,0 +1,18 @@
+# Build output
+dist/
+*.tsbuildinfo
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Vitest
+.vitest/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
