@@ -18,6 +18,11 @@
           {
             "glob": "**/*",
             "input": "apps/deep-dive-angular-aria/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "wiki",
+            "output": "wiki"
           }
         ],
         "styles": ["apps/deep-dive-angular-aria/src/styles.scss"]
