@@ -42,6 +42,15 @@
     "@nx/angular:unit-test": {
       "cache": true,
       "inputs": ["default", "^production"]
+    },
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "inputs": ["production", "^production"],
+      "outputs": ["{options.outputPath}"]
+    },
+    "test": {
+      "cache": true,
+      "inputs": ["default", "^production"]
     }
   },
   "plugins": [

@@ -1,0 +1,21 @@
+{
+  "id": "angular-aria-overview",
+  "topic": "Angular Aria Library - Big Picture Overview",
+  "state": "FINALIZED",
+  "finalizedAt": "2026-05-11",
+  "wikiPages": [
+    "wiki/entities/angular-aria.md",
+    "wiki/entities/angular-aria-grid-pattern.md",
+    "wiki/concepts/headless-accessibility-pattern.md",
+    "wiki/sources/angular-aria-big-picture-2026-05-11.md",
+    "wiki/sources/angular-aria-grid-deep-dive-2026-05-11.md"
+  ],
+  "libraries": ["@angular/aria"],
+  "version": "21.2.10",
+  "createdAt": "2026-05-11",
+  "sources": [
+    "node_modules/@angular/aria/types/*.d.ts",
+    "node_modules/@angular/aria/package.json",
+    "https://angular.dev/roadmap"
+  ]
+}

@@ -1,0 +1,99 @@
+.cinema-room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  font-family: system-ui, sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+  border-radius: 12px;
+}
+
+.screen-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.screen {
+  width: 80%;
+  height: 6px;
+  background: linear-gradient(to right, transparent, #4fc3f7, transparent);
+  border-radius: 50%;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 15px rgba(79, 195, 247, 0.4);
+}
+
+table {
+  border-spacing: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.row-label {
+  font-size: 0.75rem;
+  color: #888;
+  padding-right: 8px;
+  font-weight: normal;
+}
+
+td[ngGridCell] {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px 6px 2px 2px;
+  text-align: center;
+  font-size: 0.7rem;
+  cursor: pointer;
+  background: #4caf50;
+  color: white;
+  border: none;
+  transition: background 0.15s, transform 0.1s;
+}
+
+td[ngGridCell]:hover:not([aria-disabled="true"]) {
+  transform: scale(1.1);
+}
+
+td[ngGridCell][aria-disabled="true"] {
+  background: #424242;
+  color: #666;
+  cursor: not-allowed;
+}
+
+td[ngGridCell][aria-selected="true"] {
+  background: #2196f3;
+  box-shadow: 0 0 8px rgba(33, 150, 243, 0.5);
+}
+
+td[ngGridCell]:focus {
+  outline: 2px solid #ff9800;
+  outline-offset: 2px;
+}
+
+.legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.swatch.available { background: #4caf50; }
+.swatch.selected { background: #2196f3; }
+.swatch.occupied { background: #424242; }
+
+.selection-info {
+  font-size: 0.85rem;
+  color: #aaa;
+}

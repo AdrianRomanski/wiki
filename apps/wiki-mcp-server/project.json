@@ -1,0 +1,44 @@
+{
+  "name": "wiki-mcp-server",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/wiki-mcp-server/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "apps/wiki-mcp-server/src/index.ts",
+        "tsConfig": "apps/wiki-mcp-server/tsconfig.app.json",
+        "outputPath": "dist/apps/wiki-mcp-server",
+        "platform": "node",
+        "format": ["cjs"],
+        "bundle": true,
+        "thirdParty": true,
+        "excludeFromExternal": ["@modelcontextprotocol/sdk", "gray-matter", "zod"],
+        "esbuildOptions": {
+          "banner": {
+            "js": "#!/usr/bin/env node"
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "wiki-mcp-server:build"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config apps/wiki-mcp-server/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "debug": {
+      "command": "npx @modelcontextprotocol/inspector node dist/apps/wiki-mcp-server/main.js --wiki-dir=/path/to/wiki",
+      "dependsOn": ["build"]
+    }
+  }
+}

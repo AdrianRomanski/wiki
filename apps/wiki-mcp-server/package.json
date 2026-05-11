@@ -1,0 +1,12 @@
+{
+  "name": "wiki-mcp-server",
+  "version": "1.0.0",
+  "description": "Standalone MCP server for querying a wiki knowledge base",
+  "private": false,
+  "bin": {
+    "wiki-mcp-server": "./dist/apps/wiki-mcp-server/index.cjs"
+  },
+  "scripts": {
+    "test": "vitest run --config vitest.config.ts"
+  }
+}

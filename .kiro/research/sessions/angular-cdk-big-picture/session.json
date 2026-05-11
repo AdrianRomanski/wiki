@@ -1,0 +1,14 @@
+{
+  "id": "angular-cdk-big-picture",
+  "topic": "Big Picture overview of @angular/cdk — entry points, exported symbols, public API surface, peer dependencies",
+  "state": "SYNTHESIZE",
+  "scope": "big-picture",
+  "createdAt": "2026-05-11",
+  "libraries": ["@angular/cdk"],
+  "version": "21.2.10",
+  "sources": [
+    "node_modules/@angular/cdk/package.json",
+    "node_modules/@angular/cdk/types/",
+    "https://material.angular.io/cdk/categories"
+  ]
+}

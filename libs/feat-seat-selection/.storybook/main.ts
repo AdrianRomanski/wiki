@@ -5,12 +5,20 @@ const config: StorybookConfig = {
   addons: [],
   framework: {
     name: '@storybook/angular',
-    options: {},
+    options: {
+      builder: {
+        useSWC: true,
+      },
+    },
+  },
+  core: {
+    builder: {
+      name: '@storybook/builder-webpack5',
+      options: {
+        fsCache: true,
+      },
+    },
   },
 };
 
 export default config;
-
-// To customize your webpack configuration you can use the webpackFinal field.
-// Check https://storybook.js.org/docs/react/builders/webpack#extending-storybooks-webpack-config
-// and https://nx.dev/recipes/storybook/custom-builder-configs

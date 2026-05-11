@@ -2,13 +2,23 @@
   "mcpServers": {
     "angular-cli": {
       "command": "npx",
-      "args": ["-y", "@angular/cli", "mcp"],
+      "args": [
+        "-y",
+        "@angular/cli",
+        "mcp"
+      ],
       "disabled": false,
-      "autoApprove": []
+      "autoApprove": [
+        "list_projects",
+        "find_examples"
+      ]
     },
     "css": {
       "command": "npx",
-      "args": ["-y", "css-mcp"],
+      "args": [
+        "-y",
+        "css-mcp"
+      ],
       "disabled": false,
       "autoApprove": []
     }

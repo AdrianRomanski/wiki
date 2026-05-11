@@ -22,6 +22,8 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 *Entity pages describe specific things: libraries, tools, components, APIs*
 
+- [[@angular/aria]] - Angular's official headless accessibility library (8 patterns, v21+)
+- [[Angular Aria Grid Pattern]] - The 2D interactive grid pattern from @angular/aria
 - [[@angular/cdk/a11y]] - Library evaluated in Choose Focus Trap Library for Keyboard Navigation
 - [[Angular CDK]] - The Angular Component Dev Kit provides behavior primitives.
 - [[Custom solution]] - Library evaluated in Choose Focus Trap Library for Keyboard Navigation
@@ -35,6 +37,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 *Concept pages explain ideas, patterns, and principles*
 
+- [[Headless Accessibility Pattern]] - Behavior + ARIA semantics without styling; you own the CSS
 - [[Progressive Enhancement]] - Progressive enhancement provides a baseline experience to all users.
 - [[Standalone Components]] - Modern Angular architecture without NgModules.
 - [[Test Concept]] - A concept for testing
@@ -43,13 +46,11 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 *Source summaries distill key information from raw documents*
 
+- [[Angular Aria Grid Deep Dive]] (2026-05-11) - Deep dive into @angular/aria grid pattern internals
+- [[Angular Aria Big Picture]] (2026-05-11) - Overview of @angular/aria library — 8 patterns, architecture, API
+- [[Choose Angular Aria Grid for Cinema Seat Selection]] (2026-05-11) - Research decision: @angular/aria/grid for cinema seat selection
 - [[seat-selection-component-2026-05-10]] (2026-05-10) - Analysis of Angular standalone component
 - [[example-source-2024-05-10]] (2024-05-10) - Example source summary
-- [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
-- [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
-- [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
-- [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
-- [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
 - [[Angular ARIA Guide]] (2024-05-10) - Use semantic HTML
 - [[Choose Focus Trap Library for Keyboard Navigation]] (2024-05-10) - Research decision: @angular/cdk/a11y
 - [[Minimal ADR]] (2024-05-10) - Research decision: Option A
@@ -64,8 +65,8 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 ## Statistics
 
-- **Total Pages**: 21 (8 entities, 3 concepts, 10 sources)
-- **Last Updated**: 2026-05-10
+- **Total Pages**: 26 (10 entities, 4 concepts, 12 sources)
+- **Last Updated**: 2026-05-11
 - **Wiki Health**: 100/100 ✓
 
 ## Quick Reference

@@ -1,0 +1,22 @@
+{
+  "id": "angular-material-big-picture",
+  "topic": "Big Picture overview of @angular/material — entry points, exported symbols, public API surface, peer dependencies",
+  "state": "FINALIZED",
+  "finalizedAt": "2026-05-11",
+  "wikiPages": [
+    "wiki/entities/angular-material.md",
+    "wiki/concepts/angular-material-modular-imports.md",
+    "wiki/concepts/angular-material-theming.md",
+    "wiki/concepts/angular-material-testing-harnesses.md",
+    "wiki/sources/angular-material-big-picture-2026-05-11.md"
+  ],
+  "scope": "big-picture",
+  "createdAt": "2026-05-11",
+  "libraries": ["@angular/material"],
+  "version": "21.2.10",
+  "sources": [
+    "node_modules/@angular/material/package.json",
+    "node_modules/@angular/material/fesm2022/",
+    "https://material.angular.io"
+  ]
+}

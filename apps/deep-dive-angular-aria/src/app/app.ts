@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { FeatSeatSelection } from '@deep-dive-angular-aria/feat-seat-selection';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [FeatSeatSelection, RouterModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',

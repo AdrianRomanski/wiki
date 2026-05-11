@@ -1,0 +1,84 @@
+{
+  "id": "o-2026-05-11",
+  "createdAt": "2026-05-11T09:50:05.296Z",
+  "updatedAt": "2026-05-11T09:50:05.299Z",
+  "status": "FINALIZED",
+  "currentPhase": "FINALIZED",
+  "completedPhases": [
+    "ANALYSIS"
+  ],
+  "metadata": {
+    "goal": "|,o$",
+    "mode": "SINGLE",
+    "documentationLinks": [
+      "http://733tl2e.aq5.lt/37",
+      "http://wmp8o.rd/q8n%F1%BD%B4%96uQ"
+    ],
+    "userInputs": {
+      "M": {
+        "": {
+          "": true,
+          ">": null,
+          "BMF~?": -1.1489041352963546e-155,
+          "6E.-z?X4": -6.065875270790915e-178,
+          "NTnCYx:": -4.812946436746122e-207,
+          ";@um2": false,
+          "5(3C1@xn": {
+            "@4oEf`DW": 5.762006263553075e-45,
+            "j9@": -4788482012.838713,
+            "TRgH": null,
+            "4S.#,j": "u}J%)",
+            "~kk2_3": false,
+            "BC\\iI,5l,": -1.2562294991097923e-102
+          },
+          "(ne%": true
+        },
+        "eb=6*v4 *`": false,
+        "][-": null,
+        "_bS%f}'l": [
+          -8.48444153868451e-28,
+          true,
+          -6.835271804299278e+282,
+          true,
+          false,
+          true
+        ]
+      },
+      "[Y-.": [
+        null,
+        "[]j",
+        null,
+        null,
+        null,
+        1.5987302173071078e+192
+      ],
+      "z`77K": "`^~f",
+      "bRiwg>": "~!:",
+      "": [],
+      "WLcP%{VZ": true
+    },
+    "libraries": [
+      {
+        "name": "-4",
+        "version": "983296.612.212646",
+        "installedAt": "2029-12-31T23:59:59.970Z",
+        "installPath": ">*/<"
+      }
+    ]
+  },
+  "artifacts": [],
+  "history": [
+    {
+      "phase": "SETUP",
+      "startedAt": "2025-07-13T13:30:49.019Z",
+      "completedAt": null,
+      "actions": [
+        "|Lo<bccX",
+        "J5\"GoM>/jm_4<yF?4E",
+        "%<YU?N3u5",
+        "0VLC1Z\">O&8/LZ(L%",
+        "Xb`f\\>^;i-Q()CInbjr\\"
+      ]
+    }
+  ]
+}

@@ -4,6 +4,62 @@ This log records all wiki operations in reverse chronological order (newest firs
 
 ---
 
+## 2026-05-11
+
+### Finalized research: @angular/aria big picture + grid deep dive
+
+- Generated: [[@angular/aria]], [[Angular Aria Grid Pattern]], [[Headless Accessibility Pattern]]
+- Generated: [[Angular Aria Big Picture]], [[Angular Aria Grid Deep Dive]]
+- Sources: `node_modules/@angular/aria/types/*.d.ts`, `node_modules/@angular/aria/fesm2022/grid.mjs`
+- Research session: `.kiro/research/sessions/angular-aria-overview/`
+
+---
+
+### Created: [[@angular/aria]]
+- Type: entity
+- Source: `.kiro/research/sessions/angular-aria-overview/report.md`
+- Tags: angular, accessibility, aria, headless, angular-aria, developer-preview
+
+---
+
+### Created: [[Angular Aria Grid Pattern]]
+- Type: entity
+- Source: `.kiro/research/sessions/angular-aria-overview/grid-deep-dive.md`
+- Tags: angular, accessibility, aria, grid, keyboard-navigation, selection, angular-aria
+
+---
+
+### Created: [[Headless Accessibility Pattern]]
+- Type: concept
+- Source: `.kiro/research/sessions/angular-aria-overview/report.md`
+- Tags: accessibility, aria, headless, pattern, keyboard-navigation, design-system
+
+---
+
+### Created: [[Angular Aria Big Picture]]
+- Type: source
+- Source: `.kiro/research/sessions/angular-aria-overview/report.md`
+- Tags: angular, accessibility, aria, angular-aria, headless, research
+
+---
+
+### Created: [[Angular Aria Grid Deep Dive]]
+- Type: source
+- Source: `.kiro/research/sessions/angular-aria-overview/grid-deep-dive.md`
+- Tags: angular, accessibility, aria, grid, keyboard-navigation, selection, angular-aria, research
+
+---
+
+## 2026-05-11 07:30
+
+### Created: [[Choose Angular Aria Grid for Cinema Seat Selection]]
+- Type: source (ADR)
+- Source: `.kiro/research/sessions/cinema-seat-selection/decision.adr.md`
+- Tags: research, adr, decision, angular, accessibility, angular-aria, grid, seat-selection
+- Decision: Use `@angular/aria/grid` for cinema seat selection feature
+
+---
+
 ## 2026-05-10 19:03
 
 ### Ingested: comprehensive.md
