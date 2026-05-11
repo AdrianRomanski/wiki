@@ -1,9 +1,10 @@
 {
-  "name": "@deep-dive-angular-aria/source",
+  "name": "@wiki-graph/source",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "wiki:manifest": "node scripts/generate-wiki-manifest.mjs"
+    "start:graph": "npx nx run wiki-graph:serve",
+    "build:manifest": "node scripts/generate-wiki-manifest.mjs"
   },
   "private": true,
   "dependencies": {

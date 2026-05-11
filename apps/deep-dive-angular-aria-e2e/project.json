@@ -1,9 +1,0 @@
-{
-  "name": "deep-dive-angular-aria-e2e",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
-  "sourceRoot": "apps/deep-dive-angular-aria-e2e/src",
-  "implicitDependencies": ["deep-dive-angular-aria"],
-  "// targets": "to see all targets run: nx show project deep-dive-angular-aria-e2e --web",
-  "targets": {}
-}

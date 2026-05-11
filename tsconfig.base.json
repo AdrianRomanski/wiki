@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
-      "@deep-dive-angular-aria/feat-seat-selection": [
+      "@wiki-graph/feat-seat-selection": [
         "./libs/feat-seat-selection/src/index.ts"
       ]
     }

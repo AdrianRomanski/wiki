@@ -1,5 +1,5 @@
 {
-  "name": "@deep-dive-angular-aria/research-workflow",
+  "name": "@wiki-graph/research-workflow",
   "version": "0.1.0",
   "description": "Structured 4-phase workflow system for library research and comparison",
   "type": "module",

@@ -108,7 +108,7 @@ When comparing libraries (max 3), evaluate:
 
 ## Project Structure
 
-- `apps/deep-dive-angular-aria` - Main demo application (currently focused on Angular Aria)
+- `apps/wiki-graph` - Main demo application (currently focused on Angular Aria)
 - `libs/feat-seat-selection` - Feature library examples
 - `.kiro/research/` - Research sessions and ADRs
 - `.kiro/skills/` - Research workflow and assistant skills

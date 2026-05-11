@@ -1,23 +1,23 @@
 {
-  "name": "deep-dive-angular-aria",
+  "name": "wiki-graph",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/deep-dive-angular-aria/src",
+  "sourceRoot": "apps/wiki-graph/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/deep-dive-angular-aria",
-        "browser": "apps/deep-dive-angular-aria/src/main.ts",
-        "tsConfig": "apps/deep-dive-angular-aria/tsconfig.app.json",
+        "outputPath": "dist/apps/wiki-graph",
+        "browser": "apps/wiki-graph/src/main.ts",
+        "tsConfig": "apps/wiki-graph/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/deep-dive-angular-aria/public"
+            "input": "apps/wiki-graph/public"
           },
           {
             "glob": "**/*",
@@ -25,7 +25,7 @@
             "output": "wiki"
           }
         ],
-        "styles": ["apps/deep-dive-angular-aria/src/styles.scss"]
+        "styles": ["apps/wiki-graph/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -56,10 +56,10 @@
       "executor": "@angular/build:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "deep-dive-angular-aria:build:production"
+          "buildTarget": "wiki-graph:build:production"
         },
         "development": {
-          "buildTarget": "deep-dive-angular-aria:build:development"
+          "buildTarget": "wiki-graph:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -75,9 +75,9 @@
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "deep-dive-angular-aria:build",
+        "buildTarget": "wiki-graph:build",
         "port": 4200,
-        "staticFilePath": "dist/apps/deep-dive-angular-aria/browser",
+        "staticFilePath": "dist/apps/wiki-graph/browser",
         "spa": true
       }
     }
