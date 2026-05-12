@@ -73,10 +73,12 @@ import { GraphStateService } from '../../services/graph-state.service';
   `,
   styles: [`
     .node-detail-panel {
-      position: absolute;
-      top: 1rem;
+      position: fixed;
+      bottom: 1rem;
       right: 1rem;
       width: 280px;
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
       background: #1e1e2e;
       border: 1px solid #313244;
       border-radius: 8px;
@@ -84,6 +86,12 @@ import { GraphStateService } from '../../services/graph-state.service';
       box-shadow: 0 4px 24px rgba(0,0,0,0.4);
       z-index: 10;
       color: #cdd6f4;
+      animation: panel-in 0.15s ease-out;
+    }
+
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .node-detail-panel:focus {

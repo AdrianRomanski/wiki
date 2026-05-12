@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, inject, computed, signal } from '@angular/core';
 import { GraphCanvasComponent } from './components/graph-canvas/graph-canvas.component';
 import { NodeDetailPanelComponent } from './components/node-detail-panel/node-detail-panel.component';
 import { GraphStateService } from './services/graph-state.service';
@@ -25,7 +25,7 @@ import type { NodeType } from './models/graph.models';
       />
 
       <!-- Single unified top toolbar -->
-      <div class="toolbar" role="toolbar" aria-label="Graph controls">
+      <div class="toolbar" [class.toolbar-collapsed]="!toolbarVisible()" role="toolbar" aria-label="Graph controls">
 
         <!-- Type toggles -->
         @for (type of nodeTypes; track type) {
@@ -111,12 +111,28 @@ import type { NodeType } from './models/graph.models';
           (click)="graphState.loadGraph()"
         >↺ Refresh</button>
 
+        <!-- Hide toolbar -->
+        <button
+          type="button"
+          class="toolbar-toggle"
+          aria-label="Hide toolbar"
+          (click)="toolbarVisible.set(false)"
+        >✕</button>
+
       </div>
 
+      <!-- Show button — only visible when toolbar is hidden -->
+      @if (!toolbarVisible()) {
+        <button
+          type="button"
+          class="toolbar-show-btn"
+          aria-label="Show toolbar"
+          (click)="toolbarVisible.set(true)"
+        >▼ show</button>
+      }
+
       <!-- Node detail panel — floating bottom-right -->
-      <div class="overlay-bottom-right">
-        <app-node-detail-panel />
-      </div>
+      <app-node-detail-panel />
 
       @if (graphState.isLoading()) {
         <div class="loading-overlay" role="status" aria-live="polite">
@@ -158,14 +174,59 @@ import type { NodeType } from './models/graph.models';
       z-index: 10;
       display: flex;
       align-items: center;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       gap: 0.4rem;
       padding: 0.5rem 0.75rem;
       background: rgba(30, 30, 46, 0.92);
       backdrop-filter: blur(6px);
       border-bottom: 1px solid #313244;
-      overflow-x: auto;
+      overflow: hidden;
+      max-height: 200px;
+      transition: max-height 0.2s ease, padding 0.2s ease, border-color 0.2s ease;
     }
+
+    .toolbar.toolbar-collapsed {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-bottom-color: transparent;
+    }
+
+    /* Hide button — compact, sits right of Refresh */
+    .toolbar-toggle {
+      background: none;
+      border: 1px solid #585b70;
+      border-radius: 4px;
+      color: #585b70;
+      cursor: pointer;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.45rem;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: color 0.12s, border-color 0.12s;
+    }
+    .toolbar-toggle:hover { color: #a6adc8; border-color: #a6adc8; }
+    .toolbar-toggle:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }
+
+    /* Show button — floats at top-left when toolbar is hidden */
+    .toolbar-show-btn {
+      position: absolute;
+      top: 0.4rem;
+      left: 0.75rem;
+      z-index: 11;
+      background: rgba(30, 30, 46, 0.85);
+      border: 1px solid #585b70;
+      border-radius: 0 0 6px 6px;
+      border-top: none;
+      color: #a6adc8;
+      cursor: pointer;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem 0.25rem;
+      backdrop-filter: blur(6px);
+      transition: background 0.12s, color 0.12s;
+    }
+    .toolbar-show-btn:hover { background: #313244; color: #cdd6f4; }
+    .toolbar-show-btn:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }
 
     .sep {
       width: 1px;
@@ -287,15 +348,7 @@ import type { NodeType } from './models/graph.models';
     .refresh-btn:hover { background: #45475a; }
     .refresh-btn:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }
 
-    /* Node detail overlay */
-    .overlay-bottom-right {
-      position: absolute;
-      bottom: 1rem;
-      right: 1rem;
-      z-index: 10;
-      max-width: 280px;
-      pointer-events: auto;
-    }
+    /* Node detail overlay — panel positions itself */
 
     /* Loading / error */
     .loading-overlay {
@@ -340,6 +393,7 @@ import type { NodeType } from './models/graph.models';
 export class WikiGraphPageComponent implements OnInit {
   readonly graphState = inject(GraphStateService);
   readonly nodeTypes: NodeType[] = ['entity', 'concept', 'source'];
+  readonly toolbarVisible = signal(true);
 
   readonly visibleNodeIds = computed(() =>
     new Set(this.graphState.visibleNodes().map(n => n.id))
