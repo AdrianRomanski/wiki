@@ -22,14 +22,28 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 *Entity pages describe specific things: libraries, tools, components, APIs*
 
+- [[angular-cdk]] — Headless behavior primitives and utilities for Angular UI components (v21.2.10)
+- [[angular-material]] — Angular Material component library
+
 ## Concepts
 
 *Concept pages explain ideas, patterns, and principles*
 
+- [[list-key-manager]] — Keyboard navigation across lists (ArrowUp/Down, Home/End, typeahead)
+- [[focus-trap]] — Constrains keyboard focus to a DOM region (modals, drawers)
+- [[live-announcer]] — Pushes messages to screen readers via ARIA live regions
+- [[overlay-positioning]] — Floating panel positioning with fallbacks and scroll strategies
+- [[component-portal]] — Dynamic content projection decoupled from render location
+- [[virtual-scrolling]] — Renders only visible items for large data sets
+- [[selection-model]] — Tracks single/multi-select state with change events
+- [[drag-drop]] — Draggable elements with list sorting and transfer
+- [[component-harness]] — Environment-agnostic testing abstraction for UI components
 
 ## Recent Sources
 
 *Source summaries distill key information from raw documents*
+
+- [[angular-cdk-big-picture-2026-05-12]] — @angular/cdk v21.2.10 Big Picture research
 
 ## Navigation
 
