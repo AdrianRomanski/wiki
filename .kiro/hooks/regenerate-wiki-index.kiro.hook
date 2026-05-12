@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Regenerate Wiki Index",
+  "description": "Regenerates wiki/index.md from disk whenever a wiki page is created, edited, or deleted — keeps the index in sync and prevents stale entries",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "wiki/entities/*.md",
+      "wiki/concepts/*.md",
+      "wiki/sources/*.md"
+    ]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "node scripts/generate-wiki-index.mjs",
+    "timeout": 15
+  }
+}

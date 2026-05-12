@@ -22,28 +22,23 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 *Entity pages describe specific things: libraries, tools, components, APIs*
 
-- [[angular-cdk]] — Headless behavior primitives and utilities for Angular UI components (v21.2.10)
-- [[angular-material]] — Angular Material component library
+- [[Angular Material]] — Angular Material is the official Material Design component library for Angular. It provides 35 UI component modules —...
 
 ## Concepts
 
 *Concept pages explain ideas, patterns, and principles*
 
-- [[list-key-manager]] — Keyboard navigation across lists (ArrowUp/Down, Home/End, typeahead)
-- [[focus-trap]] — Constrains keyboard focus to a DOM region (modals, drawers)
-- [[live-announcer]] — Pushes messages to screen readers via ARIA live regions
-- [[overlay-positioning]] — Floating panel positioning with fallbacks and scroll strategies
-- [[component-portal]] — Dynamic content projection decoupled from render location
-- [[virtual-scrolling]] — Renders only visible items for large data sets
-- [[selection-model]] — Tracks single/multi-select state with change events
-- [[drag-drop]] — Draggable elements with list sorting and transfer
-- [[component-harness]] — Environment-agnostic testing abstraction for UI components
+- [[Custom Form Field Control]] — `MatFormFieldControl<T>` is an abstract class from `@angular/material/form-field` that lets you integrate any custom ...
+- [[Injection Token Configuration]] — Angular Material exposes an `InjectionToken` for every configurable default across its components. Rather than subcla...
+- [[Mat Table DataSource]] — `MatTable` is a layout primitive — it renders rows and columns but has no built-in sorting, pagination, or filtering....
+- [[Material Testing Harnesses]] — Every Angular Material component ships a `/testing` entry point that exports a `ComponentHarness` subclass. Harnesses...
+- [[Per-Module Imports]] — Angular Material ships a root barrel entry (`@angular/material`) that re-exports every component module. Importing fr...
 
 ## Recent Sources
 
 *Source summaries distill key information from raw documents*
 
-- [[angular-cdk-big-picture-2026-05-12]] — @angular/cdk v21.2.10 Big Picture research
+- [[Angular Material Big Picture Research — 2026-05-11]] — - **Library**: `@angular/material`
 
 ## Navigation
 
@@ -55,9 +50,9 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 ## Statistics
 
-- **Total Pages**:
-- **Last Updated**: 
-- **Wiki Health**: 
+- **Total Pages**: 7 (1 entity, 5 concepts, 1 source)
+- **Last Updated**: 2026-05-12
+- **Wiki Health**: ✅
 
 ## Quick Reference
 

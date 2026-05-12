@@ -4,7 +4,9 @@
   "license": "MIT",
   "scripts": {
     "start:graph": "npx nx run wiki-graph:serve",
-    "build:manifest": "node scripts/generate-wiki-manifest.mjs"
+    "build:mcp": "npx nx run wiki-mcp-server:build",
+    "build:manifest": "node scripts/generate-wiki-manifest.mjs",
+    "build:wiki-index": "node scripts/generate-wiki-index.mjs"
   },
   "private": true,
   "dependencies": {
