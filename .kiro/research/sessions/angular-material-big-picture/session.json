@@ -1,0 +1,23 @@
+{
+  "id": "angular-material-big-picture",
+  "topic": "Full overview of Angular Material — entry points, exported symbols, public API surface, peer dependencies",
+  "state": "FINALIZED",
+  "scope": "big-picture",
+  "createdAt": "2026-05-11",
+  "libraries": ["@angular/material"],
+  "version": "21.2.10",
+  "sources": [
+    "node_modules/@angular/material/package.json",
+    "node_modules/@angular/material/types/*.d.ts"
+  ],
+  "finalizedAt": "2026-05-11",
+  "wikiPages": [
+    "wiki/entities/angular-material.md",
+    "wiki/concepts/per-module-imports.md",
+    "wiki/concepts/injection-token-configuration.md",
+    "wiki/concepts/material-testing-harnesses.md",
+    "wiki/concepts/mat-table-datasource.md",
+    "wiki/concepts/custom-form-field-control.md",
+    "wiki/sources/angular-material-big-picture-2026-05-11.md"
+  ]
+}

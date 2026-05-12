@@ -1,4 +1,12 @@
 {
-  "files": [  ],
-  "generatedAt": "2026-05-11T18:19:29.583Z"
+  "files": [
+    "entities/angular-material.md",
+    "concepts/custom-form-field-control.md",
+    "concepts/injection-token-configuration.md",
+    "concepts/mat-table-datasource.md",
+    "concepts/material-testing-harnesses.md",
+    "concepts/per-module-imports.md",
+    "sources/angular-material-big-picture-2026-05-11.md"
+  ],
+  "generatedAt": "2026-05-11T21:35:01.297Z"
 }
