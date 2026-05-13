@@ -183,6 +183,7 @@ Use `[[WikiLink]]` syntax for all cross-references between wiki pages.
 3. **Bidirectional Linking**: Prefer bidirectional links - if page A links to page B, page B should reference page A
 4. **Context-Aware Linking**: Only link when the reference adds value; avoid over-linking
 5. **Validate Links**: All links should point to existing pages; broken links should be flagged during maintenance
+6. **Use Page Titles in WikiLinks**: Always use the page's frontmatter `title` value in `[[WikiLinks]]`, never the filename or file slug. For example, use `[[Angular Material Big Picture Research — 2026-05-11]]` not `[[angular-material-big-picture-2026-05-11]]`. Using the filename instead of the title creates ghost nodes in the graph visualizer.
 
 ## Workflows
 

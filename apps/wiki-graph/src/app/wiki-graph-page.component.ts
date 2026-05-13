@@ -67,11 +67,11 @@ import type { NodeType } from './models/graph.models';
         <div class="sep"></div>
 
         <!-- Stats -->
-        <span class="stat" title="Total nodes">
-          <span class="stat-label">Nodes</span>{{ graphState.graphData()?.nodes?.size ?? 0 }}
+        <span class="stat" title="Visible nodes">
+          <span class="stat-label">Nodes</span>{{ graphState.visibleNodes().length }}
         </span>
-        <span class="stat" title="Total edges">
-          <span class="stat-label">Edges</span>{{ graphState.graphData()?.edges?.length ?? 0 }}
+        <span class="stat" title="Visible edges">
+          <span class="stat-label">Edges</span>{{ visibleEdgeCount() }}
         </span>
         @if (graphState.orphanNodes().length > 0) {
           <button
@@ -398,6 +398,12 @@ export class WikiGraphPageComponent implements OnInit {
   readonly visibleNodeIds = computed(() =>
     new Set(this.graphState.visibleNodes().map(n => n.id))
   );
+
+  readonly visibleEdgeCount = computed(() => {
+    const ids = this.visibleNodeIds();
+    return (this.graphState.graphData()?.edges ?? [])
+      .filter(e => ids.has(e.sourceId) && ids.has(e.targetId)).length;
+  });
 
   readonly allTags = () => this.graphState.graphData()?.allTags ?? [];
 

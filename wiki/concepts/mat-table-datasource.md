@@ -101,4 +101,4 @@ export class UserTableComponent implements AfterViewInit {
 ## References
 
 - [[Angular Material]]
-- [[angular-material-big-picture-2026-05-11]]
+- [[Angular Material Big Picture Research — 2026-05-11]]

@@ -106,5 +106,4 @@ providers: [
 ]
 ```
 
-## References
-- [[angular-material-big-picture-2026-05-11]]
+

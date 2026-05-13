@@ -69,18 +69,37 @@ export class GraphStateService {
     const query = this._searchQuery().toLowerCase().trim();
     const tagFilter = this._activeTagFilter();
 
+    // First pass: collect ids of all visible real (non-ghost) nodes
+    const visibleRealIds = new Set<string>();
+    for (const node of data.nodes.values()) {
+      if (node.isGhost) continue;
+      if (!filters.has(node.type)) continue;
+      if (query && !node.title.toLowerCase().includes(query)) continue;
+      if (tagFilter && !node.tags.includes(tagFilter)) continue;
+      visibleRealIds.add(node.id);
+    }
+
+    // Build a set of ghost ids that have at least one edge to/from a visible real node
+    const visibleGhostIds = new Set<string>();
+    for (const edge of data.edges) {
+      if (visibleRealIds.has(edge.sourceId)) {
+        const target = data.nodes.get(edge.targetId);
+        if (target?.isGhost) visibleGhostIds.add(edge.targetId);
+      }
+      if (visibleRealIds.has(edge.targetId)) {
+        const source = data.nodes.get(edge.sourceId);
+        if (source?.isGhost) visibleGhostIds.add(edge.sourceId);
+      }
+    }
+
+    // Second pass: collect real nodes + only connected ghost nodes
     const result: GraphNode[] = [];
     for (const node of data.nodes.values()) {
-      // 1. Type must be in active filters
-      if (!filters.has(node.type)) continue;
-
-      // 2. If search query is non-empty, title must contain it (case-insensitive)
-      if (query && !node.title.toLowerCase().includes(query)) continue;
-
-      // 3. If tag filter is set, node must include that tag
-      if (tagFilter && !node.tags.includes(tagFilter)) continue;
-
-      result.push(node);
+      if (node.isGhost) {
+        if (visibleGhostIds.has(node.id)) result.push(node);
+      } else {
+        if (visibleRealIds.has(node.id)) result.push(node);
+      }
     }
     return result;
   });
