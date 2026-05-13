@@ -51,7 +51,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 ## Statistics
 
 - **Total Pages**: 7 (1 entity, 5 concepts, 1 source)
-- **Last Updated**: 2026-05-12
+- **Last Updated**: 2026-05-13
 - **Wiki Health**: ✅
 
 ## Quick Reference

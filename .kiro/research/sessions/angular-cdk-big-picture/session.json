@@ -1,8 +1,7 @@
 {
   "id": "angular-cdk-big-picture",
   "topic": "Full overview of @angular/cdk public API surface, entry points, exports, and peer dependencies",
-  "state": "FINALIZED",
-  "finalizedAt": "2026-05-12",
+  "state": "FINALIZE",
   "wikiPages": [
     "wiki/entities/angular-cdk.md",
     "wiki/concepts/list-key-manager.md",

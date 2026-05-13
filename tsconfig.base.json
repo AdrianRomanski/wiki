@@ -14,8 +14,8 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
-      "@wiki-graph/feat-seat-selection": [
-        "./libs/feat-seat-selection/src/index.ts"
+      "@wiki-graph/prototype-playground": [
+        "./libs/prototype-playground/src/index.ts"
       ]
     }
   },

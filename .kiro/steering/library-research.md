@@ -109,7 +109,7 @@ When comparing libraries (max 3), evaluate:
 ## Project Structure
 
 - `apps/wiki-graph` - Main demo application (currently focused on Angular Aria)
-- `libs/feat-seat-selection` - Feature library examples
+- `libs/prototype-playground` - All research prototypes live here; every prototype gets a Storybook Story and is validated with chrome-devtools-mcp
 - `.kiro/research/` - Research sessions and ADRs
 - `.kiro/skills/` - Research workflow and assistant skills
 
@@ -358,18 +358,157 @@ When the user provides a use case, generate a minimal, runnable code example dem
 
 #### 2.4 Saving the Prototype
 
-Save each prototype to the `prototypes/` subdirectory within the session directory:
+Every prototype is placed in **`libs/prototype-playground/src/lib/`** as a standalone Angular component, not just a loose file in the session directory. Follow this structure:
 
 ```
-.kiro/research/sessions/[session-id]/prototypes/[descriptive-kebab-case-name].[ext]
+libs/prototype-playground/src/lib/[session-id]-[descriptive-kebab-case-name]/
+├── [name].component.ts       ← standalone Angular component
+└── [name].component.stories.ts  ← Storybook Story
 ```
 
 **Filename rules:**
-- Use a descriptive name that reflects the pattern being demonstrated (e.g., `basic-observable.ts`, `switchmap-cancellation.ts`, `grid-keyboard-navigation.ts`)
-- Use kebab-case
-- Use the appropriate file extension for the language or framework (`.ts`, `.html`, `.js`, etc.)
+- Prefix the folder with the session id to avoid collisions (e.g., `rxjs-operators-deep-dive-switchmap-cancellation/`)
+- Use kebab-case throughout
+- The component must be standalone and self-contained
 
-After saving, confirm the file path to the user and ask whether they want to create another prototype or move on to SYNTHESIZE.
+**Storybook Story requirements:**
+- Every prototype component MUST have a corresponding `.stories.ts` file
+- Export at least one `Default` story that renders the component with no required inputs
+- Add a `title` following the pattern `Research/[SessionId]/[PatternName]`
+- Example:
+
+```ts
+import type { Meta, StoryObj } from '@storybook/angular';
+import { SwitchmapCancellationComponent } from './switchmap-cancellation.component';
+
+const meta: Meta<SwitchmapCancellationComponent> = {
+  title: 'Research/rxjs-operators-deep-dive/SwitchmapCancellation',
+  component: SwitchmapCancellationComponent,
+};
+export default meta;
+type Story = StoryObj<SwitchmapCancellationComponent>;
+
+export const Default: Story = {};
+```
+
+**Also** save a reference file in the session directory pointing to the playground location:
+
+```
+.kiro/research/sessions/[session-id]/prototypes/[descriptive-kebab-case-name].ref.md
+```
+
+The `.ref.md` file must contain the path to the component in `libs/prototype-playground` so the session artifacts remain traceable.
+
+After saving, confirm the component and story paths to the user.
+
+#### 2.4.1 Chrome DevTools Validation
+
+After creating each prototype component and its story, validate it using `chrome-devtools-mcp`:
+
+1. Start the Storybook dev server if not already running: `nx storybook prototype-playground`
+2. Use `mcp_chrome_devtools_navigate_page` to open the story URL (e.g., `http://localhost:4400/?path=/story/research-[session-id]-[pattern-name]--default`)
+3. Use `mcp_chrome_devtools_take_screenshot` to capture the rendered output — save the screenshot to `.kiro/research/sessions/[session-id]/devtools-reports/[prototype-name]-screenshot.png`
+4. Use `mcp_chrome_devtools_list_console_messages` to collect all console output (errors, warnings, logs)
+5. Use `mcp_chrome_devtools_list_network_requests` to check for failed network requests
+6. Determine the overall result: **PASS** (component renders, no console errors, no failed requests) or **FAIL** (with specific details)
+
+#### 2.4.2 Saving the DevTools Report
+
+After validation, save a report to the session directory:
+
+```
+.kiro/research/sessions/[session-id]/devtools-reports/[prototype-name]-report.md
+```
+
+The report must follow this structure:
+
+```markdown
+# DevTools Report — [Prototype Name]
+
+**Session:** [session-id]
+**Story:** Research/[session-id]/[PatternName]
+**Story URL:** http://localhost:4400/?path=/story/...
+**Validated:** [YYYY-MM-DD]
+**Result:** PASS | FAIL
+
+## Screenshot
+
+![Rendered output](./[prototype-name]-screenshot.png)
+
+## Console Messages
+
+| Level | Message |
+|-------|---------|
+| [error/warn/log] | [message text] |
+
+*(or "No console messages" if empty)*
+
+## Network Requests
+
+| Status | URL |
+|--------|-----|
+| [status code] | [url] |
+
+*(or "No network requests" if none)*
+
+## Issues Found
+
+*(List any errors, warnings, or unexpected behaviors. Omit section if result is PASS with no issues.)*
+
+- [issue description]
+
+## Notes
+
+*(Optional: observations about rendering, layout, or behavior worth capturing.)*
+```
+
+After saving the report, tell the user the result and the report path.
+
+If validation **fails**, fix the component before moving on to the next prototype. Re-run validation after the fix and append a "Fix Attempt" section to the existing report rather than creating a new file:
+
+```markdown
+## Fix Attempt [N] — [YYYY-MM-DD]
+
+**Change made:** [brief description of the fix]
+**Result:** PASS | FAIL
+
+[Updated console messages / screenshot reference if re-captured]
+```
+
+#### 2.4.3 Lighthouse Audit
+
+After the DevTools validation passes, run a Lighthouse audit on the story using `mcp_chrome_devtools_lighthouse_audit`:
+
+1. Ensure the story is still open in the browser (navigate again if needed)
+2. Call `mcp_chrome_devtools_lighthouse_audit` with `mode: "navigation"` and `device: "desktop"`, setting `outputDirPath` to `.kiro/research/sessions/[session-id]/devtools-reports/`
+3. Append a `## Lighthouse` section to the existing `[prototype-name]-report.md`:
+
+```markdown
+## Lighthouse
+
+**Device:** desktop
+**Mode:** navigation
+
+| Category | Score |
+|----------|-------|
+| Accessibility | [0–100] |
+| Best Practices | [0–100] |
+| SEO | [0–100] |
+
+### Accessibility Failures
+
+*(List any failing accessibility audits with their descriptions. Omit if no failures.)*
+
+- **[audit-id]** — [description]
+
+### Notable Warnings
+
+*(List any non-failing audits worth attention. Omit if none.)*
+
+- **[audit-id]** — [description]
+```
+
+Accessibility score below 90 is a **red flag** — note it prominently in the report and in the findings summary. Performance is excluded (Storybook dev server skews results).
 
 #### 2.5 Multiple Prototypes
 
@@ -382,13 +521,12 @@ Continue prompting for additional prototypes until the user indicates they are d
 When the user indicates that prototyping is complete (e.g., "done", "move on", "synthesize", or issues the `synthesize` command):
 
 1. Update `session.json` `state` to `"SYNTHESIZE"`
-2. Present a numbered list of all prototype files created during this session, showing their paths relative to the session directory:
+2. Present a numbered list of all prototype components created during this session:
 
    > Prototyping complete. Here are the prototypes created:
    >
-   > 1. `prototypes/basic-observable.ts`
-   > 2. `prototypes/switchmap-cancellation.ts`
-   > 3. `prototypes/retry-with-backoff.ts`
+   > 1. `libs/prototype-playground/src/lib/[session-id]-basic-observable/` (story: `Research/[session-id]/BasicObservable`)
+   > 2. `libs/prototype-playground/src/lib/[session-id]-switchmap-cancellation/` (story: `Research/[session-id]/SwitchmapCancellation`)
    >
    > Moving to the SYNTHESIZE step.
 
@@ -414,7 +552,8 @@ The findings summary must include the following sections, in this order:
 5. **Gotchas to avoid** — specific behaviors, edge cases, or anti-patterns that caused confusion or produced unexpected results
 6. **Session artifacts** — links to every artifact produced during the session:
    - The analysis file (`big-picture.md` or `deep-dive-[focus-area].md`)
-   - Each prototype file under `prototypes/` *(Deep Dive sessions only)*
+   - Each prototype component under `libs/prototype-playground/src/lib/` *(Deep Dive sessions only)*
+   - Each DevTools report under `devtools-reports/` *(Deep Dive sessions only)*
 
 #### 3.2 Deep Dive Scoping
 
@@ -615,9 +754,14 @@ After updating `session.json`, display a completion summary listing every artifa
 > - `.kiro/research/sessions/[session-id]/[big-picture.md | deep-dive-[focus-area].md]`
 >
 > Prototypes: *(Deep Dive sessions only — omit this section for Big Picture)*
-> - `.kiro/research/sessions/[session-id]/prototypes/[prototype-1].[ext]`
-> - `.kiro/research/sessions/[session-id]/prototypes/[prototype-2].[ext]`
+> - `libs/prototype-playground/src/lib/[session-id]-[prototype-1]/[prototype-1].component.ts`
+> - `libs/prototype-playground/src/lib/[session-id]-[prototype-1]/[prototype-1].component.stories.ts`
 > - *(list all prototypes)*
+>
+> DevTools reports: *(omit if no prototypes were validated)*
+> - `.kiro/research/sessions/[session-id]/devtools-reports/[prototype-1]-report.md`
+> - `.kiro/research/sessions/[session-id]/devtools-reports/[prototype-1]-screenshot.png`
+> - *(list all reports)*
 >
 > Findings summary:
 > - `.kiro/research/sessions/[session-id]/findings-summary.md`
@@ -717,8 +861,12 @@ Every single library research session lives under `.kiro/research/sessions/[sess
 ├── session.json
 ├── deep-dive-[focus-area].md
 ├── findings-summary.md
-└── prototypes/           ← optional; only present if user chose to prototype
-    ├── [descriptive-name].ts
+├── prototypes/           ← optional; only present if user chose to prototype
+│   ├── [descriptive-name].ref.md
+│   └── ...
+└── devtools-reports/     ← one report + screenshot per prototype validated
+    ├── [prototype-name]-report.md
+    ├── [prototype-name]-screenshot.png
     └── ...
 ```
 
