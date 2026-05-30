@@ -13,3 +13,5 @@ export {
   getSessionSubdirectoryPath,
   validateSessionId
 } from './FileSystemUtils';
+
+export { generateSessionId } from './generate-session-id';

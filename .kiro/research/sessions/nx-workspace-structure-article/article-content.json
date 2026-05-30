@@ -1,0 +1,82 @@
+{
+  "title": "The virtuous cycle of workspace structure",
+  "author": "Philip Fulcher",
+  "date": "2025-02-03",
+  "sourceUrl": "https://nx.dev/blog/virtuous-cycle-of-workspace-structure",
+  "extractedAt": "2026-05-30",
+  "entities": [
+    {
+      "name": "Nx",
+      "type": "tool",
+      "description": "A build system and monorepo management tool that provides specialized tooling for organizing and maintaining workspace structure"
+    },
+    {
+      "name": "Nx Enterprise",
+      "type": "service",
+      "description": "Enterprise support program offered by Nx for companies implementing monorepo architectures"
+    },
+    {
+      "name": "Architecture",
+      "type": "category",
+      "description": "Software architecture patterns and approaches for organizing code and systems"
+    },
+    {
+      "name": "Domain Driven Design",
+      "type": "methodology",
+      "description": "An architectural approach that can enhance modulith architecture by organizing code around business domains"
+    }
+  ],
+  "concepts": [
+    {
+      "name": "Modulith Architecture",
+      "description": "An architecture pattern that sits between monolith and microservices, maintaining a single deployable while breaking code into separate, maintainable parts"
+    },
+    {
+      "name": "Hexagonal Architecture",
+      "description": "An architectural pattern that can be applied to enhance modulith architecture by organizing code around ports and adapters"
+    },
+    {
+      "name": "Workspace Structure Goals",
+      "description": "Three core goals for organizing workspaces: projects with well-defined purpose, quick code location, and co-locating frequently updated code"
+    },
+    {
+      "name": "Project Types",
+      "description": "Four primary library types in Nx workspaces: feature libraries (container components), UI libraries (presentational), data-access libraries (backend interaction), and utility libraries (low-level utilities)"
+    },
+    {
+      "name": "Scope-Type-Identifier Naming",
+      "description": "A naming convention pattern that combines scope, type, and identifier to create self-documenting project names (e.g., products-feature-details)"
+    },
+    {
+      "name": "Module Boundary Rules",
+      "description": "Enforcement rules that define which project types can depend on which other types, maintaining separation of concerns"
+    },
+    {
+      "name": "Virtuous Cycle",
+      "description": "A positive feedback loop where well-defined project purposes lead to good naming, which enables quick code location, which results in changes in the right places, reinforcing the structure"
+    },
+    {
+      "name": "Dump Projects",
+      "description": "Anti-pattern projects (like 'util' or 'components') that accumulate code when developers can't determine proper placement, leading to tech debt"
+    },
+    {
+      "name": "Tag-Based Enforcement",
+      "description": "Using tags (scope and type) on projects to automatically enforce module boundary rules and maintain workspace structure"
+    }
+  ],
+  "codeBlocks": [
+    {
+      "language": "text",
+      "content": "libs/\n  products/               <---- grouped by scope\n    feature-details/      <---- project prefixed with type\n\n  check-out/              <---- grouped by scope\n    feature-cart/         <---- project prefixed with type\n    data-access-taxes/    <---- project prefixed with type\n\n  shared/                 <---- grouped by scope\n    ui-forms/             <---- project prefixed with type\n    util-dates            <---- project prefixed with type",
+      "description": "Example workspace structure showing scope-based grouping with type-prefixed projects"
+    }
+  ],
+  "outboundLinks": [
+    "https://cookbook.marmicode.io/nx/intro",
+    "https://cookbook.marmicode.io/nx/organize-libs",
+    "https://nx.dev/blog/improve-architecture-and-ci-times-with-projects",
+    "https://nx.dev/docs/features/enforce-module-boundaries#tags",
+    "https://nx.dev/blog/mastering-the-project-boundaries-in-nx",
+    "https://nx.dev/blog/tailoring-nx-for-your-organization"
+  ]
+}

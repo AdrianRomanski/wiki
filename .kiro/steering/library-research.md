@@ -1,3 +1,7 @@
+---
+inclusion: manual
+---
+
 # Library Research & Comparison Project
 
 ## Project Context
@@ -184,6 +188,11 @@ When research is complete:
 - **Track token costs** - AI assistance has real costs
 - **Test accessibility** - Non-negotiable for all implementations
 - **Consider maintenance** - Community and updates matter long-term
+- **Manual inclusion** - This steering file loads only when explicitly invoked via `#research-buddy`
+
+---
+
+**Note:** For article research workflows, see the separate `article-research.md` steering file.
 
 ---
 

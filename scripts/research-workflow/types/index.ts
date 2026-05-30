@@ -14,3 +14,6 @@ export * from './analysis.js';
 
 // Artifact types
 export * from './artifacts.js';
+
+// Article session types
+export * from './article-session.js';

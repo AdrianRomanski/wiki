@@ -1,0 +1,29 @@
+{
+  "id": "nx-workspace-structure-article",
+  "topic": "Virtuous Cycle of Workspace Structure",
+  "state": "FINALIZED",
+  "scope": "article",
+  "createdAt": "2026-05-30",
+  "articleInputType": "url",
+  "articleUrl": "https://nx.dev/blog/virtuous-cycle-of-workspace-structure",
+  "articleTitle": "The virtuous cycle of workspace structure",
+  "articleAuthor": "Philip Fulcher",
+  "articleDate": "2025-02-03",
+  "finalizedAt": "2026-05-30",
+  "wikiPages": [
+    "wiki/sources/nx-workspace-structure-virtuous-cycle-article-2025-02-03.md",
+    "wiki/entities/nx.md",
+    "wiki/entities/nx-enterprise.md",
+    "wiki/entities/architecture.md",
+    "wiki/entities/domain-driven-design.md",
+    "wiki/concepts/modulith-architecture.md",
+    "wiki/concepts/hexagonal-architecture.md",
+    "wiki/concepts/workspace-structure-goals.md",
+    "wiki/concepts/project-types.md",
+    "wiki/concepts/scope-type-identifier-naming.md",
+    "wiki/concepts/module-boundary-rules.md",
+    "wiki/concepts/virtuous-cycle.md",
+    "wiki/concepts/dump-projects.md",
+    "wiki/concepts/tag-based-enforcement.md"
+  ]
+}
