@@ -1,61 +1,123 @@
-# @angular/aria — Big Picture
+# @angular/aria — Big Picture Findings Summary
 
-**Library:** `@angular/aria`  
-**Version:** 21.2.10  
-**Scope:** Big Picture  
-**Research date:** 2026-05-12
+**Library:** `@angular/aria`
+**Version:** `21.2.13`
+**Scope:** Big Picture
+**Research date:** 2026-05-30
 
 ---
 
 ## Key Strengths
 
-- **Complete ARIA APG coverage** — implements all major WAI-ARIA widget patterns (accordion, combobox, grid, listbox, menu/menubar, tabs, toolbar, tree) in one cohesive package
-- **Directive-only, fully tree-shakeable** — `"sideEffects": false` and ESM-only; import only what you use, no dead code
-- **Signal-first API** — every input is an `InputSignal` or `InputSignalWithTransform`; two-way bindings use `ModelSignal`; no `@Input()` decorators anywhere
-- **Dual focus strategies** — every navigable widget supports both `roving` tabindex and `aria-activedescendant` via a single `focusMode` input, covering all ARIA focus management patterns
-- **Dual selection strategies** — `selectionMode: "follow" | "explicit"` on listbox, grid, tree, and tabs gives fine-grained control over when selection tracks focus
-- **Soft disabled** — `softDisabled` input keeps items focusable but non-interactive, matching ARIA best practice for disabled states
-- **Lazy content rendering** — `DeferredContent` / `DeferredContentAware` host directives are used consistently across accordion, combobox, menu, tabs, and tree to avoid rendering hidden content
-- **RTL support built-in** — all widgets expose a `textDirection` writable signal sourced from `@angular/cdk/bidi`
-- **Composable with CDK Overlay** — `ComboboxPopupContainer` can be replaced by `cdkConnectedOverlay`, making overlay positioning opt-in
-- **Consistent API shape** — every widget follows the same patterns for `disabled`, `wrap`, `orientation`, `focusMode`, `selectionMode`, making the learning curve additive
+**1. Headless by design**
+The library ships zero CSS. Every directive is purely behavioral — it manages ARIA attributes, keyboard interactions, and focus, but leaves all visual styling to the consumer. This makes it composable with any design system without fighting specificity wars.
+
+**2. Signal-native architecture**
+Built from the ground up with Angular signals. All inputs to UI Pattern classes use `SignalLike<T>` / `WritableSignalLike<T>` — a thin abstraction over Angular's `Signal<T>` that keeps the behavior layer framework-agnostic. No `@Input()` / `@Output()` anywhere in the interaction logic.
+
+**3. Layered, reusable behavior system**
+The same `ListNavigationBehavior` powers listbox, combobox, menu, tree, and toolbar. The same `ExpansionBehavior` powers accordion and tree. Changes to a behavior propagate to every pattern that uses it — a single fix improves five components at once.
+
+**4. Comprehensive ARIA pattern coverage**
+Eight sub-packages covering the most common WAI-ARIA Authoring Practices patterns: accordion, combobox, grid, listbox, menu, tabs, toolbar, and tree. Each follows the APG specification closely, including correct roles, states, and keyboard interactions.
+
+**5. Standalone-only, no NgModules**
+All 31 directives are standalone. Import exactly what you need — no barrel modules, no side-effect imports.
+
+**6. Deferred content for performance**
+`DeferredContent` / `DeferredContentAware` provide lazy rendering for hidden panels and popups (accordion panels, menu content, tab panels, tree nodes). Content is not rendered until first shown, keeping initial DOM lean.
+
+**7. Declarative event routing via EventManager**
+`KeyboardEventManager` and `PointerEventManager` provide a fluent, composable API for mapping keys and modifier combinations to handlers. Supports strings, signals, and regex as key matchers — making dynamic keybindings (e.g. RTL-aware arrow keys) straightforward.
+
+---
 
 ## Known Limitations
 
-- **Developer Preview — API is unstable** — every directive is tagged `@developerPreview 21.0`; breaking changes can happen in any minor release
-- **No components, only directives** — you bring your own HTML structure and styling; there is no pre-built UI, which is intentional but means more setup per widget
-- **Exact CDK peer dependency** — `@angular/cdk` must be at exactly `21.2.10`; mismatched versions will break; the entire `ng-update` package group must be updated together
-- **`private` entry point is not for apps** — `@angular/aria/private` exposes internal pattern classes; using them directly couples you to implementation details
-- **No form control integration** — directives do not implement `ControlValueAccessor`; wiring to Angular forms is manual
-- **Combobox popup requires explicit wiring** — the `ComboboxPopup` bridge directive must be applied to the popup control; it is not automatic
-- **Tree structure is verbose** — `ngTreeItemGroup` requires a `ng-template` wrapper and an `ownedBy` input linking back to the parent item; recursive trees need `ngTemplateOutlet` boilerplate
+**1. No visual layer**
+Headless is a strength, but it also means you must implement all styling, animations, and layout yourself. There are no pre-built themes or Material Design variants in this package (those live in `@angular/material`).
+
+**2. `@angular/aria/private` is unstable**
+The `private` entry point is used by `@angular/material` internally but carries no public API stability guarantee. Breaking changes can occur without a major version bump. Avoid importing from it in application code.
+
+**3. `ɵɵ`-prefixed re-exports are a workaround, not a feature**
+Several sub-packages re-export sibling directives with `ɵɵ` prefixes (e.g. `ɵɵCombobox` in `@angular/aria/listbox`). This is a tree-shaking workaround for [angular/components#30663](https://github.com/angular/components/issues/30663) — not an intentional API. Do not use these symbols directly.
+
+**4. Hard peer dependency on `@angular/cdk`**
+`@angular/cdk` is pinned to the exact same patch version. Upgrading one without the other will break. This is intentional but worth noting for monorepo setups with version constraints.
+
+**5. Root entry point exports nothing useful**
+`import { ... } from '@angular/aria'` only gives you `VERSION`. All real symbols require sub-package imports. This is easy to miss when first exploring the library.
+
+**6. No radio-group or ui-patterns entry in v21**
+The npm registry shows `radio-group`, `ui-patterns`, and `deferred-content` as named exports in the upcoming v22 release. These are not available in v21.2.x — plan accordingly if you need them.
+
+---
 
 ## Recommended Patterns
 
-- **Import per entry point** — always import from the specific sub-path (e.g. `@angular/aria/listbox`) rather than the root to keep bundles minimal
-- **Use `ModelSignal` for two-way state** — `expanded`, `selected`, `values`, `selectedTab` are all `ModelSignal`; bind with `[(value)]` syntax
-- **Lazy-render panel content** — always wrap panel/menu content in `ng-template` with the corresponding content directive (`ngAccordionContent`, `ngMenuContent`, `ngTabContent`) to avoid rendering hidden DOM
-- **Prefer `roving` focusMode for simple lists** — `activedescendant` is better for combobox popups where focus must stay on the input; `roving` is simpler for standalone listboxes and trees
-- **Use `softDisabled` instead of `disabled` when items should remain keyboard-reachable** — matches ARIA guidance and avoids focus traps
-- **Combobox + Listbox composition** — use `ngCombobox` + `ngComboboxInput` + `ng-template[ngComboboxPopupContainer]` + `ngListbox` for a fully accessible select/autocomplete; swap `ngListbox` for `ngTree` for hierarchical options
-- **Grid cell widgets** — apply `ngGridCellWidget` to interactive elements inside cells (inputs, buttons, menus) to suspend grid navigation while the widget is active; set `widgetType` to `"simple"`, `"complex"`, or `"editable"` to control activation behavior
-- **Tab linking by value** — `ngTab` and `ngTabPanel` are linked by matching `value` inputs, not by DOM position; panels can live anywhere in the template
+**Import from sub-packages, not the root:**
+```ts
+// ✅ Correct
+import { Listbox, Option } from '@angular/aria/listbox';
+import { Tabs, TabList, Tab, TabPanel } from '@angular/aria/tabs';
+
+// ❌ Wrong — root only exports VERSION
+import { Listbox } from '@angular/aria';
+```
+
+**Compose directives in standalone components:**
+```ts
+@Component({
+  standalone: true,
+  imports: [Tabs, TabList, Tab, TabPanel, TabContent],
+  template: `
+    <div cdkTabs>
+      <div cdkTabList>
+        <button cdkTab>Tab 1</button>
+        <button cdkTab>Tab 2</button>
+      </div>
+      <div cdkTabPanel>Content 1</div>
+      <div cdkTabPanel>Content 2</div>
+    </div>
+  `
+})
+export class MyTabsComponent {}
+```
+
+**Use `DeferredContent` for lazy panel rendering:**
+Apply `cdkDeferredContent` to `<ng-template>` inside accordion panels, menu content, and tab panels to avoid rendering hidden content on initial load.
+
+**Pair with `@angular/cdk` for overlay and focus utilities:**
+`@angular/aria` handles ARIA semantics and keyboard patterns; `@angular/cdk/overlay` handles positioning for combobox and menu popups; `@angular/cdk/a11y` handles focus trapping and live announcements. They are designed to work together.
+
+**Keep `@angular/cdk` version in sync:**
+Always upgrade `@angular/aria` and `@angular/cdk` together. They are pinned to the same patch version in the peer dependency declaration.
+
+---
 
 ## Gotchas to Avoid
 
-- **Do not use `@angular/aria/private`** in application code — it is an internal API surface with no stability guarantees
-- **`ngTreeItemGroup` must use `ng-template`** — it is a structural directive; applying it to a regular element will not work
-- **`ngTab` requires `value` (required input)** — omitting it causes a runtime error; `ngTabPanel` also requires `value`
-- **`MenuItem.value` is required** — unlike most other `value` inputs in the library, `ngMenuItem`'s `value` is marked required
-- **`ComboboxPopup` is a bridge, not a popup** — it does not create any DOM; it must be applied to the element that hosts the actual popup control (`ngListbox`, `ngTree`, or `ngComboboxDialog`)
-- **`contentChildren` ordering in Menu** — the source code notes a known issue where `contentChildren` returns a progressively smaller list each time a menu opens/closes; the workaround is already baked in via a signal recomputation trick, but custom menu implementations that bypass `ngMenu` will hit this
-- **`TreeItem` extends `DeferredContentAware`** — tree items are themselves deferred-content-aware, meaning they participate in lazy rendering; do not wrap them in an additional `DeferredContentAware` host
-- **`Listbox.values` vs `Option.value`** — `Listbox` uses `values` (plural, `ModelSignal<V[]>`) for its selected state; `Option` uses `value` (singular, required `InputSignal<V>`); mixing them up is a common mistake
-- **Grid range selection requires `enableRangeSelection` + `enableSelection`** — both inputs must be true; `enableRangeSelection` alone has no effect
+**1. Don't import from `@angular/aria/private`**
+Even though it's a valid import path, it has no stability guarantees. If you need the UI Pattern classes for advanced customization, be prepared for breaking changes on any release.
+
+**2. Don't use `ɵɵ`-prefixed symbols**
+`ɵɵCombobox`, `ɵɵDeferredContent`, etc. are internal re-exports for the Angular compiler's tree-shaking. They are not part of the public API and will change without notice.
+
+**3. The root `@angular/aria` entry is nearly empty**
+`public-api.ts` at the root only re-exports `version.ts`. If your IDE auto-imports from `@angular/aria` instead of `@angular/aria/listbox`, you'll get a confusing "not exported" error.
+
+**4. All inputs must be signals**
+If you're building on top of the private UI Pattern classes, every input must be a `SignalLike`. Passing plain values will not work — the patterns use `computed()` internally and expect reactive inputs.
+
+**5. `validate()` is not called automatically**
+UI Pattern classes expose a `validate()` method that checks internal state consistency. It is not called by the Angular directive layer in production — it's a development-time tool. Call it manually in tests or dev mode to catch misconfigured patterns early.
+
+**6. Keyboard navigation is pattern-specific**
+Each pattern implements its own keyboard spec per the WAI-ARIA APG. For example, `Grid` uses a 2D navigation model (arrow keys move between cells), while `Listbox` uses a 1D model (arrow keys move between options). Don't assume keyboard behavior is consistent across patterns without checking the APG spec for each.
 
 ---
 
 ## Session Artifacts
 
-- `.kiro/research/sessions/angular-aria-big-picture/big-picture.md`
-- `.kiro/research/sessions/angular-aria-big-picture/findings-summary.md`
+- Analysis: `.kiro/research/sessions/angular-aria-big-picture/big-picture.md`

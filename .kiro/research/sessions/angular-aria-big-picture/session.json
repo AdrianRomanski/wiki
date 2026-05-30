@@ -1,32 +1,40 @@
 {
   "id": "angular-aria-big-picture",
-  "topic": "Full overview of @angular/aria — entry points, exported symbols, public API surface, peer dependencies",
-  "state": "FINALIZE",
+  "topic": "Full API surface of @angular/aria",
+  "state": "FINALIZED",
   "scope": "big-picture",
-  "createdAt": "2026-05-12",
+  "createdAt": "2026-05-30",
   "libraries": ["@angular/aria"],
-  "version": "21.2.10",
+  "version": "21.2.13",
+  "repositoryUrl": "https://github.com/angular/components",
+  "githubRef": "v21.2.13",
+  "sourceStrategy": "github-with-fallback",
   "sources": [
-    "node_modules/@angular/aria/package.json",
-    "node_modules/@angular/aria/types/aria.d.ts",
-    "node_modules/@angular/aria/types/accordion.d.ts",
-    "node_modules/@angular/aria/types/combobox.d.ts",
-    "node_modules/@angular/aria/types/grid.d.ts",
-    "node_modules/@angular/aria/types/listbox.d.ts",
-    "node_modules/@angular/aria/types/menu.d.ts",
-    "node_modules/@angular/aria/types/private.d.ts",
-    "node_modules/@angular/aria/types/tabs.d.ts",
-    "node_modules/@angular/aria/types/toolbar.d.ts",
-    "node_modules/@angular/aria/types/tree.d.ts"
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/package.json",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/index.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/version.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/accordion/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/combobox/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/grid/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/listbox/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/menu/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/tabs/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/toolbar/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/tree/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/private/public-api.ts",
+    "https://github.com/angular/components/blob/v21.2.13/src/aria/private/ui-pattern-rules.md"
   ],
+  "fallbackSources": [
+    "node_modules/@angular/aria/package.json"
+  ],
+  "finalizedAt": "2026-05-30",
   "wikiPages": [
     "wiki/entities/angular-aria.md",
-    "wiki/concepts/signal-first-directive-api.md",
-    "wiki/concepts/dual-focus-strategy.md",
-    "wiki/concepts/dual-selection-strategy.md",
-    "wiki/concepts/lazy-content-rendering.md",
-    "wiki/concepts/soft-disabled.md",
-    "wiki/concepts/combobox-popup-composition.md",
-    "wiki/sources/angular-aria-big-picture-2026-05-12.md"
+    "wiki/concepts/headless-aria-directives.md",
+    "wiki/concepts/ui-pattern-behavior-composition.md",
+    "wiki/concepts/deferred-content-lazy-rendering.md",
+    "wiki/concepts/signal-native-component-inputs.md",
+    "wiki/sources/angular-aria-big-picture-2026-05-30.md"
   ]
 }

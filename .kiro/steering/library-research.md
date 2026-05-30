@@ -8,7 +8,7 @@ This is a research-phase project for exploring, comparing, and prototyping with 
 
 ### Core Research Principles
 
-1. **Evidence-Based Research** - Always verify against official docs AND actual source code in node_modules
+1. **Evidence-Based Research** - Always verify against official docs AND actual source code in the GitHub repository at the resolved ref
 2. **Prototype First** - Build minimal, focused examples to understand library behavior
 3. **Structured Comparison** - Use quantitative metrics (complexity, modularity, bundle size, token usage)
 4. **Document Findings** - Capture insights, patterns, and decisions as you learn
@@ -19,13 +19,12 @@ This is a research-phase project for exploring, comparing, and prototyping with 
 
 When researching any library:
 
-1. **Official Online Docs** - Search for latest API documentation and guides
-2. **Source Code** - Check `node_modules/[library]` for actual implementation
-3. **Type Definitions** - Review `.d.ts` files for API signatures and available options
-4. **Examples in Code** - Look for usage patterns in the installed package
-5. **Community Resources** - GitHub issues, Stack Overflow, blog posts
+1. **GitHub Repository Source Files** - Read source code directly from the GitHub repository at the resolved ref
+2. **Official Online Docs** - Search for latest API documentation and guides
+3. **node_modules** - Optional fallback when GitHub sources are unavailable
+4. **Community Resources** - GitHub issues, Stack Overflow, blog posts
 
-**Why Multiple Sources?** Online docs explain concepts, but node_modules shows the exact version we're using and reveals implementation details not always documented.
+**Why Multiple Sources?** GitHub repository source files are preferred because: (1) the repository is the canonical source of truth, (2) it may include unreleased changes not present in the published npm artifact, and (3) it requires no local installation.
 
 ## Research Session Workflow
 
@@ -116,7 +115,7 @@ When comparing libraries (max 3), evaluate:
 ## Key Research Principles
 
 ### Evidence-Based
-- Read actual code from node_modules
+- Read actual code from the GitHub repository at the resolved ref
 - Check real documentation online
 - Verify claims with code examples
 - Cite sources
@@ -248,31 +247,86 @@ If the user selects **Deep Dive**, also prompt for:
 
 Record the chosen scope in `session.json` as `scope`: either `"big-picture"` or `"deep-dive"`.
 
+#### 1.1.1 Version and Branch Targeting
+
+After collecting the library name and scope, prompt the user to optionally specify a GitHub ref to target:
+
+6. **GitHub ref (optional)** — ask the user to specify exactly one of:
+   - A **version tag** (e.g., `21.2.10`, `v7.8.1`)
+   - A **branch name** (e.g., `main`, `v2-lts`)
+   - A **commit SHA** (40 hex characters)
+
+   If the user provides more than one specification type simultaneously (e.g., both a version tag and a commit SHA), reject the request and re-prompt for exactly one type before proceeding.
+
+**Default ref resolution (when user provides nothing):**
+
+1. Fetch the repository's releases list from GitHub
+2. Filter out any release tags whose name contains `alpha`, `beta`, or `rc` (case-insensitive)
+3. Sort the remaining releases by `published_at` descending
+4. Use the latest stable release tag as the ref
+5. If no releases exist, fall back to the repository's default branch
+
+**After resolution:**
+
+- Display the resolved ref to the user before analysis begins
+- If the user requests a change, re-enter the ref resolution process from step 6 above
+- Record the resolved ref in `session.json` under `githubRef` as a plain string (full 40-character SHA, tag name, or branch name)
+
 #### 1.2 Library Installation
 
-Before generating any analysis, install the library using npm:
+`npm install` is **optional**. GitHub is the primary source for all analysis; `node_modules` is available as an optional supplementary or fallback source.
 
-```
-npm install [library]
-```
+**node_modules check:** Check whether the library is already present in `node_modules`. If it is, report the installed version and the path to the package directory to the user as informational context. Do **not** block analysis on the presence or absence of a local installation.
 
-**Already installed:** If the library already exists in `node_modules`, report the currently installed version to the user and ask whether to reinstall (to get the latest or a specific version) or continue with the existing version. Do not silently skip installation — always confirm the version in use.
+**npm install is not required:** Do not prompt the user to install the library as a prerequisite for analysis when GitHub sources are available (i.e., the GitHub_Resolver has resolved a repository URL and the GitHub_Fetcher can reach the repository at the resolved ref).
 
-**Installation failure:** If `npm install` fails, report the full error output and prompt the user to correct the library name or version before retrying. Do not advance the session state until installation succeeds.
+#### 1.2.1 GitHub_Resolver
+
+The GitHub_Resolver maps the npm package name to a canonical GitHub repository URL before any analysis begins. Run this algorithm immediately after the node_modules check in step 1.2.
+
+**Resolution algorithm (in order):**
+
+1. **Explicit URL provided:** If the user provided an explicit GitHub URL at session start, use it directly — skip steps 2–4.
+2. **npm registry lookup:** Fetch `https://registry.npmjs.org/{package-name}` and extract `.repository.url`.
+3. **GitHub URL found:** If `.repository.url` contains `"github.com"`, normalise it to `https://github.com/{owner}/{repo}` and record it — done.
+4. **Registry unreachable or no GitHub URL:** If the registry is unreachable or `.repository.url` does not reference GitHub, notify the user and search GitHub using the package name as the query (`GET https://api.github.com/search/repositories?q={package-name}`). Present up to 3 candidates (name, description, stars, URL) to the user for selection.
+   - If the user selects a candidate, use that URL.
+   - If the user rejects all candidates, prompt for manual URL input.
+5. **Record:** Store the resolved URL in `session.json` under `repositoryUrl` before the EXPLORE step generates any analysis artifact.
+
+**URL normalisation rules:**
+- Scheme: always `https://`
+- Strip `.git` suffix
+- Strip trailing slash
+- Strip `git+` prefix if present
+- Result form: `https://github.com/{owner}/{repo}`
+
+**Examples:**
+
+| Raw value | Normalised |
+|---|---|
+| `git+https://github.com/ReactiveX/rxjs.git` | `https://github.com/ReactiveX/rxjs` |
+| `git://github.com/angular/angular.git` | `https://github.com/angular/angular` |
+| `https://github.com/angular/angular-cdk/` | `https://github.com/angular/angular-cdk` |
 
 #### 1.3 Big Picture Analysis
 
 When the scope is **Big Picture**:
 
-1. Read the library's entry points from `node_modules/[library]/package.json` (`main`, `module`, `exports` fields)
-2. Read type definition files (`.d.ts`) to enumerate exported symbols
+1. **Fetch `package.json`** — use GitHub_Fetcher to fetch `package.json` from the repository root at the resolved ref (`GET https://api.github.com/repos/{owner}/{repo}/contents/package.json?ref={ref}`). Identify entry points from the `main`, `module`, and `exports` fields. If the fetch fails, halt analysis, report the HTTP status or error reason to the user, and offer the option to retry or abort the session.
+2. **Enumerate export paths** — if `package.json` contains an `exports` field, enumerate all named export paths. For each path, strip the file extension and attempt to fetch the `.ts` source file at the same relative path within the repository. Prefer `.ts` over `.d.ts`. If no `.ts` file resolves for a path, note the unresolvable path in the analysis artifact and continue. Only fall back to `.d.ts` files when no `.ts` files exist anywhere in the repository.
 3. Categorize exported symbols into logical groups (e.g., components, directives, services, utilities, types)
 4. Identify the main entry points and public API surface
 5. Identify any peer dependencies listed in `package.json`
-6. Save the result as **`big-picture.md`** in the session directory
+6. **Fetch `README.md`** — fetch the repository's `README.md` from the root at the resolved ref and include its content as a documentation source.
+7. **Fetch changelog** — fetch `CHANGELOG.md` or `CHANGELOG` from the repository root. Extract the entry for the targeted version. If the targeted version entry is absent, note this in the artifact and include the most recent changelog entry instead.
+8. **Record sources** — for each file fetched, record its GitHub permalink URL in `session.json` under `sources` in the form `https://github.com/{owner}/{repo}/blob/{commit-sha}/{path}`.
+9. Save the result as **`big-picture.md`** in the session directory
 
 `big-picture.md` must include:
-- Library name and installed version
+- Library name and version
+- GitHub repository URL and resolved ref
+- A note that the analysis was sourced from GitHub rather than node_modules
 - Entry points and their purposes
 - Exported symbols organized by category
 - Public API surface summary
@@ -292,14 +346,63 @@ If a prior FINALIZED session is found:
 
 If no prior FINALIZED session exists for the library, proceed without prior context and note this in the session. This is not an error.
 
-**Analysis generation:** Generate a Deep Dive analysis focused exclusively on the named focus area. The analysis must cover:
+**File identification via GitHub_Fetcher:**
+
+1. **Fetch directory tree** — fetch the repository directory tree at the resolved ref (`GET https://api.github.com/repos/{owner}/{repo}/git/trees/{ref}?recursive=1`).
+2. **Match files** — identify relevant files using the following signals in priority order (a file is included if it satisfies at least one signal):
+   - (1) Directory name matches the focus area in kebab-case
+   - (2) File name matches the focus area in kebab-case
+   - (3) Export symbol names within the file match the focus area
+3. **Sub-package entry points** — if the focus area corresponds to a named sub-package entry point (e.g., `@angular/cdk/a11y`), fetch all source files under the corresponding directory.
+4. **No files found** — if no files are identified after applying all signals, notify the user, display the directory tree fetched, and prompt the user to refine the focus area or provide explicit file paths before proceeding.
+5. **Fetch file contents** — fetch the full content of each identified file. If GitHub_Fetcher fails to fetch an identified file, note the failure and the affected file path in the analysis artifact and continue with the remaining files.
+
+**Analysis generation:** Generate a Deep Dive analysis focused exclusively on the named focus area using the fetched source files. The analysis must cover:
 - Internal mechanics of the focus area (how it works under the hood)
 - Relevant exported symbols scoped to the focus area
 - Edge cases and known gotchas
 - Integration patterns and recommended usage
-- Any undocumented behaviors found by reading source code in `node_modules`
+- Undocumented behaviors found by reading the fetched GitHub source files
 
 Save the result as **`deep-dive-[focus-area].md`** in the session directory, where `[focus-area]` is the focus area name converted to kebab-case (e.g., focus area `"grid pattern"` → `deep-dive-grid-pattern.md`).
+
+`deep-dive-[focus-area].md` must include:
+- GitHub repository URL and resolved ref
+- A note that the analysis was sourced from GitHub rather than node_modules
+- Inline code references citing GitHub permalink URLs (in the form `https://github.com/{owner}/{repo}/blob/{commit-sha}/{path}`) for each referenced code block
+
+#### 1.4.1 Fallback Strategy
+
+Apply this decision tree whenever a GitHub fetch fails or returns insufficient data:
+
+**Partial failure (one or more files not fetched):**
+- Note the missing file path and the failure reason in the analysis artifact
+- Continue analysis with the files that were successfully fetched
+
+**Total failure (no files fetched at all):**
+- Offer the user a node_modules fallback:
+  > GitHub sources are unavailable. Would you like to fall back to reading from `node_modules`?
+- If the user accepts: read the required files from `node_modules`, note in the artifact that node_modules was used as a fallback source for those files
+- If the user declines: note in the artifact that the step is incomplete due to GitHub source failure and continue to the next step
+
+**Rate limit handling:**
+- After each GitHub API request, check the `X-RateLimit-Remaining` response header
+- When `X-RateLimit-Remaining` reaches 0, display the reset time from `X-RateLimit-Reset` to the user and block all further GitHub fetch operations until either the rate limit resets or the user provides a `GITHUB_TOKEN`
+
+**GITHUB_TOKEN support:**
+- If a `GITHUB_TOKEN` environment variable is set, include it as `Authorization: Bearer {token}` on every GitHub API request
+- This raises the rate limit from 60 to 5,000 requests/hour
+
+**sourceStrategy field:**
+At the end of the EXPLORE step, write the `sourceStrategy` field to `session.json` based on which sources were actually used:
+
+| Condition | `sourceStrategy` value |
+|---|---|
+| All files fetched from GitHub | `"github"` |
+| Mix of GitHub + node_modules | `"github-with-fallback"` |
+| All files from node_modules | `"node_modules"` |
+
+When `sourceStrategy` is `"github-with-fallback"`, also write the node_modules file paths to `session.json` under `fallbackSources`.
 
 #### 1.5 Completing the EXPLORE Step
 
@@ -712,6 +815,13 @@ After the wiki publication decision has been resolved (either declined or all ac
    - `finalizedAt`: current date in ISO format (`YYYY-MM-DD`)
    - `wikiPages`: array of paths of all successfully created wiki pages, or `[]` if none were created
 
+2. **If any wiki pages were created**, regenerate the manifest and index by running both scripts from the workspace root:
+   ```bash
+   node scripts/generate-wiki-manifest.mjs
+   node scripts/generate-wiki-index.mjs
+   ```
+   These scripts scan `wiki/entities/`, `wiki/concepts/`, and `wiki/sources/` and rewrite `wiki/manifest.json` and `wiki/index.md` from the actual files on disk. Always run them after wiki publication — the manually maintained index and manifest will otherwise be stale.
+
 Example `session.json` finalization fields:
 
 ```jsonc
@@ -789,7 +899,34 @@ The `session.json` file is the single source of truth for session state. Every s
   "createdAt": "YYYY-MM-DD", // ISO date the session was created
   "libraries": ["string"],  // MUST contain exactly one entry for single library sessions
   "version": "string",      // installed library version, e.g. "7.8.1"
-  "sources": ["string"],    // documentation URLs and node_modules paths used as sources
+  "sources": ["string"],    // GitHub permalink URLs for every file fetched during the session
+                            // Form: https://github.com/{owner}/{repo}/blob/{commit-sha}/{path}
+                            // Documentation URLs (official docs, changelogs) are also included
+
+  // ── New GitHub fields (added by this feature) ─────────────────────────────────
+
+  "repositoryUrl": "string",
+  // The canonical GitHub repository URL.
+  // Form: https://github.com/{owner}/{repo}
+  // HTTPS scheme, no trailing slash, no .git suffix.
+  // Written by GitHub_Resolver before the EXPLORE step generates any artifact.
+  // Example: "https://github.com/ReactiveX/rxjs"
+
+  "githubRef": "string",
+  // The resolved Git ref used for all file fetches in this session.
+  // One of: full 40-character commit SHA, tag name, or branch name.
+  // Written by Version/Branch Targeting before the EXPLORE step generates any artifact.
+  // Examples: "7.8.1", "main", "a3f9c2d1b8e4f7a0c6d2e5b9f1a4c7d0e3b6f9a2"
+
+  "sourceStrategy": "github",
+  // Describes which sources were used for file fetches in this session.
+  // Allowed values: "github" | "github-with-fallback" | "node_modules"
+  // Written at the end of the EXPLORE step once all fetches are complete.
+
+  "fallbackSources": ["string"],
+  // Present only when sourceStrategy is "github-with-fallback".
+  // Lists the node_modules file paths that were used as fallback sources.
+  // Absent when sourceStrategy is "github" or "node_modules".
 
   // ── Conditional: Deep Dive sessions only ─────────────────────────────────────
   // Present when scope is "deep-dive". MUST NOT be present for "big-picture" sessions.
@@ -816,6 +953,67 @@ The `session.json` file is the single source of truth for session state. Every s
 
   "finalizedAt": "YYYY-MM-DD", // ISO date the session was finalized
   "wikiPages": ["string"]      // paths of all created wiki pages; [] if user declined publication
+}
+```
+
+**`sources` field change:** Previously contained `node_modules` paths and documentation URLs. After this feature, it contains GitHub permalink URLs for every file fetched during the session, in the form:
+```
+https://github.com/{owner}/{repo}/blob/{commit-sha}/{path}
+```
+Documentation URLs (official docs, changelogs) continue to be included alongside file permalinks.
+
+**`fallbackSources` field:** Only present when `sourceStrategy` is `"github-with-fallback"`. Lists the local paths of files read from `node_modules` during the session. Example:
+```jsonc
+"fallbackSources": [
+  "node_modules/@angular/cdk/esm2022/a11y/a11y.mjs"
+]
+```
+
+### Full session.json Example (Big Picture, GitHub sources)
+
+```jsonc
+{
+  "id": "angular-cdk-big-picture",
+  "topic": "Full API surface of @angular/cdk",
+  "state": "SYNTHESIZE",
+  "scope": "big-picture",
+  "createdAt": "2025-01-15",
+  "libraries": ["@angular/cdk"],
+  "version": "19.2.0",
+  "repositoryUrl": "https://github.com/angular/components",
+  "githubRef": "19.2.0",
+  "sourceStrategy": "github",
+  "sources": [
+    "https://github.com/angular/components/blob/a3f9c2d1b8e4f7a0c6d2e5b9f1a4c7d0e3b6f9a2/src/cdk/package.json",
+    "https://github.com/angular/components/blob/a3f9c2d1b8e4f7a0c6d2e5b9f1a4c7d0e3b6f9a2/src/cdk/README.md",
+    "https://angular.dev/cdk"
+  ]
+}
+```
+
+### Full session.json Example (Deep Dive, partial fallback)
+
+```jsonc
+{
+  "id": "angular-cdk-a11y-deep-dive",
+  "topic": "Accessibility utilities in @angular/cdk/a11y",
+  "state": "EXPLORE",
+  "scope": "deep-dive",
+  "focusArea": "a11y",
+  "goal": "Understand FocusTrap and LiveAnnouncer APIs",
+  "createdAt": "2025-01-16",
+  "libraries": ["@angular/cdk"],
+  "version": "19.2.0",
+  "repositoryUrl": "https://github.com/angular/components",
+  "githubRef": "a3f9c2d1b8e4f7a0c6d2e5b9f1a4c7d0e3b6f9a2",
+  "sourceStrategy": "github-with-fallback",
+  "sources": [
+    "https://github.com/angular/components/blob/a3f9c2d1b8e4f7a0c6d2e5b9f1a4c7d0e3b6f9a2/src/cdk/a11y/focus-trap/focus-trap.ts",
+    "https://github.com/angular/components/blob/a3f9c2d1b8e4f7a0c6d2e5b9f1a4c7d0e3b6f9a2/src/cdk/a11y/live-announcer/live-announcer.ts"
+  ],
+  "fallbackSources": [
+    "node_modules/@angular/cdk/a11y/index.d.ts"
+  ]
 }
 ```
 

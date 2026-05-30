@@ -22,23 +22,22 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 *Entity pages describe specific things: libraries, tools, components, APIs*
 
-- [[Angular Material]] — Angular Material is the official Material Design component library for Angular. It provides 35 UI component modules —...
+- [[Angular Aria]] — `@angular/aria` is Angular's first-party library for building **fully accessible, headless UI components** that confo...
 
 ## Concepts
 
 *Concept pages explain ideas, patterns, and principles*
 
-- [[Custom Form Field Control]] — `MatFormFieldControl<T>` is an abstract class from `@angular/material/form-field` that lets you integrate any custom ...
-- [[Injection Token Configuration]] — Angular Material exposes an `InjectionToken` for every configurable default across its components. Rather than subcla...
-- [[Mat Table DataSource]] — `MatTable` is a layout primitive — it renders rows and columns but has no built-in sorting, pagination, or filtering....
-- [[Material Testing Harnesses]] — Every Angular Material component ships a `/testing` entry point that exports a `ComponentHarness` subclass. Harnesses...
-- [[Per-Module Imports]] — Angular Material ships a root barrel entry (`@angular/material`) that re-exports every component module. Importing fr...
+- [[Deferred Content Lazy Rendering]] — Deferred Content Lazy Rendering is a pattern used in `@angular/aria` to avoid rendering hidden panel and popup conten...
+- [[Headless ARIA Directives]] — Headless ARIA directives are Angular directives that implement **accessibility behavior without providing any visual ...
+- [[Signal-Native Component Inputs]] — Signal-Native Component Inputs is an architectural pattern where a component or class accepts **all inputs as signals...
+- [[UI Pattern Behavior Composition]] — UI Pattern Behavior Composition is the internal architecture used by `@angular/aria` to build accessible UI component...
 
 ## Recent Sources
 
 *Source summaries distill key information from raw documents*
 
-- [[Angular Material Big Picture Research — 2026-05-11]] — - **Library**: `@angular/material`
+- [[Angular Aria Big Picture Research — 2026-05-30]] — - **Author:** Kiro Research Session (`angular-aria-big-picture`)
 
 ## Navigation
 
@@ -50,8 +49,8 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 ## Statistics
 
-- **Total Pages**: 7 (1 entity, 5 concepts, 1 source)
-- **Last Updated**: 2026-05-13
+- **Total Pages**: 6 (1 entity, 4 concepts, 1 source)
+- **Last Updated**: 2026-05-30
 - **Wiki Health**: ✅
 
 ## Quick Reference

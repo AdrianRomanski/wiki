@@ -49,3 +49,6 @@ __screenshots__/
 
 
 storybook-static
+
+# Kiro specs (local development artifacts)
+.kiro/specs/

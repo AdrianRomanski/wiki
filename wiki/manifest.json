@@ -1,12 +1,11 @@
 {
   "files": [
-    "entities/angular-material.md",
-    "concepts/custom-form-field-control.md",
-    "concepts/injection-token-configuration.md",
-    "concepts/mat-table-datasource.md",
-    "concepts/material-testing-harnesses.md",
-    "concepts/per-module-imports.md",
-    "sources/angular-material-big-picture-2026-05-11.md"
+    "entities/angular-aria.md",
+    "concepts/deferred-content-lazy-rendering.md",
+    "concepts/headless-aria-directives.md",
+    "concepts/signal-native-component-inputs.md",
+    "concepts/ui-pattern-behavior-composition.md",
+    "sources/angular-aria-big-picture-2026-05-30.md"
   ],
-  "generatedAt": "2026-05-13T14:25:08.202Z"
+  "generatedAt": "2026-05-30T10:08:09.131Z"
 }
