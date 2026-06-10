@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1781030904161" clover="3.2.0">
+  <project timestamp="1781030904161" name="All files">
+    <metrics statements="50" coveredstatements="50" conditionals="30" coveredconditionals="30" methods="10" coveredmethods="10" elements="90" coveredelements="90" complexity="0" loc="50" ncloc="50" packages="1" files="2" classes="2"/>
+    <file name="naming-convention-error.ts" path="/home/adrian-romanski/projects/demo/wiki/libs/wiki/domain-naming/src/lib/naming-convention-error.ts">
+      <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <line num="4" count="4" type="stmt"/>
+      <line num="5" count="4" type="stmt"/>
+      <line num="6" count="4" type="stmt"/>
+      <line num="8" count="4" type="stmt"/>
+      <line num="9" count="4" type="stmt"/>
+    </file>
+    <file name="naming-validators.ts" path="/home/adrian-romanski/projects/demo/wiki/libs/wiki/domain-naming/src/lib/naming-validators.ts">
+      <metrics statements="45" coveredstatements="45" conditionals="30" coveredconditionals="30" methods="9" coveredmethods="9"/>
+      <line num="5" count="64" type="stmt"/>
+      <line num="6" count="64" type="stmt"/>
+      <line num="11" count="33" type="stmt"/>
+      <line num="13" count="33" type="cond" truecount="2" falsecount="0"/>
+      <line num="14" count="11" type="stmt"/>
+      <line num="17" count="22" type="stmt"/>
+      <line num="18" count="22" type="cond" truecount="2" falsecount="0"/>
+      <line num="22" count="48" type="stmt"/>
+      <line num="30" count="16" type="stmt"/>
+      <line num="32" count="16" type="cond" truecount="2" falsecount="0"/>
+      <line num="36" count="16" type="cond" truecount="2" falsecount="0"/>
+      <line num="37" count="10" type="stmt"/>
+      <line num="43" count="6" type="stmt"/>
+      <line num="45" count="6" type="stmt"/>
+      <line num="54" count="12" type="stmt"/>
+      <line num="56" count="12" type="cond" truecount="2" falsecount="0"/>
+      <line num="60" count="12" type="cond" truecount="2" falsecount="0"/>
+      <line num="61" count="8" type="stmt"/>
+      <line num="67" count="4" type="stmt"/>
+      <line num="69" count="4" type="stmt"/>
+      <line num="78" count="20" type="stmt"/>
+      <line num="80" count="20" type="cond" truecount="2" falsecount="0"/>
+      <line num="84" count="20" type="cond" truecount="2" falsecount="0"/>
+      <line num="85" count="1" type="stmt"/>
+      <line num="93" count="19" type="stmt"/>
+      <line num="94" count="19" type="stmt"/>
+      <line num="96" count="19" type="cond" truecount="2" falsecount="0"/>
+      <line num="97" count="8" type="stmt"/>
+      <line num="105" count="11" type="cond" truecount="2" falsecount="0"/>
+      <line num="106" count="2" type="stmt"/>
+      <line num="107" count="2" type="stmt"/>
+      <line num="115" count="9" type="stmt"/>
+      <line num="125" count="11" type="cond" truecount="4" falsecount="0"/>
+      <line num="127" count="4" type="stmt"/>
+      <line num="129" count="3" type="stmt"/>
+      <line num="131" count="3" type="stmt"/>
+      <line num="133" count="1" type="stmt"/>
+      <line num="141" count="7" type="stmt"/>
+      <line num="143" count="7" type="cond" truecount="2" falsecount="0"/>
+      <line num="144" count="4" type="stmt"/>
+      <line num="158" count="14" type="stmt"/>
+      <line num="160" count="14" type="cond" truecount="2" falsecount="0"/>
+      <line num="161" count="4" type="cond" truecount="2" falsecount="0"/>
+      <line num="162" count="4" type="stmt"/>
+      <line num="165" count="10" type="stmt"/>
+    </file>
+  </project>
+</coverage>

@@ -1,7 +1,3 @@
----
-inclusion: manual
----
-
 # Library Research & Comparison Project
 
 ## Project Context

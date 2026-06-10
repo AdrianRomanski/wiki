@@ -1,0 +1,34 @@
+{
+  "name": "application-cross-reference",
+  "sourceRoot": "libs/wiki/application-cross-reference/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["application"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/wiki/application-cross-reference/ng-package.json",
+        "tsConfig": "libs/wiki/application-cross-reference/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/wiki/application-cross-reference/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/wiki/application-cross-reference/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

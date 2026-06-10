@@ -1,0 +1,14 @@
+{
+  "name": "@wiki/application-workflow",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/application-ports": "*",
+    "@wiki/application-index-manager": "*",
+    "@wiki/domain-models": "*",
+    "@wiki/application-generators": "*",
+    "@wiki/application-cross-reference": "*",
+    "@wiki/application-activity-log": "*",
+    "@wiki/application-maintenance": "*"
+  },
+  "sideEffects": false
+}

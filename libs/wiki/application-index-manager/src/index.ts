@@ -1,0 +1,12 @@
+export type { IndexEntry } from './lib/index-entry';
+export type { IndexConfig } from './lib/index-config';
+export { DEFAULT_INDEX_CONFIG } from './lib/index-config';
+export { AddEntityToIndexUseCase } from './lib/add-entity-to-index.use-case';
+export { AddConceptToIndexUseCase } from './lib/add-concept-to-index.use-case';
+export { AddSourceToIndexUseCase } from './lib/add-source-to-index.use-case';
+export { AddEntryToIndexUseCase } from './lib/add-entry-to-index.use-case';
+export { RemoveEntryFromIndexUseCase } from './lib/remove-entry-from-index.use-case';
+export { RegenerateIndexUseCase } from './lib/regenerate-index.use-case';
+export { ParseIndexEntriesUseCase } from './lib/parse-index-entries.use-case';
+export { ScanWikiPagesUseCase } from './lib/scan-wiki-pages.use-case';
+export { GenerateIndexContentUseCase } from './lib/generate-index-content.use-case';

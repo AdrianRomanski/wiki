@@ -1,0 +1,23 @@
+{
+  "id": "hexagonal-architecture-article",
+  "topic": "Hexagonal Architecture",
+  "state": "FINALIZED",
+  "scope": "article",
+  "createdAt": "2026-06-10",
+  "articleInputType": "url",
+  "articleUrl": "https://jmgarridopaz.github.io/content/hexagonalarchitecture.html",
+  "articleTitle": "Ports and Adapters Pattern (Hexagonal Architecture)",
+  "articleAuthor": "Juan Manuel Garrido de Paz",
+  "articleDate": "2018-08-29",
+  "finalizedAt": "2026-06-10",
+  "wikiPages": [
+    "wiki/entities/hexagonal-architecture.md",
+    "wiki/concepts/ports.md",
+    "wiki/concepts/adapters.md",
+    "wiki/concepts/technology-agnostic-design.md",
+    "wiki/concepts/testing-in-isolation.md",
+    "wiki/concepts/application-boundary.md",
+    "wiki/concepts/composition-root.md",
+    "wiki/sources/hexagonal-architecture-article-2018-08-29.md"
+  ]
+}

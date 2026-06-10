@@ -81,6 +81,17 @@ When you complete a research session and create an Architecture Decision Record 
 4. Maintains bidirectional links between research sessions and wiki pages
 5. Makes decisions searchable and discoverable
 
+### Architecture
+
+The wiki system is organized as a collection of Nx libraries following clean architecture principles with four distinct layers:
+
+- **Domain Layer** (`@wiki/domain-*`): Core business entities and validation rules with zero external dependencies
+- **Application Layer** (`@wiki/application-*`): Use case orchestration services coordinating domain operations through port interfaces
+- **Infrastructure Layer** (`@wiki/infrastructure-*`): Technical implementations of file system, markdown, and frontmatter adapters
+- **Presentation Layer** (`@wiki/core`): Public API facade providing unified access to all wiki functionality
+
+See [libs/wiki/ARCHITECTURE.md](libs/wiki/ARCHITECTURE.md) for complete architectural documentation.
+
 ### Directory Structure
 
 ```
@@ -120,16 +131,23 @@ wiki/
 └── guides/                            # How-to guides and workflows
     └── adr-ingestion.md               # ADR ingestion guide
 
-scripts/
-└── wiki/                              # Wiki automation scripts
-    ├── adr-workflow.ts                # ADR ingestion workflow
-    ├── adr-copier.ts                  # Copy ADRs from research to raw/
-    ├── adr-metadata-extractor.ts      # Parse ADR content and metadata
-    ├── adr-generator-extensions.ts    # Generate wiki pages from ADRs
-    ├── research-session-linker.ts     # Create bidirectional links
-    ├── ingestion.ts                   # General wiki ingestion
-    ├── query.ts                       # Search and query wiki
-    └── maintenance.ts                 # Wiki maintenance and validation
+libs/wiki/                             # Wiki system Nx libraries (clean architecture)
+├── domain-models/                     # Core domain entities (WikiPage, RawSource, etc.)
+├── domain-naming/                     # Naming convention validation and generation
+├── domain-validation/                 # Domain-level validation rules
+├── application-ports/                 # Port interface definitions
+├── application-generators/            # Page generation use cases
+├── application-cross-reference/       # Cross-reference detection and linking
+├── application-index-manager/         # Index management use cases
+├── application-activity-log/          # Activity logging use cases
+├── application-query/                 # Search and query use cases
+├── application-maintenance/           # Maintenance and health check use cases
+├── application-workflow/              # High-level workflow orchestration
+├── application-adr/                   # ADR-specific use cases
+├── infrastructure-filesystem/         # File system adapter implementation
+├── infrastructure-markdown/           # Markdown parsing and formatting adapter
+├── infrastructure-frontmatter/        # Frontmatter processing adapter
+└── core/                              # Public API facade
 ```
 
 ### Workflow: Research to Wiki
@@ -236,7 +254,7 @@ initial investment.
 Ingest the ADR into the wiki system:
 
 ```typescript
-import { runADRIngestionWorkflow } from './scripts/wiki/adr-workflow';
+import { runADRIngestionWorkflow } from '@wiki/application-adr';
 
 // Ingest ADR from research session
 const result = await runADRIngestionWorkflow({
@@ -268,7 +286,7 @@ The workflow automatically:
 Search for research decisions in the wiki:
 
 ```typescript
-import { queryWiki } from './scripts/wiki/query';
+import { queryWiki } from '@wiki/application-query';
 
 // Find all research decisions
 const decisions = await queryWiki({
@@ -319,8 +337,8 @@ ADRs can reference existing wiki pages, and the system automatically detects and
 Here's a complete example of the research-to-wiki workflow:
 
 ```typescript
-import { runADRIngestionWorkflow } from './scripts/wiki/adr-workflow';
-import { queryWiki } from './scripts/wiki/query';
+import { runADRIngestionWorkflow } from '@wiki/application-adr';
+import { queryWiki } from '@wiki/application-query';
 
 // 1. Ingest ADR from completed research session
 const ingestionResult = await runADRIngestionWorkflow({
@@ -369,7 +387,7 @@ For detailed information about the research-wiki integration:
 
 - **Research Workflow**: See `.kiro/steering/library-research.md` for complete research workflow documentation
 - **ADR Ingestion Guide**: See `wiki/guides/adr-ingestion.md` for step-by-step ingestion instructions
-- **Query System**: See `scripts/wiki/QUERY_README.md` for advanced query examples
+- **Architecture Guide**: See `libs/wiki/ARCHITECTURE.md` for architectural documentation and library relationships
 - **Wiki Schema**: See `WIKI_SCHEMA.md` for wiki page structure and conventions
 
 ### Maintenance
@@ -377,7 +395,7 @@ For detailed information about the research-wiki integration:
 The wiki system includes maintenance tools to keep content up-to-date:
 
 ```typescript
-import { runMaintenanceWorkflow } from './scripts/wiki/maintenance';
+import { runMaintenanceWorkflow } from '@wiki/application-maintenance';
 
 // Run maintenance checks
 const report = await runMaintenanceWorkflow();

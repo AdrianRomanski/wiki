@@ -10,7 +10,8 @@
       "disabled": false,
       "autoApprove": [
         "list_projects",
-        "find_examples"
+        "find_examples",
+        "get_best_practices"
       ]
     },
     "css": {

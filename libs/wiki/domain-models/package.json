@@ -1,0 +1,8 @@
+{
+  "name": "@wiki/domain-models",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "vitest": "*"
+  },
+  "sideEffects": false
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@wiki/infrastructure-frontmatter",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@wiki/domain-models": "*",
+    "@wiki/application-ports": "*",
+    "gray-matter": "^4.0.3"
+  },
+  "sideEffects": false
+}

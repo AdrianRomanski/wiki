@@ -1,0 +1,12 @@
+{
+  "name": "@wiki/application-adr",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/application-generators": "*",
+    "@wiki/application-ports": "*",
+    "@wiki/domain-models": "*",
+    "@wiki/domain-naming": "*",
+    "vitest": "*"
+  },
+  "sideEffects": false
+}

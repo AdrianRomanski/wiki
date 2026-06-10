@@ -1,0 +1,35 @@
+{
+  "name": "infrastructure-markdown",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/wiki/infrastructure-markdown/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["infrastructure"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/wiki/infrastructure-markdown/ng-package.json",
+        "tsConfig": "libs/wiki/infrastructure-markdown/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/wiki/infrastructure-markdown/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/wiki/infrastructure-markdown/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

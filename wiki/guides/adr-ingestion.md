@@ -54,18 +54,20 @@ Before ingesting an ADR, ensure:
 
 ### Using the Command Line
 
+The wiki system is now organized as Nx libraries. Use the examples library to run workflows:
+
 ```bash
 # Navigate to your project root
 cd /path/to/your/project
 
-# Run the ingestion workflow
-npx tsx scripts/wiki/adr-workflow-example.ts
+# Run the ingestion workflow example
+npx nx run wiki-examples:test --test-name-pattern="adr-workflow"
 ```
 
 ### Using TypeScript
 
 ```typescript
-import { runADRIngestionWorkflow } from './scripts/wiki/adr-workflow.js';
+import { runADRIngestionWorkflow } from '@wiki/application-adr';
 
 // Ingest ADR from research session
 const result = await runADRIngestionWorkflow({
@@ -173,7 +175,7 @@ Chosen option: **NgRx**
 Execute the ingestion workflow:
 
 ```typescript
-import { runADRIngestionWorkflow } from './scripts/wiki/adr-workflow.js';
+import { runADRIngestionWorkflow } from '@wiki/application-adr';
 
 const result = await runADRIngestionWorkflow({
   sessionPath: '.kiro/research/session-2024-01-15-state-management',
@@ -420,7 +422,7 @@ const result = await runADRIngestionWorkflow({
 
 **Script:**
 ```typescript
-import { runADRIngestionWorkflow } from './scripts/wiki/adr-workflow.js';
+import { runADRIngestionWorkflow } from '@wiki/application-adr';
 import { promises as fs } from 'fs';
 
 async function batchIngest() {
@@ -550,7 +552,7 @@ Warning: Session reference validation failed
 
 **Validation:**
 ```typescript
-import { validateSessionReference } from './scripts/wiki/research-session-linker.js';
+import { validateSessionReference } from '@wiki/application-adr';
 
 const validation = await validateSessionReference(sessionReference);
 
@@ -689,11 +691,11 @@ git commit -m "[wiki] ingest: ADR from research session [session-id]"
 ## Related Documentation
 
 - [Library Research Workflow](../../.kiro/steering/library-research.md)
-- [ADR Workflow Implementation](../../scripts/wiki/adr-workflow.ts)
-- [ADR Workflow Examples](../../scripts/wiki/adr-workflow-example.ts)
-- [Query System Guide](../../scripts/wiki/QUERY_README.md)
-- [Maintenance Workflow](../../scripts/wiki/maintenance.ts)
-- [Wiki System Overview](../../README.md)
+- [Wiki Architecture](../../libs/wiki/ARCHITECTURE.md) - Complete architectural documentation
+- [Wiki System Overview](../../README.md) - Main project README with usage examples
+- ADR Workflow Implementation: See `@wiki/application-adr` library
+- Query System: See `@wiki/application-query` library
+- Maintenance Workflow: See `@wiki/application-maintenance` library
 
 ---
 
@@ -709,4 +711,4 @@ The ADR ingestion workflow automates the flow of research decisions into your wi
 
 This ensures valuable research insights are preserved, searchable, and connected to your knowledge base.
 
-For more examples, see [adr-workflow-example.ts](../../scripts/wiki/adr-workflow-example.ts).
+For implementation details, see the `@wiki/application-adr` library in `libs/wiki/application-adr/`.

@@ -16,7 +16,42 @@
     "paths": {
       "@wiki-graph/prototype-playground": [
         "./libs/prototype-playground/src/index.ts"
-      ]
+      ],
+      "@wiki/domain-models": ["./libs/wiki/domain-models/src/index.ts"],
+      "@wiki/domain-naming": ["./libs/wiki/domain-naming/src/index.ts"],
+      "@wiki/domain-validation": ["./libs/wiki/domain-validation/src/index.ts"],
+      "@wiki/application-ports": ["./libs/wiki/application-ports/src/index.ts"],
+      "@wiki/infrastructure-markdown": [
+        "./libs/wiki/infrastructure-markdown/src/index.ts"
+      ],
+      "@wiki/infrastructure-filesystem": [
+        "./libs/wiki/infrastructure-filesystem/src/index.ts"
+      ],
+      "@wiki/infrastructure-frontmatter": [
+        "./libs/wiki/infrastructure-frontmatter/src/index.ts"
+      ],
+      "@wiki/application-activity-log": [
+        "./libs/wiki/application-activity-log/src/index.ts"
+      ],
+      "@wiki/application-cross-reference": [
+        "./libs/wiki/application-cross-reference/src/index.ts"
+      ],
+      "@wiki/application-query": ["./libs/wiki/application-query/src/index.ts"],
+      "@wiki/application-index-manager": [
+        "./libs/wiki/application-index-manager/src/index.ts"
+      ],
+      "@wiki/application-generators": [
+        "./libs/wiki/application-generators/src/index.ts"
+      ],
+      "@wiki/application-maintenance": [
+        "./libs/wiki/application-maintenance/src/index.ts"
+      ],
+      "@wiki/application-workflow": [
+        "./libs/wiki/application-workflow/src/index.ts"
+      ],
+      "@wiki/application-adr": ["./libs/wiki/application-adr/src/index.ts"],
+      "@wiki/core": ["./libs/wiki/core/src/index.ts"],
+      "@wiki-graph/examples": ["./libs/wiki/examples/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

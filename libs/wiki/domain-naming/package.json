@@ -1,0 +1,8 @@
+{
+  "name": "@wiki/domain-naming",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "vitest": "*"
+  },
+  "sideEffects": false
+}

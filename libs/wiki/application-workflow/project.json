@@ -1,0 +1,45 @@
+{
+  "name": "application-workflow",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/wiki/application-workflow/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["application"],
+  "implicitDependencies": [
+    "domain-models",
+    "application-ports",
+    "application-generators",
+    "application-cross-reference",
+    "application-index-manager",
+    "application-activity-log",
+    "application-query",
+    "application-maintenance"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/wiki/application-workflow/ng-package.json",
+        "tsConfig": "libs/wiki/application-workflow/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/wiki/application-workflow/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/wiki/application-workflow/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

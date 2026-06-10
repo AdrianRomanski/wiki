@@ -1,0 +1,35 @@
+{
+  "name": "domain-validation",
+  "sourceRoot": "libs/wiki/domain-validation/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["domain"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/wiki/domain-validation/ng-package.json",
+        "tsConfig": "libs/wiki/domain-validation/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/wiki/domain-validation/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/wiki/domain-validation/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  },
+  "implicitDependencies": ["domain-models"]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@wiki/core",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/application-adr": "*",
+    "@wiki/application-activity-log": "*",
+    "@wiki/application-cross-reference": "*",
+    "@wiki/application-generators": "*",
+    "@wiki/application-maintenance": "*",
+    "@wiki/application-ports": "*",
+    "@wiki/application-query": "*",
+    "@wiki/application-workflow": "*",
+    "@wiki/domain-models": "*",
+    "@wiki/domain-naming": "*",
+    "@wiki/domain-validation": "*",
+    "@wiki/infrastructure-filesystem": "*",
+    "@wiki/infrastructure-frontmatter": "*",
+    "@wiki/infrastructure-markdown": "*",
+    "vitest": "*"
+  },
+  "sideEffects": false
+}

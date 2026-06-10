@@ -1,0 +1,9 @@
+{
+  "name": "@wiki/infrastructure-filesystem",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/application-ports": "*",
+    "glob": "^13.0.6"
+  },
+  "sideEffects": false
+}

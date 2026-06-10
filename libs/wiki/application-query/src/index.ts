@@ -1,0 +1,10 @@
+export { QueryEngine } from './lib/query-engine';
+export { SearchUseCase } from './lib/search-use-case';
+export { SearchByTagUseCase } from './lib/search-by-tag-use-case';
+export { FindEntitiesUseCase } from './lib/find-entities-use-case';
+export { FindConceptsUseCase } from './lib/find-concepts-use-case';
+export { FindSourcesUseCase } from './lib/find-sources-use-case';
+export { FindResearchDecisionsUseCase } from './lib/find-research-decisions-use-case';
+export { createQueryEngine } from './lib/create-query-engine';
+export type { SearchResult } from './lib/search-result';
+export type { SearchOptions, SourceFilters } from './lib/search-options';

@@ -1,0 +1,10 @@
+{
+  "name": "@wiki/infrastructure-markdown",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/domain-models": "*",
+    "@wiki/application-ports": "*",
+    "vitest": "*"
+  },
+  "sideEffects": false
+}

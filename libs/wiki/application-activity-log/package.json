@@ -1,0 +1,10 @@
+{
+  "name": "@wiki/application-activity-log",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/application-ports": "*",
+    "@wiki/domain-models": "*",
+    "vitest": "*"
+  },
+  "sideEffects": false
+}

@@ -1,1 +1,1 @@
-export * from './lib/prototype-playground/prototype-playground';
+export const PROTOTYPE_PLAYGROUND = 'prototype-playground';

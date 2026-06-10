@@ -1,0 +1,52 @@
+{
+  "extends": "./tsconfig.base.json",
+  "ts-node": {
+    "require": ["tsconfig-paths/register"],
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node"
+    }
+  },
+  "compilerOptions": {
+    "paths": {
+      "@wiki-graph/prototype-playground": [
+        "./libs/prototype-playground/src/index.ts"
+      ],
+      "@wiki/domain-models": ["./dist/libs/wiki/domain-models/index.d.ts"],
+      "@wiki/domain-naming": ["./dist/libs/wiki/domain-naming/index.d.ts"],
+      "@wiki/domain-validation": ["./dist/libs/wiki/domain-validation/index.d.ts"],
+      "@wiki/application-ports": ["./dist/libs/wiki/application-ports/index.d.ts"],
+      "@wiki/infrastructure-markdown": [
+        "./dist/libs/wiki/infrastructure-markdown/index.d.ts"
+      ],
+      "@wiki/infrastructure-filesystem": [
+        "./dist/libs/wiki/infrastructure-filesystem/index.d.ts"
+      ],
+      "@wiki/infrastructure-frontmatter": [
+        "./dist/libs/wiki/infrastructure-frontmatter/index.d.ts"
+      ],
+      "@wiki/application-activity-log": [
+        "./dist/libs/wiki/application-activity-log/index.d.ts"
+      ],
+      "@wiki/application-cross-reference": [
+        "./dist/libs/wiki/application-cross-reference/index.d.ts"
+      ],
+      "@wiki/application-query": ["./dist/libs/wiki/application-query/index.d.ts"],
+      "@wiki/application-index-manager": [
+        "./dist/libs/wiki/application-index-manager/index.d.ts"
+      ],
+      "@wiki/application-generators": [
+        "./dist/libs/wiki/application-generators/index.d.ts"
+      ],
+      "@wiki/application-maintenance": [
+        "./dist/libs/wiki/application-maintenance/index.d.ts"
+      ],
+      "@wiki/application-workflow": [
+        "./dist/libs/wiki/application-workflow/index.d.ts"
+      ],
+      "@wiki/application-adr": ["./dist/libs/wiki/application-adr/index.d.ts"],
+      "@wiki/core": ["./dist/libs/wiki/core/index.d.ts"],
+      "@wiki-graph/examples": ["./libs/wiki/examples/src/index.ts"]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "application-index-manager",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/wiki/application-index-manager/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": [
+    "application"
+  ],
+  "implicitDependencies": [
+    "domain-models",
+    "application-ports"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": [
+        "{workspaceRoot}/dist/{projectRoot}"
+      ],
+      "options": {
+        "project": "libs/wiki/application-index-manager/ng-package.json",
+        "tsConfig": "libs/wiki/application-index-manager/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/wiki/application-index-manager/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/angular:unit-test",
+      "options": {}
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@wiki/application-cross-reference",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/domain-models": "*",
+    "@wiki/application-ports": "*"
+  },
+  "sideEffects": false
+}

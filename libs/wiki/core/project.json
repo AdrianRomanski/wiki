@@ -1,0 +1,51 @@
+{
+  "name": "core",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/wiki/core/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["presentation"],
+  "implicitDependencies": [
+    "domain-models",
+    "domain-naming",
+    "domain-validation",
+    "application-generators",
+    "application-cross-reference",
+    "application-query",
+    "application-activity-log",
+    "application-maintenance",
+    "application-workflow",
+    "application-adr",
+    "application-ports",
+    "infrastructure-filesystem",
+    "infrastructure-markdown",
+    "infrastructure-frontmatter"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/wiki/core/ng-package.json",
+        "tsConfig": "libs/wiki/core/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/wiki/core/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/wiki/core/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
