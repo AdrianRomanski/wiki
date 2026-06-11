@@ -52,3 +52,14 @@ storybook-static
 
 # Kiro specs (local development artifacts)
 .kiro/specs/
+
+# Research sessions (private knowledge exploration)
+.kiro/research/
+
+# Wiki content (private knowledge base)
+wiki/concepts/
+wiki/entities/
+wiki/guides/
+wiki/sources/
+wiki/index.md
+wiki/manifest.json

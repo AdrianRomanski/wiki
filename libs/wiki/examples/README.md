@@ -1,468 +1,126 @@
-# Wiki System Examples
+# Wiki Examples Initialization Scripts
 
-This directory contains comprehensive examples demonstrating how to use the wiki system libraries. Each example showcases specific features and patterns for building AI-generated knowledge bases with structured content.
+## Purpose
 
-## Prerequisites
+This library provides a set of initialization scripts that populate a demo wiki graph with sample entities, concepts, and source pages. These scripts generate realistic, interconnected wiki content for demonstration purposes, showcasing the full capabilities of the wiki system including entity relationships, concept connections, and cross-domain knowledge organization. The generated content includes frontend/backend/testing libraries, blog and documentation articles, and concepts with varying relationship strengths.
 
-### Required Software
-- **Node.js**: Version 20.x or higher
-- **npm**: Version 10.x or higher (included with Node.js)
+## Available Scripts
 
-### Project Dependencies
-All dependencies are managed at the workspace root. To install:
+### Library Entity Scripts
 
-```bash
-npm install
-```
+#### `npm run init:frontend-libs`
+Generates 3 frontend library entity pages (React, Vue, Svelte) with component-based architecture properties, UI framework characteristics, and relationships to web development concepts.
 
-### Build Wiki Libraries
-The examples use the built wiki libraries. To ensure they're available:
+#### `npm run init:backend-libs`
+Generates 3 backend library entity pages (NestJS, Express, Fastify) with server framework properties, runtime environment specifications, and relationships to backend architecture concepts.
 
-```bash
-# Build the core library and its dependencies
-npx nx build core
-```
+#### `npm run init:testing-libs`
+Generates 3 testing library entity pages (Vitest, Jest, Playwright) with test runner capabilities, assertion styles, and relationships to testing methodology concepts.
 
-### Wiki Directory Structure
-Examples expect the following directory structure to exist:
+### Article Source Scripts
 
-```
-project-root/
-├── raw/          # Raw source documents
-├── wiki/         # Generated wiki pages
-│   ├── entities/ # Entity pages
-│   ├── concepts/ # Concept pages
-│   └── sources/  # Source summaries
-└── libs/         # Library code
-```
+#### `npm run init:articles-blog`
+Generates 3 blog article source pages with author attribution and publication dates, demonstrating how to document and cite external blog content in the wiki.
 
-If the `wiki/` directory doesn't exist, create it before running examples:
+#### `npm run init:articles-docs`
+Generates 3 documentation article source pages with URLs and metadata, showing how to reference official documentation and technical guides.
 
-```bash
-mkdir -p wiki/entities wiki/concepts wiki/sources
-```
+### Concept Relationship Scripts
 
-## Running Examples
+#### `npm run init:close-concepts`
+Generates 4 concept pages within the same domain (Web Accessibility) with strong interconnections, demonstrating how closely related concepts reference each other through WikiLinks.
 
-### Via NPM Scripts (Recommended)
+#### `npm run init:far-concepts`
+Generates 4 concept pages from different domains with cross-domain connections, showcasing unexpected relationships between concepts from separate knowledge areas.
 
-The npm scripts provide a convenient way to run example tests:
+### Cross-Domain Script
 
-#### 1. Page Generation Examples
-Run entity, concept, and source page generation examples (including setup):
-```bash
-npm run examples:generate
-```
+#### `npm run init:cross-domain`
+Generates entities and concepts spanning 3 distinct domains (web development, data science, infrastructure), demonstrating how the wiki graph handles heterogeneous knowledge with cross-domain references.
 
-#### 2. Query and Search Examples
-Run full-text search, tag-based queries, and filtering examples:
-```bash
-npm run examples:query
-```
+### Utility Scripts
 
-#### 3. Maintenance Examples
-Run duplicate detection, broken link checking, and health report examples:
-```bash
-npm run examples:maintenance
-```
+#### `npm run init:all`
+Runs all 8 initialization scripts sequentially, populating the complete demo wiki graph. Stops execution if any individual script fails.
 
-#### 4. Run All Examples
-Execute the complete test suite with all examples:
-```bash
-npm run examples:all
-```
+#### `npm run init:clean`
+Removes all generated markdown files from `wiki/entities/`, `wiki/concepts/`, and `wiki/sources/` directories, providing a clean slate for regeneration.
 
-**Note**: The `examples:setup` script displays a message about running the test suite, as setup examples are integrated into the page generation tests.
+## Quick Start
 
-### Via Nx Test Runner
+Follow these steps to populate your demo wiki graph:
 
-You can also run examples directly using the Nx test runner with more control:
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-#### Run All Examples
-```bash
-npx nx test examples
-```
+2. **Build Required Libraries**
+   ```bash
+   npx nx build core
+   ```
 
-#### Run Specific Example Suite
-```bash
-npx nx test examples --testNamePattern="Generate Entity Page"
-```
+3. **Create Wiki Directory Structure**
+   ```bash
+   mkdir -p wiki/entities wiki/concepts wiki/sources
+   ```
 
-#### Run Examples with Coverage
-```bash
-npx nx test examples --coverage
-```
+4. **Run Generation Scripts**
+   ```bash
+   # Generate all content at once
+   npm run init:all
+   
+   # Or run individual scripts
+   npm run init:frontend-libs
+   npm run init:backend-libs
+   # ... etc
+   ```
 
-#### Run Examples in Watch Mode
-```bash
-npx nx test examples --watch
-```
+5. **Verify Generated Content**
+   ```bash
+   ls wiki/entities/
+   ls wiki/concepts/
+   ls wiki/sources/
+   ```
 
-## Example Categories
+## Generated Content Overview
 
-### 1. Setup and Configuration
+### Library Entity Scripts
 
-**File**: `basic-setup.example.ts`
+**`init:frontend-libs`**
+- **Type**: Entity pages
+- **Examples**: `react.md`, `vue.md`, `svelte.md`
 
-**Purpose**: Demonstrates how to initialize the wiki system with required adapters and configuration.
+**`init:backend-libs`**
+- **Type**: Entity pages
+- **Examples**: `nestjs.md`, `express.md`, `fastify.md`
 
-**Key Concepts**:
-- Creating `FileSystemAdapter` with path configuration
-- Instantiating `MarkdownAdapter` for content processing
-- Instantiating `FrontmatterAdapter` for metadata handling
-- Using factory functions to create the `WikiSystem` instance
+**`init:testing-libs`**
+- **Type**: Entity pages
+- **Examples**: `vitest.md`, `jest.md`, `playwright.md`
 
-**When to Use**: Start here to understand the foundation of the wiki system before exploring other examples.
+### Article Source Scripts
 
-**Example Usage**:
-```typescript
-import { basicSetupExample } from './basic-setup.example';
+**`init:articles-blog`**
+- **Type**: Source pages
+- **Examples**: `building-accessible-components-2024-03-15.md`, `state-management-patterns-2024-05-20.md`
 
-const wikiSystem = basicSetupExample();
-// Now you can use wikiSystem.generators, wikiSystem.query, etc.
-```
+**`init:articles-docs`**
+- **Type**: Source pages
+- **Examples**: `angular-material-grid-list-guide-2024-01-10.md`, `nestjs-microservices-documentation-2024-02-15.md`
 
----
+### Concept Relationship Scripts
 
-### 2. Page Generation
+**`init:close-concepts`**
+- **Type**: Concept pages (same domain)
+- **Examples**: `focus-management.md`, `keyboard-navigation.md`, `aria-attributes.md`, `screen-reader-support.md`
 
-#### Entity Pages
-**File**: `generate-entity-page.example.ts`
+**`init:far-concepts`**
+- **Type**: Concept pages (cross-domain)
+- **Examples**: `dependency-injection.md`, `test-driven-development.md`, `reactive-programming.md`, `component-architecture.md`
 
-**Purpose**: Generate structured pages for concrete things (libraries, tools, frameworks).
+### Cross-Domain Script
 
-**Key Concepts**:
-- Using `GenerateEntityPageUseCase` to create entity pages
-- Configuring `EntityPageOptions` with name, definition, properties, relationships
-- Generating markdown with frontmatter
-- Creating valid filenames following kebab-case conventions
-
-**When to Use**: When documenting libraries, tools, frameworks, or any concrete technology.
-
-**Example Functions**:
-- `generateEntityPageExample()` - Full entity page with all sections
-- `generateEntityPageWithMinimalOptions()` - Minimal required fields
-- `generateEntityPageForFramework()` - Framework-specific example
-
----
-
-#### Concept Pages
-**File**: `generate-concept-page.example.ts`
-
-**Purpose**: Generate pages for abstract ideas, patterns, and principles.
-
-**Key Concepts**:
-- Using `GenerateConceptPageUseCase` for concept documentation
-- Structuring explanations, principles, and applications
-- Linking related concepts through WikiLinks
-- Organizing theoretical knowledge
-
-**When to Use**: When documenting design patterns, architectural principles, or abstract concepts.
-
----
-
-#### Source Summaries
-**File**: `generate-source-summary.example.ts`
-
-**Purpose**: Generate summary pages for external source materials (articles, documentation, videos).
-
-**Key Concepts**:
-- Using `GenerateSourceSummaryUseCase` to document sources
-- Including author, date, and URL metadata
-- Structuring summaries with key points and takeaways
-- Linking sources to generated entity and concept pages
-
-**When to Use**: When processing research materials, documentation, or learning resources.
-
----
-
-### 3. Reading and Parsing
-
-**File**: `read-and-parse-pages.example.ts`
-
-**Purpose**: Read existing wiki pages and extract structured data.
-
-**Key Concepts**:
-- Reading wiki files with `FileSystemAdapter`
-- Parsing frontmatter with `FrontmatterAdapter`
-- Extracting sections with `MarkdownAdapter`
-- Detecting WikiLinks in content
-- Finding backlinks to pages
-
-**When to Use**: When analyzing existing pages, building indexes, or discovering relationships.
-
-**Example Functions**:
-- `readSinglePageExample()` - Read and parse a single page
-- `parseFrontmatterExample()` - Extract metadata from pages
-- `parseMarkdownSectionsExample()` - Parse hierarchical sections
-- `extractWikiLinksExample()` - Find all WikiLinks in a page
-- `findBacklinksExample()` - Discover pages linking to a target
-- `readPagesByTypeExample()` - Filter pages by type (entity, concept, source)
-
----
-
-### 4. Query and Search
-
-**File**: `query-and-search.example.spec.ts`
-
-**Purpose**: Search and retrieve wiki pages using various criteria.
-
-**Key Concepts**:
-- Full-text search with relevance ranking
-- Tag-based filtering
-- Type-specific queries (entities, concepts, sources)
-- Search options: maxResults, includeRelatedPages, caseSensitive
-- Combining multiple search criteria
-
-**When to Use**: When building search features, finding related content, or analyzing wiki structure.
-
-**Use Cases**:
-- `SearchUseCase` - Full-text search across all content
-- `SearchByTagUseCase` - Find pages with specific tags
-- `FindEntitiesUseCase` - Retrieve entity pages
-- `FindConceptsUseCase` - Retrieve concept pages
-- `FindSourcesUseCase` - Retrieve source summaries with filters
-
----
-
-### 5. Cross-References
-
-**File**: `cross-reference.example.ts`
-
-**Purpose**: Detect and manage cross-references between wiki pages.
-
-**Key Concepts**:
-- Detecting potential cross-references in content
-- Validating WikiLink targets
-- Inserting WikiLink syntax
-- Finding bidirectional relationships
-- Suggesting missing links
-
-**When to Use**: When building automatic linking features or analyzing wiki connectivity.
-
----
-
-### 6. WikiLink and Markdown Formatting
-
-**File**: `wikilink-and-markdown.example.ts`
-
-**Purpose**: Generate and format markdown elements and WikiLinks.
-
-**Key Concepts**:
-- Creating WikiLinks with display text and sections
-- Generating headings, lists, code blocks
-- Formatting tables and blockquotes
-- Converting sections to markdown
-- Escaping special characters
-
-**When to Use**: When programmatically generating markdown content or building page templates.
-
----
-
-### 7. Updating Pages
-
-**File**: `update-existing-pages.example.ts`
-
-**Purpose**: Modify existing wiki pages while preserving structure.
-
-**Key Concepts**:
-- Reading existing page content
-- Updating frontmatter timestamps
-- Modifying sections without breaking structure
-- Writing updated content back to files
-- Validating changes
-
-**When to Use**: When implementing page editing features or batch updates.
-
----
-
-### 8. Maintenance
-
-**File**: `maintenance.example.ts`
-
-**Purpose**: Detect wiki health issues and opportunities for improvement.
-
-**Key Concepts**:
-- Detecting duplicate content
-- Finding broken WikiLinks
-- Identifying orphaned pages
-- Suggesting consolidation opportunities
-- Generating maintenance reports
-
-**When to Use**: During periodic wiki maintenance or when assessing wiki quality.
-
----
-
-## Learning Path
-
-Recommended order for exploring examples:
-
-1. **Start Here**: `basic-setup.example.ts`
-   - Understand configuration and initialization
-   - Learn the core components and their roles
-
-2. **Page Creation**: `generate-entity-page.example.ts`, `generate-concept-page.example.ts`, `generate-source-summary.example.ts`
-   - Master the three page types
-   - Learn frontmatter structure and validation
-
-3. **Reading Content**: `read-and-parse-pages.example.ts`
-   - Parse existing pages
-   - Extract structured data
-
-4. **Formatting**: `wikilink-and-markdown.example.ts`
-   - Generate markdown elements
-   - Work with WikiLinks
-
-5. **Search and Discovery**: `query-and-search.example.spec.ts`
-   - Implement search features
-   - Filter by various criteria
-
-6. **Relationships**: `cross-reference.example.ts`
-   - Build automatic linking
-   - Analyze page connections
-
-7. **Updates**: `update-existing-pages.example.ts`
-   - Modify existing content
-   - Preserve wiki structure
-
-8. **Advanced**: `maintenance.example.ts`
-   - Detect quality issues
-   - Generate health reports
-
-## Troubleshooting
-
-### Issue: "Cannot find module '@wiki/...'"
-
-**Cause**: Workspace libraries are not built or path mappings are incorrect.
-
-**Solution**:
-```bash
-# Build all wiki libraries
-npx nx run-many --target=build --projects=tag:wiki
-
-# Or build specific library
-npx nx build infrastructure-filesystem
-```
-
-### Issue: "ENOENT: no such file or directory, open 'wiki/...'"
-
-**Cause**: Wiki directory structure doesn't exist.
-
-**Solution**:
-```bash
-mkdir -p wiki/entities wiki/concepts wiki/sources raw
-```
-
-### Issue: Tests fail with "Cannot read property 'frontmatter' of undefined"
-
-**Cause**: Example is trying to read a page that doesn't exist.
-
-**Solution**: Examples that read existing pages use mocks in tests. If running examples outside tests, ensure sample wiki pages exist or modify examples to use your actual pages.
-
-### Issue: "Cannot find tsconfig.json"
-
-**Cause**: Running from wrong directory.
-
-**Solution**: Run commands from the workspace root:
-```bash
-cd /path/to/wiki
-npx nx test examples
-```
-
-### Issue: Vitest watch mode not responding
-
-**Cause**: File watching conflicts with IDE or other processes.
-
-**Solution**:
-```bash
-# Exit watch mode (Ctrl+C) and restart
-npx nx test examples --watch --no-coverage
-```
-
-### Issue: Examples run slowly
-
-**Cause**: Coverage collection adds overhead.
-
-**Solution**: Run without coverage for faster feedback:
-```bash
-npx nx test examples --coverage=false
-```
-
-## Common Patterns
-
-### Creating a WikiSystem Instance
-
-```typescript
-import { createAdapters, createWikiSystem } from '@wiki/core';
-import type { FileSystemConfig } from '@wiki/infrastructure-filesystem';
-
-const config: FileSystemConfig = {
-  rootDir: process.cwd(),
-  rawDir: 'raw',
-  wikiDir: 'wiki',
-};
-
-const adapters = createAdapters(config);
-const wikiSystem = createWikiSystem(
-  adapters.fileSystem,
-  adapters.markdown,
-  adapters.frontmatter
-);
-```
-
-### Generating a Page
-
-```typescript
-const result = wikiSystem.generators.entity.execute({
-  name: 'TypeScript',
-  definition: 'A strongly typed programming language.',
-  tags: ['programming-language']
-});
-
-console.log(result.filename);   // typescript.md
-console.log(result.content);    // Full markdown with frontmatter
-```
-
-### Searching Pages
-
-```typescript
-const results = await wikiSystem.query.search('accessibility', {
-  maxResults: 5,
-  includeRelatedPages: true
-});
-
-results.forEach(result => {
-  console.log(result.page.frontmatter.title);
-  console.log(result.relevance);
-});
-```
-
-### Validating WikiLinks
-
-```typescript
-const validation = await wikiSystem.crossReference.validate.execute(
-  'entities/angular-cdk.md'
-);
-
-if (validation.brokenLinks.length > 0) {
-  console.log('Broken links found:', validation.brokenLinks);
-}
-```
-
-## Additional Resources
-
-- **Architecture Documentation**: See `libs/wiki/ARCHITECTURE.md` for system design
-- **API Reference**: Each library's README contains detailed API documentation
-- **Requirements**: See `.kiro/specs/wiki-architecture-refactor/requirements.md`
-- **Design Document**: See `.kiro/specs/wiki-architecture-refactor/design.md`
-
-## Contributing Examples
-
-When adding new examples:
-
-1. Create both `.example.ts` and `.example.spec.ts` files
-2. Include inline comments explaining key concepts
-3. Provide at least 2-3 variations demonstrating different use cases
-4. Add test coverage for all example functions
-5. Update this README with the new example's purpose and usage
-6. Place the example in the appropriate learning path position
+**`init:cross-domain`**
+- **Type**: Mixed entities and concepts across 3 domains
+- **Examples**: 2 entities + 2 concepts per domain for web development, data science, and infrastructure

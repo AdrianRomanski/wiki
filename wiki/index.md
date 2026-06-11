@@ -19,7 +19,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 4. **Maintain Quality**: Run periodic maintenance to consolidate and validate
 
 ## Entities
-
+: 
 *Entity pages describe specific things: libraries, tools, components, APIs*
 
 - [[Angular Aria]] — `@angular/aria` is Angular's first-party library for building **fully accessible, headless UI components** that confo...

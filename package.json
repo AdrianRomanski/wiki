@@ -12,7 +12,18 @@
     "examples:generate": "npx nx test examples --testNamePattern=\"generate\" --run",
     "examples:query": "npx nx test examples --testNamePattern=\"query|search\" --run",
     "examples:maintenance": "npx nx test examples --testNamePattern=\"maintenance\" --run",
-    "examples:all": "npx nx test examples --run"
+    "examples:all": "npx nx test examples --run",
+    "init:frontend-libs": "node libs/wiki/examples/src/scripts/init-frontend-libraries.mjs",
+    "init:backend-libs": "node libs/wiki/examples/src/scripts/init-backend-libraries.mjs",
+    "init:testing-libs": "node libs/wiki/examples/src/scripts/init-testing-libraries.mjs",
+    "init:articles-blog": "node libs/wiki/examples/src/scripts/init-blog-articles.mjs",
+    "init:articles-docs": "node libs/wiki/examples/src/scripts/init-documentation-articles.mjs",
+    "init:close-concepts": "node libs/wiki/examples/src/scripts/init-close-concepts.mjs",
+    "init:far-concepts": "node libs/wiki/examples/src/scripts/init-far-concepts.mjs",
+    "init:cross-domain": "node libs/wiki/examples/src/scripts/init-cross-domain.mjs",
+    "init:all": "npm run init:frontend-libs && npm run init:backend-libs && npm run init:testing-libs && npm run init:articles-blog && npm run init:articles-docs && npm run init:close-concepts && npm run init:far-concepts && npm run init:cross-domain",
+    "init:clean": "rm -f wiki/entities/*.md wiki/concepts/*.md wiki/sources/*.md",
+    "validate:tags": "node scripts/validate-tag-distribution.mjs"
   },
   "private": true,
   "dependencies": {
