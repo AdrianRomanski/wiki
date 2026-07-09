@@ -143,27 +143,14 @@ When comparing libraries (max 3), evaluate:
 
 ## Research Commands
 
-Invoke `#research-buddy` for specialized research assistance:
+Invoke `#research-buddy` to start. The assistant will ask you what you want to research and guide you through the rest interactively.
 
-### Session Management
-- `start research: [topic]` - Begin new research session
-- `continue research: [session-id]` - Resume paused session
-- `pause research` - Save current state
-- `finalize research` - Complete and generate ADR
-
-### Analysis
-- `compare [lib1] vs [lib2] vs [lib3]` - Multi-library comparison
-- `visualize [library]` - Show structure and exports
-- `analyze complexity of [library]` - Complexity scoring
-- `analyze modularity of [library]` - Modularity assessment
-- `estimate token usage for [library]` - AI assistance cost
-
-### Examples & Reports
-- `show minimal example of [pattern]` - Generate minimal code
-- `pros and cons of [library]` - Structured analysis
-- `generate comparison report` - Create comparison matrices
-- `generate final report` - Complete research summary
-- `generate ADR` - Architecture Decision Record
+| Command | Effect |
+|---|---|
+| `research` | Start a new session — triggers interactive questionnaire |
+| `continue research: [session-id]` | Resume a paused session |
+| `pause research` | Pause the current session |
+| `finalize research` | Trigger wiki publication decision |
 
 ## Integration with Spec Workflow
 
@@ -1083,18 +1070,15 @@ Every single library research session lives under `.kiro/research/sessions/[sess
 
 ### Commands
 
-All commands for the single library workflow are issued to `#research-buddy`. Commands are case-insensitive and bracket placeholders should be replaced with actual values.
+All commands for the single library workflow are issued to `#research-buddy`. The primary entry point is `research` — the assistant will ask the right questions to determine library, scope, focus area, and goal.
 
-| Command | Step | Effect |
-|---|---|---|
-| `start research: [topic]` | EXPLORE | Begins the EXPLORE step; prompts for library name and scope selection |
-| `explore [library]` | EXPLORE | Shorthand to start a Big Picture EXPLORE for the named library |
-| `deep dive [library] into [area]` | EXPLORE | Shorthand to start a Deep Dive EXPLORE for the named library and focus area |
-| `prototype [pattern]` | PROTOTYPE | Creates a prototype demonstrating the named pattern in the PROTOTYPE step |
-| `synthesize` | PROTOTYPE → SYNTHESIZE | Signals prototyping is complete and triggers findings consolidation in the SYNTHESIZE step |
-| `finalize research` | SYNTHESIZE → FINALIZE | Triggers the wiki publication decision in the FINALIZE step |
-| `pause research` | Any | Pauses the session at the current step; saves all artifacts and records `resumeFrom` in `session.json` |
-| `continue research: [session-id]` | PAUSED | Resumes a paused session, restoring context and returning to the step recorded in `resumeFrom` |
+| Command | Effect |
+|---|---|
+| `research` | Start a new session — triggers interactive questionnaire |
+| `synthesize` | Signals prototyping is complete, triggers SYNTHESIZE step |
+| `finalize research` | Triggers the wiki publication decision in the FINALIZE step |
+| `pause research` | Pauses the session; saves all artifacts and records `resumeFrom` in `session.json` |
+| `continue research: [session-id]` | Resumes a paused session, returning to the step recorded in `resumeFrom` |
 
 ### Pause and Resume
 

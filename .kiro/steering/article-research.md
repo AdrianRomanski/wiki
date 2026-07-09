@@ -226,14 +226,14 @@ When user issues `continue research: [session-id]`:
 
 ## Commands
 
-All commands for article research are issued to `#research-buddy`:
+Invoke `#research-buddy` to start. The assistant will ask what you want to research and guide you through the rest interactively.
 
-| Command | Step | Effect |
-|---|---|---|
-| `start article research: [topic]` | EXPLORE | Begins EXPLORE step; prompts for URL or pasted text |
-| `pause research` | Any | Pauses session at current step |
-| `continue research: [session-id]` | PAUSED | Resumes paused session |
-| `finalize research` | SYNTHESIZE → FINALIZE | Triggers wiki publication decision |
+| Command | Effect |
+|---|---|
+| `research` | Start a new session — triggers interactive questionnaire |
+| `pause research` | Pause the current session |
+| `continue research: [session-id]` | Resume a paused session |
+| `finalize research` | Trigger wiki publication decision |
 
 ## Error Handling
 
