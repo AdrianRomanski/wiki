@@ -12,7 +12,7 @@
  * Returns a deduplicated array of target titles.
  */
 export function extractWikiLinks(content: string): string[] {
-  const wikiLinkPattern = /(?<!\\)\[\[([^\[\]]+?)\]\]/g;
+  const wikiLinkPattern = /(?<!\\)\[\[([^[\]]+?)\]\]/g;
   const titles = new Set<string>();
 
   let match: RegExpExecArray | null;

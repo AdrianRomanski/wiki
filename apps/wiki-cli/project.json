@@ -33,6 +33,7 @@
     },
     "test": {
       "executor": "nx:run-commands",
+      "dependsOn": ["build"],
       "options": {
         "command": "npx vitest run --config apps/wiki-cli/vitest.config.ts",
         "cwd": "{workspaceRoot}"

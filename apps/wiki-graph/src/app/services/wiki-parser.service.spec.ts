@@ -105,7 +105,7 @@ describe('parseFilesToGraphData', () => {
   });
 
   it('skips files with missing title', () => {
-    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     const files = [
       { filePath: 'entities/bad.md', content: '---\ntype: entity\n---\nno title' },
     ];
@@ -116,7 +116,7 @@ describe('parseFilesToGraphData', () => {
   });
 
   it('skips files with invalid type', () => {
-    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     const files = [
       { filePath: 'entities/bad.md', content: makeMarkdown('Bad', 'unknown', []) },
     ];
@@ -277,7 +277,7 @@ describe('WikiParserService', () => {
   });
 
   it('skips individual file failures and continues', () => {
-    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     let result: ReturnType<typeof parseFilesToGraphData> | undefined;
 
     service.loadGraph().subscribe((data) => {

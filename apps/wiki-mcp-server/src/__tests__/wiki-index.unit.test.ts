@@ -246,7 +246,7 @@ describe('buildIndex', () => {
       '---\ntitle: \n---\n\nNo valid frontmatter.'
     );
 
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
     const index = await buildIndex(tmpDir);
 

@@ -12,6 +12,10 @@ export default [
         'error',
         {
           ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}'],
+          // Declared as peerDependencies for the Angular components this
+          // playground will host; not yet imported since no prototype
+          // component has been added yet.
+          ignoredDependencies: ['@angular/common', '@angular/core'],
         },
       ],
     },
