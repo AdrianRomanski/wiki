@@ -378,8 +378,10 @@ This enables testing at every stage of development.
 ## References
 
 - [[Hexagonal Architecture Article — 2018-08-29]]
+- [[Hexagonal Architecture is just an island — Article — 2025-01-22]]
 - [[Hexagonal Architecture]]
 - [[Ports]]
 - [[Technology Agnostic Design]]
 - [[Composition Root]]
 - [[Testing in Isolation]]
+- [[Island Analogy for Hexagonal Architecture]]

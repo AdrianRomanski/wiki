@@ -6,6 +6,7 @@ date: 2018-08-29
 url: https://jmgarridopaz.github.io/content/hexagonalarchitecture.html
 tags: [hexagonal-architecture, ports-adapters, alistair-cockburn, architecture-pattern, testability]
 created: 2026-06-10
+updated: 2026-06-10
 ---
 
 # Hexagonal Architecture Article — 2018-08-29

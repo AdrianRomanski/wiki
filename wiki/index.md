@@ -19,7 +19,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 4. **Maintain Quality**: Run periodic maintenance to consolidate and validate
 
 ## Entities
-: 
+
 *Entity pages describe specific things: libraries, tools, components, APIs*
 
 - [[Angular Aria]] — `@angular/aria` is Angular's first-party library for building **fully accessible, headless UI components** that confo...
@@ -40,6 +40,7 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 - [[Dump Projects]] — Dump projects are an anti-pattern where code accumulates in projects with vague names (like `util` or `components`) w...
 - [[Headless ARIA Directives]] — Headless ARIA directives are Angular directives that implement **accessibility behavior without providing any visual ...
 - [[Hexagonal Architecture]] — Hexagonal Architecture (also known as Ports and Adapters) is an architectural pattern that organizes code around the ...
+- [[Island Analogy for Hexagonal Architecture]] — The Island Analogy is a teaching device for explaining Hexagonal Architecture without diagrams or code. It imagines a...
 - [[Module Boundary Rules]] — Module boundary rules define which Project Types can depend on which other types, maintaining separation of concerns ...
 - [[Modulith Architecture]] — Modulith architecture is a pattern that sits between monolith and microservices architectures. It maintains a single ...
 - [[Ports]] — In Hexagonal Architecture, **ports** are interfaces that define the application boundary. They specify how the applic...
@@ -58,7 +59,8 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 *Source summaries distill key information from raw documents*
 
 - [[Angular Aria Big Picture Research — 2026-05-30]] — - **Author:** Kiro Research Session (`angular-aria-big-picture`)
-- [["The virtuous cycle of workspace structure"]] — - **Author:** Philip Fulcher
+- [[The virtuous cycle of workspace structure]] — - **Author:** Philip Fulcher
+- [[Hexagonal Architecture is just an island — Article — 2025-01-22]] — - **Author**: Danny Keller
 - [[Hexagonal Architecture Article — 2018-08-29]] — - **Author**: Juan Manuel Garrido de Paz
 
 ## Navigation
@@ -71,8 +73,8 @@ Welcome to the LLM Wiki Second Brain - an AI-powered knowledge management system
 
 ## Statistics
 
-- **Total Pages**: 28 (6 entities, 19 concepts, 3 sources)
-- **Last Updated**: 2026-06-10
+- **Total Pages**: 30 (6 entities, 20 concepts, 4 sources)
+- **Last Updated**: 2026-07-14
 - **Wiki Health**: ✅
 
 ## Quick Reference

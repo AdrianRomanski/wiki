@@ -50,3 +50,4 @@ Enhances [[Module Boundary Rules]] by:
 ## Sources
 
 - [[The virtuous cycle of workspace structure]] - Mentions hexagonal architecture as complementary to modulith pattern
+- [[Hexagonal Architecture is just an island — Article — 2025-01-22]] - Teaches the pattern via the [[Island Analogy for Hexagonal Architecture]]

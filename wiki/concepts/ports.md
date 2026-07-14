@@ -2,9 +2,9 @@
 title: Ports
 type: concept
 tags: [hexagonal-architecture, api, spi, interface, boundary]
-sources: [hexagonal-architecture-article-2018-08-29]
+sources: [hexagonal-architecture-article-2018-08-29, hexagonal-architecture-is-just-an-island-article-2025-01-22]
 created: 2026-06-10
-updated: 2026-06-10
+updated: 2026-07-14
 ---
 
 # Ports
@@ -273,10 +273,21 @@ For proper [[Hexagonal Architecture]] implementation, every port must have at le
 
 This enables [[Testing in Isolation]] and allows the application to be tested without external dependencies.
 
+### Driver Port Optionality (Nuance)
+
+While the minimum-two-adapters rule applies once a driver port exists, the driver (inbound) port interface itself is not strictly mandatory the way the driven (outbound) port interface is:
+
+- The **driven port is essential** — without it, the application cannot invert its dependency on external services, breaking the Dependency Inversion Principle. The driven port interface must exist for [[Configurable Dependency Pattern]] to work on that side.
+- The **driver port is optional** — a driver adapter could call the application service directly without an interface in between, and the application would still function.
+
+Defining a driver port anyway is still recommended, because it provides looser coupling between the adapter and the service, and improves testability by allowing the adapter to be tested against an interface rather than a concrete class. Skipping it is a valid but lesser choice, typically made only for very small or throwaway driver adapters.
+
 ## References
 
 - [[Hexagonal Architecture Article — 2018-08-29]]
+- [[Hexagonal Architecture is just an island — Article — 2025-01-22]]
 - [[Hexagonal Architecture]]
 - [[Adapters]]
 - [[Application Boundary]]
 - [[Technology Agnostic Design]]
+- [[Island Analogy for Hexagonal Architecture]]
