@@ -112,13 +112,19 @@ describe('WikiGraphPageComponent', () => {
   // -------------------------------------------------------------------------
 
   describe('child components are rendered', () => {
-    it('renders GraphControlsComponent (app-graph-controls)', async () => {
+    it('renders the unified toolbar controls (type toggles, search, tag filter)', async () => {
       const fixture = TestBed.createComponent(WikiGraphPageComponent);
       await fixture.whenStable();
       fixture.detectChanges();
 
+      // WikiGraphPageComponent inlines a single unified toolbar rather than
+      // composing GraphControlsComponent — assert against that toolbar's
+      // actual markup instead of a child component selector.
       const el: HTMLElement = fixture.nativeElement;
-      expect(el.querySelector('app-graph-controls')).not.toBeNull();
+      expect(el.querySelector('[role="toolbar"]')).not.toBeNull();
+      expect(el.querySelector('.type-toggle')).not.toBeNull();
+      expect(el.querySelector('.search-input')).not.toBeNull();
+      expect(el.querySelector('.tag-select')).not.toBeNull();
     });
 
     it('renders GraphCanvasComponent (app-graph-canvas)', async () => {
@@ -130,13 +136,21 @@ describe('WikiGraphPageComponent', () => {
       expect(el.querySelector('app-graph-canvas')).not.toBeNull();
     });
 
-    it('renders GraphSummaryPanelComponent (app-graph-summary-panel)', async () => {
+    it('renders the unified toolbar summary stats (nodes, edges, orphans)', async () => {
       const fixture = TestBed.createComponent(WikiGraphPageComponent);
       await fixture.whenStable();
       fixture.detectChanges();
 
+      // WikiGraphPageComponent inlines the summary stats rather than
+      // composing GraphSummaryPanelComponent — assert against the actual
+      // .stat elements in the toolbar instead of a child component selector.
       const el: HTMLElement = fixture.nativeElement;
-      expect(el.querySelector('app-graph-summary-panel')).not.toBeNull();
+      const stats = el.querySelectorAll('.stat');
+      expect(stats.length).toBeGreaterThan(0);
+      const statsText = Array.from(stats).map(s => s.textContent).join(' ');
+      expect(statsText).toContain('Nodes');
+      expect(statsText).toContain('Edges');
+      expect(statsText).toContain('Orphans');
     });
 
     it('renders NodeDetailPanelComponent (app-node-detail-panel)', async () => {
