@@ -20,6 +20,12 @@
       "@wiki/domain-models": ["./libs/wiki/domain-models/src/index.ts"],
       "@wiki/domain-naming": ["./libs/wiki/domain-naming/src/index.ts"],
       "@wiki/domain-validation": ["./libs/wiki/domain-validation/src/index.ts"],
+      "@wiki/domain-research-session": [
+        "./libs/wiki/domain-research-session/src/index.ts"
+      ],
+      "@wiki/domain-research-errors": [
+        "./libs/wiki/domain-research-errors/src/index.ts"
+      ],
       "@wiki/application-ports": ["./libs/wiki/application-ports/src/index.ts"],
       "@wiki/infrastructure-markdown": [
         "./libs/wiki/infrastructure-markdown/src/index.ts"
@@ -30,6 +36,9 @@
       "@wiki/infrastructure-frontmatter": [
         "./libs/wiki/infrastructure-frontmatter/src/index.ts"
       ],
+      "@wiki/infrastructure-http": [
+        "./libs/wiki/infrastructure-http/src/index.ts"
+      ],
       "@wiki/application-activity-log": [
         "./libs/wiki/application-activity-log/src/index.ts"
       ],
@@ -39,6 +48,21 @@
       "@wiki/application-query": ["./libs/wiki/application-query/src/index.ts"],
       "@wiki/application-index-manager": [
         "./libs/wiki/application-index-manager/src/index.ts"
+      ],
+      "@wiki/application-tag-validation": [
+        "./libs/wiki/application-tag-validation/src/index.ts"
+      ],
+      "@wiki/application-scaffolding": [
+        "./libs/wiki/application-scaffolding/src/index.ts"
+      ],
+      "@wiki/application-article-extraction": [
+        "./libs/wiki/application-article-extraction/src/index.ts"
+      ],
+      "@wiki/application-research-session": [
+        "./libs/wiki/application-research-session/src/index.ts"
+      ],
+      "@wiki/application-wiki-publisher": [
+        "./libs/wiki/application-wiki-publisher/src/index.ts"
       ],
       "@wiki/application-generators": [
         "./libs/wiki/application-generators/src/index.ts"

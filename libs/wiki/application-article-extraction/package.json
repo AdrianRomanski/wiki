@@ -1,0 +1,9 @@
+{
+  "name": "@wiki/application-article-extraction",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/application-ports": "*",
+    "@wiki/domain-research-session": "*"
+  },
+  "sideEffects": false
+}

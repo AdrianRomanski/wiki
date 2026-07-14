@@ -69,6 +69,14 @@ ${page.content}`;
   async ensureWikiDir(): Promise<void> { return; }
 
   async deleteWikiFile(): Promise<void> { return; }
+
+  async ensureDir(): Promise<void> { return; }
+
+  async readFile(): Promise<string> { return ''; }
+
+  async writeFile(): Promise<void> { return; }
+
+  async deleteDir(): Promise<void> { return; }
 }
 
 class MockFrontmatterPort implements FrontmatterPort {

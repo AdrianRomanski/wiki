@@ -6,8 +6,8 @@
     "nx": "npx nx",
     "start:graph": "npx nx run wiki-graph:serve --port=4300",
     "build:mcp": "npx nx run wiki-mcp-server:build",
-    "build:manifest": "node scripts/generate-wiki-manifest.mjs",
-    "build:wiki-index": "node scripts/generate-wiki-index.mjs",
+    "build:manifest": "npx nx run wiki-cli:generate-manifest",
+    "build:wiki-index": "npx nx run wiki-cli:generate-index",
     "examples:setup": "echo 'Run: npx nx test examples' && echo 'Setup examples are demonstrated in generate-entity-page tests'",
     "examples:generate": "npx nx test examples --testNamePattern=\"generate\" --run",
     "examples:query": "npx nx test examples --testNamePattern=\"query|search\" --run",
@@ -23,7 +23,8 @@
     "init:cross-domain": "node libs/wiki/examples/src/scripts/init-cross-domain.mjs",
     "init:all": "npm run init:frontend-libs && npm run init:backend-libs && npm run init:testing-libs && npm run init:articles-blog && npm run init:articles-docs && npm run init:close-concepts && npm run init:far-concepts && npm run init:cross-domain",
     "init:clean": "rm -f wiki/entities/*.md wiki/concepts/*.md wiki/sources/*.md",
-    "validate:tags": "node scripts/validate-tag-distribution.mjs"
+    "validate:tags": "npx nx run wiki-cli:validate-tags",
+    "init:wiki": "npx nx run wiki-cli:init"
   },
   "private": true,
   "dependencies": {

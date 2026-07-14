@@ -1,0 +1,36 @@
+{
+  "name": "domain-research-errors",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/wiki/domain-research-errors/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["domain"],
+  "implicitDependencies": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/wiki/domain-research-errors/ng-package.json",
+        "tsConfig": "libs/wiki/domain-research-errors/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/wiki/domain-research-errors/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/wiki/domain-research-errors/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@wiki/application-wiki-publisher",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/application-ports": "*",
+    "@wiki/domain-research-session": "*",
+    "@wiki/domain-models": "*"
+  },
+  "sideEffects": false
+}

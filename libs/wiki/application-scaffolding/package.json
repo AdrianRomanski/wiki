@@ -1,0 +1,8 @@
+{
+  "name": "@wiki/application-scaffolding",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@wiki/application-ports": "*"
+  },
+  "sideEffects": false
+}

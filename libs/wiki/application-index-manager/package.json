@@ -4,7 +4,8 @@
   "peerDependencies": {
     "@wiki/domain-models": "*",
     "@wiki/application-ports": "*",
-    "vitest": "*"
+    "vitest": "*",
+    "fast-check": "*"
   },
   "sideEffects": false
 }

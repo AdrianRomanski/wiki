@@ -10,7 +10,7 @@ This is an Angular/NX monorepo used for library research, prototyping, and build
 - `libs/prototype-playground` — All research prototypes; every prototype gets a Storybook story
 - `.kiro/research/sessions/` — Research session artifacts and state
 - `wiki/` — Published knowledge base (entities, concepts, sources)
-- `scripts/` — Wiki manifest and index generation scripts
+- `apps/wiki-cli` — Nx application exposing wiki manifest/index generation, tag validation, and scaffolding as `nx run wiki-cli:*` targets
 
 ## Always-On Rules
 
@@ -46,10 +46,10 @@ After any research session, wiki pages are generated under:
 - `wiki/concepts/` — pattern and principle pages
 - `wiki/sources/` — citable research session references
 
-Always run both scripts after creating wiki pages:
+Always run both targets after creating wiki pages:
 ```bash
-node scripts/generate-wiki-manifest.mjs
-node scripts/generate-wiki-index.mjs
+npx nx run wiki-cli:generate-manifest
+npx nx run wiki-cli:generate-index
 ```
 
 ### Prototype Validation

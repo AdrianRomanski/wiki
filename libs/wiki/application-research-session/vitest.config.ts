@@ -1,0 +1,42 @@
+import { defineConfig } from 'vitest/config';
+import path from 'path';
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@wiki/application-ports': path.resolve(
+        __dirname,
+        '../application-ports/src/index.ts'
+      ),
+      '@wiki/domain-research-session': path.resolve(
+        __dirname,
+        '../domain-research-session/src/index.ts'
+      ),
+      '@wiki/domain-research-errors': path.resolve(
+        __dirname,
+        '../domain-research-errors/src/index.ts'
+      ),
+      '@wiki/application-article-extraction': path.resolve(
+        __dirname,
+        '../application-article-extraction/src/index.ts'
+      ),
+      '@wiki/application-wiki-publisher': path.resolve(
+        __dirname,
+        '../application-wiki-publisher/src/index.ts'
+      ),
+      '@wiki/domain-models': path.resolve(
+        __dirname,
+        '../domain-models/src/index.ts'
+      ),
+    },
+  },
+  test: {
+    globals: true,
+    environment: 'node',
+    include: ['src/**/*.{test,spec}.ts'],
+    exclude: ['**/node_modules/**', '**/dist/**'],
+    root: __dirname,
+    testTimeout: 10000,
+    passWithNoTests: true,
+  },
+});

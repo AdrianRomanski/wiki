@@ -458,6 +458,59 @@ The migration from the monolithic `scripts/wiki` directory to the modular Nx lib
 - **Documentation Updated**: README.md, ARCHITECTURE.md, and guide files updated
 - **Import Paths Updated**: All references changed from relative paths to `@wiki/*` aliases
 - **Build Verification**: All libraries build successfully with no errors
+
+## Migration Mapping: Remaining Scripts and Research Workflow (scripts-migration-hexagonal)
+
+A second migration wave moved the four remaining standalone scripts
+(`generate-wiki-manifest.mjs`, `generate-wiki-index.mjs`,
+`validate-tag-distribution.mjs`, `init-wiki.ts`) and the entire standalone
+`@wiki-graph/research-workflow` package (`scripts/research-workflow/`, now
+removed) into the same hexagonal Nx library structure. This table extends the
+mapping above with the additional source-to-library moves:
+
+| Source Module | Target Library | Architectural Layer | Description |
+|---------------|----------------|---------------------|-------------|
+| generate-wiki-manifest.mjs | @wiki/application-index-manager (`GenerateManifestUseCase`) | Application | Scans wiki/entities, concepts, sources and writes manifest.json `{files, generatedAt}` |
+| generate-wiki-index.mjs | @wiki/application-index-manager (`GenerateIndexUseCase`) | Application | Scans wiki pages, derives descriptions, sorts, and renders index.md |
+| validate-tag-distribution.mjs | @wiki/application-tag-validation | Application | Computes per-tag frequency across wiki pages and flags tags exceeding the 60% threshold |
+| init-wiki.ts | @wiki/application-scaffolding (`ScaffoldWikiUseCase`) | Application | Idempotently scaffolds the `raw/` and `wiki/` directory trees |
+| research-workflow/types/article-session.ts | @wiki/domain-research-session | Domain | Research-session domain types (`SessionState`, `ArticleContent`, `FetchResult`, `EntityCandidate`, etc.) |
+| research-workflow/utils/generate-session-id.ts, FileSystemUtils.ts (partial), article-fetcher/validate-url.ts, wiki-publisher/domain-extractor.ts | @wiki/domain-research-session | Domain | Pure session-id generation, path sanitization/validation, URL validation, and domain-to-slug extraction |
+| research-workflow/errors/WorkflowError.ts | @wiki/domain-research-errors | Domain | `WorkflowError` hierarchy (session, installation, verification, artifact-generation, validation, prerequisite errors) |
+| research-workflow/content-extractor/*.ts | @wiki/application-article-extraction | Application | Article parsing, candidate identification, analysis generation, and content persistence use cases |
+| research-workflow/article-fetcher/fetch-from-url.ts (retry policy) | @wiki/application-article-extraction (`fetchWithRetries`) | Application | Pure retry/abort orchestration policy over `ArticleFetchPort` |
+| research-workflow/article-fetcher/fetch-from-url.ts (HTTP call) | @wiki/infrastructure-http (`ArticleFetchAdapter`) | Infrastructure | `ArticleFetchPort` implementation using `fetch` with a 30s `AbortController` timeout |
+| research-workflow/session-manager/*.ts | @wiki/application-research-session | Application | Session creation, state transitions, pause/resume, and EXPLORE/SYNTHESIZE/FINALIZE step orchestration |
+| research-workflow/wiki-publisher/*.ts (excl. domain-extractor, regenerate-manifest-index) | @wiki/application-wiki-publisher | Application | Author/source/publication-source page generation, entity/concept page publishing, and reciprocal-reference maintenance |
+| research-workflow/wiki-publisher/regenerate-manifest-index.ts | @wiki/application-wiki-publisher (`regenerateManifestAndIndex`) | Application | Manifest/index regeneration orchestration, with the `child_process` shell-out isolated behind `CommandRunnerPort` |
+| N/A (new port) | @wiki/application-ports (`ArticleFetchPort`, `CommandRunnerPort`) | Application | New port interfaces for HTTP article fetching and shell-command execution |
+| N/A (new adapter) | @wiki/infrastructure-filesystem (`CommandRunnerAdapter`, `ensureDir`) | Infrastructure | `CommandRunnerPort` implementation using `child_process.execSync`; generic workspace-root-relative directory creation |
+| scripts/*.mjs, scripts/init-wiki.ts (superseded) | apps/wiki-cli (`generate-manifest`, `generate-index`, `validate-tags`, `init` commands) | Presentation / Driver_Adapter | Consolidated into a single Nx application; each command wires source `@wiki/*` Infrastructure adapters into Application use cases; no business logic. Exposed as `nx run wiki-cli:<command>` targets |
+
+**Migration Status**: ✅ **COMPLETED**
+
+The `scripts/` directory has been removed entirely, including
+`scripts/research-workflow/` and the four thin wrapper entry points
+(`generate-wiki-manifest.mjs`, `generate-wiki-index.mjs`,
+`validate-tag-distribution.mjs`, `init-wiki.ts`). Their composition-root
+responsibility was consolidated into the `apps/wiki-cli` Nx application,
+which exposes four commands (`generate-manifest`, `generate-index`,
+`validate-tags`, `init`) as first-class Nx targets:
+
+```bash
+npx nx run wiki-cli:generate-manifest
+npx nx run wiki-cli:generate-index
+npx nx run wiki-cli:validate-tags
+npx nx run wiki-cli:init
+```
+
+`package.json` script keys (`build:manifest`, `build:wiki-index`,
+`validate:tags`, `init:wiki`) now delegate to these Nx targets instead of
+`node scripts/*.mjs`, and `regenerateManifestAndIndex`'s `CommandRunnerPort`
+shell-out invokes `npx nx run wiki-cli:generate-manifest`/`generate-index`
+instead of the old script paths. Exit-code semantics (0 success, 1 failure)
+are preserved. All steering and skill documentation referencing
+`node scripts/*.mjs` has been updated to the `nx run wiki-cli:*` form.
 - **Test Verification**: All tests pass with preserved functionality
 
 ### Key Improvements

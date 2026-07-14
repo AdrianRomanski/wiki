@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import * as fc from 'fast-check';
 import { FrontmatterAdapter } from './frontmatter-adapter';
 import { FrontmatterValidationError } from './frontmatter-validation-error';
 import { WikiPageFrontmatter } from '@wiki/domain-models';
@@ -356,5 +357,77 @@ This is content with [[WikiLinks]].`;
       expect(result.frontmatter.tags).toEqual(['obsidian', 'wiki']);
       expect(result.content).toContain('[[WikiLinks]]');
     });
+  });
+});
+
+// ============================================================================
+// Property-Based Test
+// Feature: scripts-migration-hexagonal, Property 4: Frontmatter parse∘render round-trip
+// ============================================================================
+
+/**
+ * Safe alnum "word" — avoids YAML-significant characters (`:`, `#`, quotes,
+ * newlines) and leading/trailing whitespace, so the string survives a
+ * stringify -> parse round-trip unchanged.
+ */
+const safeWordArbitrary = fc.stringMatching(/^[A-Za-z0-9]{1,10}$/);
+
+/** One or more safe words joined by single spaces (no leading/trailing ws). */
+const safeTextArbitrary = fc
+  .array(safeWordArbitrary, { minLength: 1, maxLength: 4 })
+  .map((words) => words.join(' '));
+
+/** A valid `YYYY-MM-DD` date string (always a real calendar date). */
+const dateStringArbitrary = fc
+  .date({
+    min: new Date('2000-01-01T00:00:00Z'),
+    max: new Date('2035-12-31T00:00:00Z'),
+    noInvalidDate: true,
+  })
+  .map((d) => d.toISOString().split('T')[0]);
+
+/** A simple, safe URL string. */
+const urlArbitrary = safeWordArbitrary.map((w) => `https://example.com/${w}`);
+
+/** Arbitrary generating any valid `WikiPageFrontmatter`, optional fields included. */
+const wikiPageFrontmatterArbitrary: fc.Arbitrary<WikiPageFrontmatter> = fc.record(
+  {
+    title: safeTextArbitrary,
+    type: fc.constantFrom<'entity' | 'concept' | 'source'>('entity', 'concept', 'source'),
+    tags: fc.array(safeWordArbitrary, { maxLength: 5 }),
+    created: dateStringArbitrary,
+    updated: dateStringArbitrary,
+    sources: fc.option(fc.array(safeWordArbitrary, { minLength: 1, maxLength: 3 }), {
+      nil: undefined,
+    }),
+    author: fc.option(safeTextArbitrary, { nil: undefined }),
+    date: fc.option(dateStringArbitrary, { nil: undefined }),
+    url: fc.option(urlArbitrary, { nil: undefined }),
+  },
+  { requiredKeys: ['title', 'type', 'tags', 'created', 'updated'] }
+);
+
+describe('Feature: scripts-migration-hexagonal, Property 4: Frontmatter parse∘render round-trip', () => {
+  /**
+   * Property 4: Frontmatter parse∘render round-trip
+   *
+   * For any valid WikiPageFrontmatter, generateFrontmatter then
+   * parseFrontmatter SHALL yield equivalent frontmatter (title, type, tags,
+   * and other present optional fields preserved).
+   *
+   * **Validates: Requirements 6.7**
+   */
+  it('preserves title, type, tags, and all present optional fields through generate -> parse', () => {
+    fc.assert(
+      fc.property(wikiPageFrontmatterArbitrary, safeTextArbitrary, (frontmatter, body) => {
+        const adapter = new FrontmatterAdapter();
+
+        const markdown = adapter.generateFrontmatter(frontmatter, body);
+        const parsed = adapter.parseFrontmatter(markdown);
+
+        expect(parsed.frontmatter).toEqual(frontmatter);
+      }),
+      { numRuns: 100 }
+    );
   });
 });

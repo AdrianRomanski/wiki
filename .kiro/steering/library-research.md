@@ -807,12 +807,12 @@ After the wiki publication decision has been resolved (either declined or all ac
    - `finalizedAt`: current date in ISO format (`YYYY-MM-DD`)
    - `wikiPages`: array of paths of all successfully created wiki pages, or `[]` if none were created
 
-2. **If any wiki pages were created**, regenerate the manifest and index by running both scripts from the workspace root:
+2. **If any wiki pages were created**, regenerate the manifest and index by running both `wiki-cli` targets from the workspace root:
    ```bash
-   node scripts/generate-wiki-manifest.mjs
-   node scripts/generate-wiki-index.mjs
+   npx nx run wiki-cli:generate-manifest
+   npx nx run wiki-cli:generate-index
    ```
-   These scripts scan `wiki/entities/`, `wiki/concepts/`, and `wiki/sources/` and rewrite `wiki/manifest.json` and `wiki/index.md` from the actual files on disk. Always run them after wiki publication — the manually maintained index and manifest will otherwise be stale.
+   These targets scan `wiki/entities/`, `wiki/concepts/`, and `wiki/sources/` and rewrite `wiki/manifest.json` and `wiki/index.md` from the actual files on disk. Always run them after wiki publication — the manually maintained index and manifest will otherwise be stale.
 
 Example `session.json` finalization fields:
 

@@ -1,0 +1,9 @@
+{
+  "name": "@wiki/domain-research-session",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "vitest": "*",
+    "fast-check": "*"
+  },
+  "sideEffects": false
+}

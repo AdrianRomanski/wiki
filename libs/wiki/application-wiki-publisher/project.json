@@ -1,0 +1,43 @@
+{
+  "name": "application-wiki-publisher",
+  "sourceRoot": "libs/wiki/application-wiki-publisher/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": [
+    "application"
+  ],
+  "implicitDependencies": [
+    "domain-research-session",
+    "application-ports",
+    "domain-models"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": [
+        "{workspaceRoot}/dist/{projectRoot}"
+      ],
+      "options": {
+        "project": "libs/wiki/application-wiki-publisher/ng-package.json",
+        "tsConfig": "libs/wiki/application-wiki-publisher/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/wiki/application-wiki-publisher/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/wiki/application-wiki-publisher/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

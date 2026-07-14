@@ -10,3 +10,6 @@ export { RegenerateIndexUseCase } from './lib/regenerate-index.use-case';
 export { ParseIndexEntriesUseCase } from './lib/parse-index-entries.use-case';
 export { ScanWikiPagesUseCase } from './lib/scan-wiki-pages.use-case';
 export { GenerateIndexContentUseCase } from './lib/generate-index-content.use-case';
+export type { WikiManifest } from './lib/wiki-manifest';
+export { GenerateManifestUseCase } from './lib/generate-manifest.use-case';
+export { GenerateIndexUseCase } from './lib/generate-index.use-case';

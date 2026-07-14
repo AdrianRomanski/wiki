@@ -139,8 +139,8 @@ All research is organized in `.kiro/research/sessions/[session-id]/`:
 - If reciprocal reference fails → preserve source page, report which targets failed
 
 **Manifest and Index Regeneration:**
-- Run `node scripts/generate-wiki-manifest.mjs` from workspace root
-- Run `node scripts/generate-wiki-index.mjs` from workspace root
+- Run `npx nx run wiki-cli:generate-manifest` from workspace root
+- Run `npx nx run wiki-cli:generate-index` from workspace root
 - If either script fails → delete all wiki pages created in session, set `wikiPages: []`
 
 **Decline Path — No Wiki Pages:**
@@ -261,8 +261,8 @@ Invoke `#research-buddy` to start. The assistant will ask what you want to resea
 |----------------|----------|
 | Wiki page write failure | Report per-page status, record only successful pages, offer retry |
 | Reciprocal reference failure | Preserve source page, report which targets failed |
-| generate-wiki-manifest.mjs failure | Delete all wiki pages created in session, set wikiPages to [] |
-| generate-wiki-index.mjs failure | Delete all wiki pages created in session, set wikiPages to [] |
+| wiki-cli:generate-manifest failure | Delete all wiki pages created in session, set wikiPages to [] |
+| wiki-cli:generate-index failure | Delete all wiki pages created in session, set wikiPages to [] |
 
 ### Session_Manager Errors
 

@@ -218,6 +218,20 @@ export class FileSystemAdapter implements FileSystemPort {
     }
   }
 
+  async ensureDir(dirPath: string): Promise<void> {
+    const absolutePath = this.validatePath(dirPath, this.config.rootDir);
+
+    try {
+      await fs.mkdir(absolutePath, { recursive: true });
+    } catch (error) {
+      throw new FileOperationError(
+        `Failed to create directory: ${dirPath}`,
+        dirPath,
+        error as Error
+      );
+    }
+  }
+
   async deleteWikiFile(filePath: string): Promise<void> {
     const wikiBase = path.join(this.config.rootDir, this.config.wikiDir);
     const absolutePath = this.validatePath(filePath, wikiBase);
@@ -228,6 +242,59 @@ export class FileSystemAdapter implements FileSystemPort {
       throw new FileOperationError(
         `Failed to delete wiki file: ${filePath}`,
         filePath,
+        error as Error
+      );
+    }
+  }
+
+  async readFile(filePath: string): Promise<string> {
+    const absolutePath = this.validatePath(filePath, this.config.rootDir);
+
+    try {
+      return await fs.readFile(absolutePath, 'utf-8');
+    } catch (error) {
+      throw new FileOperationError(
+        `Failed to read file: ${filePath}`,
+        filePath,
+        error as Error
+      );
+    }
+  }
+
+  async writeFile(filePath: string, content: string): Promise<void> {
+    const absolutePath = this.validatePath(filePath, this.config.rootDir);
+
+    const dir = path.dirname(absolutePath);
+    try {
+      await fs.mkdir(dir, { recursive: true });
+    } catch (error) {
+      throw new FileOperationError(
+        `Failed to create directory for: ${filePath}`,
+        filePath,
+        error as Error
+      );
+    }
+
+    try {
+      await fs.writeFile(absolutePath, content, 'utf-8');
+    } catch (error) {
+      throw new FileOperationError(
+        `Failed to write file: ${filePath}`,
+        filePath,
+        error as Error
+      );
+    }
+  }
+
+  async deleteDir(dirPath: string): Promise<void> {
+    const absolutePath = this.validatePath(dirPath, this.config.rootDir);
+
+    try {
+      await fs.rm(absolutePath, { recursive: true, force: true });
+    } catch (error) {
+      throw new FileOperationError(
+        `Failed to delete directory: ${dirPath}`,
+        dirPath,
         error as Error
       );
     }

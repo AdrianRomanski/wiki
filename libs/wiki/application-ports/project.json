@@ -5,7 +5,7 @@
   "prefix": "lib",
   "projectType": "library",
   "tags": ["application"],
-  "implicitDependencies": ["domain-models"],
+  "implicitDependencies": ["domain-models", "domain-research-session"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",

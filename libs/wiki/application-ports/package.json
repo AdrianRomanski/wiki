@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@wiki/domain-models": "*",
+    "@wiki/domain-research-session": "*",
     "vitest": "*"
   },
   "sideEffects": false

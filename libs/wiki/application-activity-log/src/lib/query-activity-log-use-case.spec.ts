@@ -28,6 +28,18 @@ class MockFileSystemPort implements FileSystemPort {
   async deleteWikiFile(): Promise<void> {
     return Promise.resolve();
   }
+  async ensureDir(): Promise<void> {
+    return Promise.resolve();
+  }
+  async readFile(): Promise<string> {
+    return '';
+  }
+  async writeFile(): Promise<void> {
+    return Promise.resolve();
+  }
+  async deleteDir(): Promise<void> {
+    return Promise.resolve();
+  }
 
   setFileContent(filePath: string, content: string) {
     this.storage.set(filePath, content);

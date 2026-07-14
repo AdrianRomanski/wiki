@@ -1,0 +1,12 @@
+{
+  "name": "wiki-cli",
+  "version": "1.0.0",
+  "description": "Driver_Adapter composition roots for wiki manifest/index generation, tag validation, and scaffolding",
+  "private": true,
+  "bin": {
+    "wiki-cli": "./dist/apps/wiki-cli/index.cjs"
+  },
+  "scripts": {
+    "test": "vitest run --config vitest.config.ts"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@wiki/domain-research-errors",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "vitest": "*"
+  },
+  "sideEffects": false
+}

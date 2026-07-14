@@ -1,0 +1,6 @@
+{
+  "dest": "../../../dist/libs/wiki/application-article-extraction",
+  "lib": {
+    "entryFile": "src/index.ts"
+  }
+}

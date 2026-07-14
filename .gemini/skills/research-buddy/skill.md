@@ -84,6 +84,6 @@ These commands skip the questionnaire and go straight to the relevant step:
 - Never advance to FINALIZE without user approval of `findings-summary.md`
 - After creating wiki pages, always run:
   ```bash
-  node scripts/generate-wiki-manifest.mjs
-  node scripts/generate-wiki-index.mjs
+  npx nx run wiki-cli:generate-manifest
+  npx nx run wiki-cli:generate-index
   ```

@@ -1,0 +1,77 @@
+{
+  "name": "wiki-cli",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/wiki-cli/src",
+  "tags": ["presentation"],
+  "implicitDependencies": [
+    "application-index-manager",
+    "application-tag-validation",
+    "application-scaffolding",
+    "infrastructure-filesystem",
+    "infrastructure-frontmatter",
+    "infrastructure-markdown"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "apps/wiki-cli/src/index.ts",
+        "tsConfig": "apps/wiki-cli/tsconfig.app.json",
+        "outputPath": "dist/apps/wiki-cli",
+        "platform": "node",
+        "format": ["cjs"],
+        "bundle": true,
+        "thirdParty": true,
+        "esbuildOptions": {
+          "banner": {
+            "js": "#!/usr/bin/env node"
+          }
+        }
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config apps/wiki-cli/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "generate-manifest": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node dist/apps/wiki-cli/index.cjs generate-manifest",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "generate-index": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node dist/apps/wiki-cli/index.cjs generate-index",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "validate-tags": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node dist/apps/wiki-cli/index.cjs validate-tags",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "init": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node dist/apps/wiki-cli/index.cjs init",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

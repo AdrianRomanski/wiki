@@ -304,6 +304,39 @@ describe('FileSystemAdapter - File Operations', () => {
     });
   });
 
+  describe('ensureDir', () => {
+    it('should create a new directory', async () => {
+      await adapter.ensureDir('scratch');
+      const stats = await fs.stat(path.join(tempDir, 'scratch'));
+      expect(stats.isDirectory()).toBe(true);
+    });
+
+    it('should be idempotent when called twice on the same path', async () => {
+      await adapter.ensureDir('scratch');
+      await expect(adapter.ensureDir('scratch')).resolves.not.toThrow();
+      const stats = await fs.stat(path.join(tempDir, 'scratch'));
+      expect(stats.isDirectory()).toBe(true);
+    });
+
+    it('should create nested intermediate directories', async () => {
+      await adapter.ensureDir('a/b/c');
+      const stats = await fs.stat(path.join(tempDir, 'a', 'b', 'c'));
+      expect(stats.isDirectory()).toBe(true);
+    });
+
+    it('should reject directory traversal attempts with ../', async () => {
+      await expect(adapter.ensureDir('../escape')).rejects.toThrow(InvalidPathError);
+    });
+
+    it('should reject absolute paths', async () => {
+      await expect(adapter.ensureDir('/absolute/path')).rejects.toThrow(InvalidPathError);
+    });
+
+    it('should reject paths containing a null byte', async () => {
+      await expect(adapter.ensureDir('bad\0path')).rejects.toThrow();
+    });
+  });
+
   describe('deleteWikiFile', () => {
     it('should delete a file', async () => {
       await fs.writeFile(path.join(tempDir, 'wiki', 'test.md'), 'content');
