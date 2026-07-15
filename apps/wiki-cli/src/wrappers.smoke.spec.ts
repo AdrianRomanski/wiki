@@ -1,17 +1,3 @@
-/**
- * CLI smoke/integration tests for the wiki-cli Nx application's
- * subcommands (Driver_Adapter composition roots).
- *
- * Invokes the built CLI (`dist/apps/wiki-cli/index.cjs`) as a real
- * subprocess from the actual repo root, asserting on stdout content and
- * exit code — the same way `nx run wiki-cli:<target>` invokes it.
- *
- * Requires `nx build wiki-cli` to have already produced
- * `dist/apps/wiki-cli/index.cjs`.
- *
- * **Validates: Requirements 2.6**
- */
-
 import { describe, it, expect, afterEach } from 'vitest';
 import { execFileSync } from 'node:child_process';
 import { renameSync, existsSync } from 'node:fs';
