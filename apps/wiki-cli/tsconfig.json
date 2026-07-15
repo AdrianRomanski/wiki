@@ -6,7 +6,6 @@
     "target": "ES2022",
     "declaration": false,
     "outDir": "../../dist/apps/wiki-cli",
-    "rootDir": "src",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "strict": true,
