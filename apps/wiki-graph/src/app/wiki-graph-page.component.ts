@@ -391,41 +391,41 @@ import type { NodeType } from './models/graph.models';
   `],
 })
 export class WikiGraphPageComponent implements OnInit {
-  readonly graphState = inject(GraphStateService);
-  readonly nodeTypes: NodeType[] = ['entity', 'concept', 'source'];
-  readonly toolbarVisible = signal(true);
+  protected readonly graphState = inject(GraphStateService);
+  protected readonly nodeTypes: NodeType[] = ['entity', 'concept', 'source'];
+  protected readonly toolbarVisible = signal(true);
 
-  readonly visibleNodeIds = computed(() =>
+  protected readonly visibleNodeIds = computed(() =>
     new Set(this.graphState.visibleNodes().map(n => n.id))
   );
 
-  readonly visibleEdgeCount = computed(() => {
+  protected readonly visibleEdgeCount = computed(() => {
     const ids = this.visibleNodeIds();
     return (this.graphState.graphData()?.edges ?? [])
       .filter(e => ids.has(e.sourceId) && ids.has(e.targetId)).length;
   });
 
-  readonly allTags = () => this.graphState.graphData()?.allTags ?? [];
+  protected readonly allTags = () => this.graphState.graphData()?.allTags ?? [];
 
   ngOnInit(): void {
     this.graphState.loadGraph();
   }
 
-  toggleType(type: NodeType): void {
+  protected toggleType(type: NodeType): void {
     const active = this.graphState.activeTypeFilters().has(type);
     this.graphState.setTypeFilter(type, !active);
   }
 
-  onSearch(event: Event): void {
+  protected onSearch(event: Event): void {
     this.graphState.setSearchQuery((event.target as HTMLInputElement).value);
   }
 
-  onTagChange(event: Event): void {
+  protected onTagChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     this.graphState.setTagFilter(value || null);
   }
 
-  highlightOrphans(): void {
+  protected highlightOrphans(): void {
     const orphans = this.graphState.orphanNodes();
     if (orphans.length > 0) this.graphState.selectNode(orphans[0].id);
   }

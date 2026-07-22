@@ -1,0 +1,53 @@
+<div class="graph-controls" role="toolbar" aria-label="Graph filter controls">
+
+  <fieldset class="type-filters">
+    <legend>Node types</legend>
+    @for (type of nodeTypes; track type) {
+      <button
+        class="type-toggle"
+        [class.active]="activeTypeFilters().has(type)"
+        [attr.aria-pressed]="activeTypeFilters().has(type)"
+        [attr.aria-label]="'Toggle ' + type + ' nodes'"
+        (click)="toggleType(type)"
+      >
+        {{ type }}
+      </button>
+    }
+  </fieldset>
+
+  <div class="search-field">
+    <label for="graph-search">Search pages</label>
+    <input
+      id="graph-search"
+      type="search"
+      placeholder="Filter by title…"
+      [value]="searchQuery()"
+      (input)="onSearch($event)"
+      aria-label="Search wiki pages by title"
+    />
+  </div>
+
+  <div class="tag-filter">
+    <label for="graph-tag-filter">Filter by tag</label>
+    <select
+      id="graph-tag-filter"
+      [value]="activeTagFilter() ?? ''"
+      (change)="onTagChange($event)"
+      aria-label="Filter nodes by tag"
+    >
+      <option value="">All tags</option>
+      @for (tag of allTags(); track tag) {
+        <option [value]="tag">{{ tag }}</option>
+      }
+    </select>
+  </div>
+
+  <button
+    class="refresh-btn"
+    aria-label="Refresh graph data"
+    (click)="graphState.loadGraph()"
+  >
+    Refresh
+  </button>
+
+</div>

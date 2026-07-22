@@ -1,0 +1,48 @@
+<aside class="summary-panel" aria-label="Graph summary">
+  <h2 class="panel-title">Graph Summary</h2>
+
+  <dl class="stats">
+    <dt>Nodes</dt>
+    <dd>{{ graphData()?.nodes?.size ?? 0 }}</dd>
+
+    <dt>Edges</dt>
+    <dd>{{ graphData()?.edges?.length ?? 0 }}</dd>
+
+    <dt>Orphans</dt>
+    <dd>
+      @if (orphanNodes().length > 0) {
+        <button
+          class="orphan-count-btn"
+          [attr.aria-label]="'Highlight ' + orphanNodes().length + ' orphan nodes'"
+          (click)="highlightOrphans()"
+        >
+          {{ orphanNodes().length }}
+        </button>
+      } @else {
+        0
+      }
+    </dd>
+  </dl>
+
+  <section class="hubs-section" aria-label="Top hub nodes">
+    <span class="section-title">Hubs:</span>
+    @if (hubNodes().length > 0) {
+      <ul class="hub-list" aria-label="Hub nodes by connection count">
+        @for (node of hubNodes(); track node.id) {
+          <li>
+            <button
+              class="hub-btn"
+              [attr.aria-label]="'Select hub node: ' + node.title + ', ' + (node.inDegree + node.outDegree) + ' connections'"
+              (click)="graphState.selectNode(node.id)"
+            >
+              {{ node.title }}
+              <span class="hub-count" aria-hidden="true">{{ node.inDegree + node.outDegree }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="empty-state">No data loaded</p>
+    }
+  </section>
+</aside>
