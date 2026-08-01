@@ -48,5 +48,8 @@
       "@wiki/core": ["./dist/libs/wiki/core/index.d.ts"],
       "@wiki-graph/examples": ["./libs/wiki/examples/src/index.ts"]
     }
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
   }
 }
