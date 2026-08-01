@@ -20,6 +20,11 @@ This is an Angular/NX monorepo used for library research, prototyping, and build
 - Kebab-case for all file and folder names
 - Follow NX project conventions for imports and project boundaries
 
+### Component Architecture
+- **UI Components**: Must ONLY have `input()` and `output()`. Never inject data services or manage external state directly.
+- **Container Components**: Responsible for wrapping UI components, composing layouts, rendering component structures and lists.
+- **Smart Components**: Responsible for knowing where data comes from (injecting state/data services like `GraphStateService`) and binding reactive state to containers and UI components.
+
 ### Research Workflows
 
 This workspace has two research workflows, each managed by the `research-buddy` skill:

@@ -1,21 +1,21 @@
-@if (selectedNode()) {
+@if (node()) {
   <section
     #panel
     class="node-detail-panel"
-    role="region"
     aria-label="Node details"
     tabindex="-1"
   >
     <header class="panel-header">
-      <h2 class="node-title">{{ selectedNode()!.title }}</h2>
+      <h2 class="node-title">{{ node()!.title }}</h2>
       <button
+        type="button"
         class="close-btn"
         aria-label="Close node details"
-        (click)="close()"
+        (click)="closed.emit()"
       >✕</button>
     </header>
 
-    @if (selectedNode()!.isGhost) {
+    @if (node()!.isGhost) {
       <p class="ghost-indicator" role="status">
         ⚠ This page does not exist in the wiki (broken link target).
       </p>
@@ -24,16 +24,16 @@
     <dl class="node-meta">
       <dt>Type</dt>
       <dd>
-        <span class="type-badge type-{{ selectedNode()!.type }}">
-          {{ selectedNode()!.type }}
+        <span class="type-badge type-{{ node()!.type }}">
+          {{ node()!.type }}
         </span>
       </dd>
 
       <dt>Tags</dt>
       <dd>
-        @if (selectedNode()!.tags.length > 0) {
+        @if (node()!.tags.length > 0) {
           <ul class="tag-list" aria-label="Tags">
-            @for (tag of selectedNode()!.tags; track tag) {
+            @for (tag of node()!.tags; track tag) {
               <li class="tag">{{ tag }}</li>
             }
           </ul>
@@ -43,10 +43,10 @@
       </dd>
 
       <dt>Outgoing links</dt>
-      <dd>{{ selectedNode()!.outDegree }}</dd>
+      <dd>{{ node()!.outDegree }}</dd>
 
       <dt>Incoming links</dt>
-      <dd>{{ selectedNode()!.inDegree }}</dd>
+      <dd>{{ node()!.inDegree }}</dd>
     </dl>
   </section>
 }

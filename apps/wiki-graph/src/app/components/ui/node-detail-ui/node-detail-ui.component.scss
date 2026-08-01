@@ -1,0 +1,100 @@
+.node-detail-panel {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 15;
+  width: 300px;
+  max-height: 80vh;
+  background: rgba(30, 30, 46, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid #45475a;
+  border-radius: 8px;
+  padding: 1rem;
+  color: #cdd6f4;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.node-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #89b4fa;
+  word-break: break-word;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #585b70;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 0.2rem;
+  line-height: 1;
+  border-radius: 4px;
+}
+.close-btn:hover { color: #cdd6f4; }
+.close-btn:focus-visible { outline: 2px solid #89b4fa; }
+
+.ghost-indicator {
+  margin: 0 0 0.75rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(243, 139, 168, 0.1);
+  border: 1px solid #f38ba8;
+  border-radius: 4px;
+  color: #f38ba8;
+  font-size: 0.75rem;
+}
+
+.node-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  margin: 0;
+}
+.node-meta dt {
+  color: #585b70;
+  font-weight: 500;
+}
+.node-meta dd {
+  margin: 0;
+  color: #cdd6f4;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 1rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.type-badge.type-entity  { background: rgba(137, 180, 250, 0.15); color: #89b4fa; border: 1px solid #89b4fa; }
+.type-badge.type-concept { background: rgba(166, 227, 161, 0.15); color: #a6e3a1; border: 1px solid #a6e3a1; }
+.type-badge.type-source  { background: rgba(250, 179, 135, 0.15); color: #fab387; border: 1px solid #fab387; }
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tag {
+  background: #313244;
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.7rem;
+  color: #a6adc8;
+}
+.empty { color: #585b70; font-style: italic; }

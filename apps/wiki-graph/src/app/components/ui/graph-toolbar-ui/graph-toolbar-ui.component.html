@@ -1,0 +1,97 @@
+<div class="toolbar" [class.toolbar-collapsed]="!toolbarVisible()" role="toolbar" aria-label="Graph controls">
+
+  @for (type of nodeTypes(); track type) {
+    <button
+      type="button"
+      class="type-toggle"
+      [class.active]="activeTypeFilters().has(type)"
+      [attr.aria-pressed]="activeTypeFilters().has(type)"
+      [attr.aria-label]="'Toggle ' + type + ' nodes'"
+      (click)="typeToggled.emit(type)"
+    >{{ type }}</button>
+  }
+
+  <div class="sep"></div>
+
+  <input
+    type="search"
+    class="search-input"
+    placeholder="Search pages…"
+    [value]="searchQuery()"
+    (input)="onSearchInput($event)"
+    aria-label="Search wiki pages by title"
+  />
+
+  <select
+    class="tag-select"
+    [value]="activeTagFilter() ?? ''"
+    (change)="onTagSelectChange($event)"
+    aria-label="Filter nodes by tag"
+  >
+    <option value="">All tags</option>
+    @for (tag of allTags(); track tag) {
+      <option [value]="tag">{{ tag }}</option>
+    }
+  </select>
+
+  <div class="sep"></div>
+
+  <span class="stat" title="Visible nodes">
+    <span class="stat-label">Nodes</span>{{ visibleNodeCount() }}
+  </span>
+  <span class="stat" title="Visible edges">
+    <span class="stat-label">Edges</span>{{ visibleEdgeCount() }}
+  </span>
+  @if (orphanCount() > 0) {
+    <button
+      type="button"
+      class="stat orphan-btn"
+      title="Orphan nodes — click to highlight"
+      [attr.aria-label]="orphanCount() + ' orphan nodes, click to highlight'"
+      (click)="orphanHighlighted.emit()"
+    >
+      <span class="stat-label">Orphans</span>{{ orphanCount() }}
+    </button>
+  } @else {
+    <span class="stat" title="Orphan nodes"><span class="stat-label">Orphans</span>0</span>
+  }
+
+  <div class="sep"></div>
+
+  @for (node of hubNodes(); track node.id) {
+    <button
+      type="button"
+      class="hub-pill"
+      [attr.aria-label]="'Focus hub: ' + node.title"
+      (click)="hubSelected.emit(node.id)"
+    >
+      {{ node.title }}<span class="hub-count">{{ node.inDegree + node.outDegree }}</span>
+    </button>
+  }
+
+  <div class="spacer"></div>
+
+  <button
+    type="button"
+    class="refresh-btn"
+    aria-label="Refresh graph data"
+    (click)="refreshRequested.emit()"
+  >↺ Refresh</button>
+
+  <button
+    type="button"
+    class="toolbar-toggle"
+    aria-label="Hide toolbar"
+    (click)="toolbarVisibilityToggled.emit(false)"
+  >✕</button>
+
+</div>
+
+@if (!toolbarVisible()) {
+  <button
+    type="button"
+    class="toolbar-show-btn"
+    aria-label="Show toolbar"
+    (click)="toolbarVisibilityToggled.emit(true)"
+  >▼ show</button>
+}

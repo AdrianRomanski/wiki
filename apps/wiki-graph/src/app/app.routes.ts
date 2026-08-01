@@ -4,7 +4,7 @@ export const appRoutes: Route[] = [
   {
     path: 'wiki-graph',
     loadComponent: () =>
-      import('./wiki-graph-page.component').then(
+      import('./components/smart/wiki-graph-smart/wiki-graph-smart.component').then(
         (m) => m.WikiGraphPageComponent
       ),
   },

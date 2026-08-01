@@ -9,8 +9,8 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import type { GraphData } from '../../models/graph.models';
-import { D3ForceRenderer } from '../../d3/d3-force-renderer';
+import type { GraphData } from '../../../models/graph.models';
+import { D3ForceRenderer } from '../../../d3/d3-force-renderer';
 
 @Component({
   selector: 'app-graph-canvas',

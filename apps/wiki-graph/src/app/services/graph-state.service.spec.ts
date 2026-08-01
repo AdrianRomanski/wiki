@@ -5,10 +5,6 @@ import { GraphStateService } from './graph-state.service';
 import { WikiParserService } from './wiki-parser.service';
 import type { GraphData, GraphNode } from '../models/graph.models';
 
-// ---------------------------------------------------------------------------
-// Fixture helpers
-// ---------------------------------------------------------------------------
-
 function makeNode(id: string, overrides: Partial<GraphNode> = {}): GraphNode {
   return {
     id,
@@ -32,15 +28,10 @@ function makeGraphData(
   return { nodes: nodesMap, edges, allTags };
 }
 
-/** Trigger a successful load synchronously (of() is synchronous). */
 function loadData(service: GraphStateService, data: GraphData): void {
   (TestBed.inject(WikiParserService) as any).loadGraph.mockReturnValue(of(data));
   service.loadGraph();
 }
-
-// ---------------------------------------------------------------------------
-// GraphStateService
-// ---------------------------------------------------------------------------
 
 describe('GraphStateService', () => {
   let service: GraphStateService;
@@ -58,10 +49,6 @@ describe('GraphStateService', () => {
 
     service = TestBed.inject(GraphStateService);
   });
-
-  // -------------------------------------------------------------------------
-  // Initial state
-  // -------------------------------------------------------------------------
 
   describe('initial state', () => {
     it('graphData is null before any load', () => {
@@ -108,14 +95,9 @@ describe('GraphStateService', () => {
     });
   });
 
-  // -------------------------------------------------------------------------
-  // loadGraph — loading state and success
-  // -------------------------------------------------------------------------
-
   describe('loadGraph()', () => {
     it('sets isLoading to true while request is in flight', () => {
-      // A never-completing observable keeps isLoading true
-      wikiParserSpy.loadGraph.mockReturnValue(new Observable(() => { /* never completes */ }));
+      wikiParserSpy.loadGraph.mockReturnValue(new Observable(() => {}));
       service.loadGraph();
       expect(service.isLoading()).toBe(true);
     });
@@ -130,21 +112,14 @@ describe('GraphStateService', () => {
     });
 
     it('clears error signal at the start of a new load attempt', () => {
-      // The switchMap sets _error to null before calling wikiParser.loadGraph(),
-      // so even if the previous load failed, the error is cleared when a new
-      // load begins. Use a never-completing observable to observe this mid-flight.
       wikiParserSpy.loadGraph
         .mockReturnValueOnce(throwError(() => new Error('network error')))
-        .mockReturnValueOnce(new Observable(() => { /* never completes */ }));
+        .mockReturnValueOnce(new Observable(() => {}));
 
-      service.loadGraph(); // fails, sets error
+      service.loadGraph();
       expect(service.error()).toBe('network error');
 
-      // NOTE: After an RxJS error the outer subscription terminates, so a
-      // second loadGraph() call will not re-subscribe. This test documents
-      // the current behavior: the error persists after the subscription ends.
       service.loadGraph();
-      // error remains because the subscription has terminated
       expect(service.error()).toBe('network error');
     });
 
@@ -165,10 +140,6 @@ describe('GraphStateService', () => {
       expect(service.error()).toContain('unknown error');
     });
   });
-
-  // -------------------------------------------------------------------------
-  // selectNode
-  // -------------------------------------------------------------------------
 
   describe('selectNode()', () => {
     beforeEach(() => {
@@ -192,7 +163,6 @@ describe('GraphStateService', () => {
     });
 
     it('sets selectedNode to null when graphData is not loaded', () => {
-      // Re-inject to get a fresh instance with no data
       TestBed.resetTestingModule();
       const freshSpy = { loadGraph: vi.fn() };
       TestBed.configureTestingModule({
@@ -206,10 +176,6 @@ describe('GraphStateService', () => {
       expect(freshService.selectedNode()).toBeNull();
     });
   });
-
-  // -------------------------------------------------------------------------
-  // setTypeFilter — Requirement 4.1, 4.2
-  // -------------------------------------------------------------------------
 
   describe('setTypeFilter()', () => {
     beforeEach(() => {
@@ -253,10 +219,6 @@ describe('GraphStateService', () => {
       expect(service.visibleNodes()).toHaveLength(0);
     });
   });
-
-  // -------------------------------------------------------------------------
-  // setSearchQuery — Requirement 4.3, 4.4
-  // -------------------------------------------------------------------------
 
   describe('setSearchQuery()', () => {
     beforeEach(() => {
@@ -302,10 +264,6 @@ describe('GraphStateService', () => {
     });
   });
 
-  // -------------------------------------------------------------------------
-  // setTagFilter — Requirement 4.6, 4.7
-  // -------------------------------------------------------------------------
-
   describe('setTagFilter()', () => {
     beforeEach(() => {
       loadData(
@@ -343,10 +301,6 @@ describe('GraphStateService', () => {
     });
   });
 
-  // -------------------------------------------------------------------------
-  // Combined filters — Requirement 4.1–4.7
-  // -------------------------------------------------------------------------
-
   describe('combined filters', () => {
     beforeEach(() => {
       loadData(
@@ -365,16 +319,16 @@ describe('GraphStateService', () => {
       service.setSearchQuery('angular');
       const ids = service.visibleNodes().map((n) => n.id);
       expect(ids).toContain('angular');
-      expect(ids).not.toContain('ng-docs'); // source type disabled
-      expect(ids).not.toContain('signals'); // doesn't match search
+      expect(ids).not.toContain('ng-docs');
+      expect(ids).not.toContain('signals');
     });
 
     it('type filter + tag filter are applied together', () => {
       service.setTypeFilter('entity', false);
       service.setTagFilter('framework');
       const ids = service.visibleNodes().map((n) => n.id);
-      expect(ids).not.toContain('angular'); // entity type disabled
-      expect(ids).toContain('ng-docs');     // source with 'framework' tag
+      expect(ids).not.toContain('angular');
+      expect(ids).toContain('ng-docs');
     });
 
     it('all three filters applied together', () => {
@@ -383,36 +337,31 @@ describe('GraphStateService', () => {
       service.setTagFilter('reactivity');
       const ids = service.visibleNodes().map((n) => n.id);
       expect(ids).toContain('rxjs');
-      expect(ids).not.toContain('signals'); // doesn't match search
-      expect(ids).not.toContain('angular'); // doesn't match tag
-      expect(ids).not.toContain('ng-docs'); // source type disabled
+      expect(ids).not.toContain('signals');
+      expect(ids).not.toContain('angular');
+      expect(ids).not.toContain('ng-docs');
     });
   });
-
-  // -------------------------------------------------------------------------
-  // hubNodes — Requirement 5.2
-  // -------------------------------------------------------------------------
 
   describe('hubNodes', () => {
     it('returns top 5 nodes sorted by total connection count descending', () => {
       const nodes = [
-        makeNode('a', { inDegree: 1, outDegree: 1 }), // total: 2
-        makeNode('b', { inDegree: 5, outDegree: 3 }), // total: 8
-        makeNode('c', { inDegree: 0, outDegree: 4 }), // total: 4
-        makeNode('d', { inDegree: 2, outDegree: 2 }), // total: 4
-        makeNode('e', { inDegree: 3, outDegree: 4 }), // total: 7
-        makeNode('f', { inDegree: 0, outDegree: 1 }), // total: 1
+        makeNode('a', { inDegree: 1, outDegree: 1 }),
+        makeNode('b', { inDegree: 5, outDegree: 3 }),
+        makeNode('c', { inDegree: 0, outDegree: 4 }),
+        makeNode('d', { inDegree: 2, outDegree: 2 }),
+        makeNode('e', { inDegree: 3, outDegree: 4 }),
+        makeNode('f', { inDegree: 0, outDegree: 1 }),
       ];
       loadData(service, makeGraphData(nodes));
 
       const hubs = service.hubNodes();
       expect(hubs).toHaveLength(5);
-      expect(hubs[0].id).toBe('b'); // 8
-      expect(hubs[1].id).toBe('e'); // 7
-      // c and d both have 4 — either order is valid
+      expect(hubs[0].id).toBe('b');
+      expect(hubs[1].id).toBe('e');
       expect([hubs[2].id, hubs[3].id]).toContain('c');
       expect([hubs[2].id, hubs[3].id]).toContain('d');
-      expect(hubs[4].id).toBe('a'); // 2
+      expect(hubs[4].id).toBe('a');
     });
 
     it('returns all nodes when there are fewer than 5', () => {
@@ -438,10 +387,6 @@ describe('GraphStateService', () => {
       expect(service.hubNodes()[0].id).toBe('high');
     });
   });
-
-  // -------------------------------------------------------------------------
-  // orphanNodes — Requirement 5.1, 5.4
-  // -------------------------------------------------------------------------
 
   describe('orphanNodes', () => {
     it('identifies nodes with zero in and out degree', () => {

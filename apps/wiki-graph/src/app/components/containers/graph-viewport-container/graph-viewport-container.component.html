@@ -1,0 +1,47 @@
+<div class="wiki-graph-page">
+
+  <app-graph-canvas
+    [graphData]="graphData()"
+    [visibleNodeIds]="visibleNodeIds()"
+    [selectedNodeId]="selectedNode()?.id ?? null"
+    (nodeSelected)="nodeSelected.emit($event)"
+  />
+
+  <app-graph-toolbar-ui
+    [nodeTypes]="nodeTypes()"
+    [activeTypeFilters]="activeTypeFilters()"
+    [searchQuery]="searchQuery()"
+    [activeTagFilter]="activeTagFilter()"
+    [allTags]="allTags()"
+    [visibleNodeCount]="visibleNodeCount()"
+    [visibleEdgeCount]="visibleEdgeCount()"
+    [orphanCount]="orphanCount()"
+    [hubNodes]="hubNodes()"
+    [toolbarVisible]="toolbarVisible()"
+    (typeToggled)="typeToggled.emit($event)"
+    (searchChanged)="searchChanged.emit($event)"
+    (tagChanged)="tagChanged.emit($event)"
+    (orphanHighlighted)="orphanHighlighted.emit()"
+    (hubSelected)="hubSelected.emit($event)"
+    (refreshRequested)="refreshRequested.emit()"
+    (toolbarVisibilityToggled)="toolbarVisibilityToggled.emit($event)"
+  />
+
+  <app-node-detail-ui
+    [node]="selectedNode()"
+    (closed)="detailClosed.emit()"
+  />
+
+  @if (isLoading()) {
+    <div class="loading-overlay" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>Loading graph…
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-banner" role="alert">
+      <strong>Error:</strong> {{ error() }}
+    </div>
+  }
+
+</div>

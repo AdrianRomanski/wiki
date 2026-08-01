@@ -1,0 +1,171 @@
+.toolbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(30, 30, 46, 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid #313244;
+  overflow: hidden;
+  max-height: 200px;
+  transition: max-height 0.2s ease, padding 0.2s ease, border-color 0.2s ease;
+}
+
+.toolbar.toolbar-collapsed {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom-color: transparent;
+}
+
+.toolbar-toggle {
+  background: none;
+  border: 1px solid #585b70;
+  border-radius: 4px;
+  color: #585b70;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.45rem;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.12s, border-color 0.12s;
+}
+.toolbar-toggle:hover { color: #a6adc8; border-color: #a6adc8; }
+.toolbar-toggle:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }
+
+.toolbar-show-btn {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.75rem;
+  z-index: 11;
+  background: rgba(30, 30, 46, 0.85);
+  border: 1px solid #585b70;
+  border-radius: 0 0 6px 6px;
+  border-top: none;
+  color: #a6adc8;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem 0.25rem;
+  backdrop-filter: blur(6px);
+  transition: background 0.12s, color 0.12s;
+}
+.toolbar-show-btn:hover { background: #313244; color: #cdd6f4; }
+.toolbar-show-btn:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }
+
+.sep {
+  width: 1px;
+  height: 1.25rem;
+  background: #45475a;
+  flex-shrink: 0;
+  margin: 0 0.15rem;
+}
+
+.spacer { flex: 1; }
+
+.type-toggle {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid #585b70;
+  border-radius: 1rem;
+  background: transparent;
+  color: #a6adc8;
+  cursor: pointer;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.type-toggle.active {
+  background: #313244;
+  border-color: #89b4fa;
+  color: #89b4fa;
+}
+.type-toggle:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }
+
+.search-input {
+  padding: 0.25rem 0.5rem;
+  background: #313244;
+  border: 1px solid #585b70;
+  border-radius: 4px;
+  color: #cdd6f4;
+  font-size: 0.8rem;
+  width: 140px;
+}
+.search-input:focus { outline: 2px solid #89b4fa; border-color: #89b4fa; }
+
+.tag-select {
+  padding: 0.25rem 0.4rem;
+  background: #313244;
+  border: 1px solid #585b70;
+  border-radius: 4px;
+  color: #cdd6f4;
+  font-size: 0.8rem;
+  max-width: 130px;
+}
+.tag-select:focus { outline: 2px solid #89b4fa; border-color: #89b4fa; }
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+  color: #cdd6f4;
+  white-space: nowrap;
+}
+.stat-label {
+  font-size: 0.65rem;
+  color: #585b70;
+  margin-right: 0.1rem;
+}
+
+button.stat, .orphan-btn {
+  background: none;
+  border: 1px solid #f38ba8;
+  border-radius: 4px;
+  color: #f38ba8;
+  cursor: pointer;
+  padding: 0.1rem 0.35rem;
+}
+.orphan-btn:hover { background: rgba(243,139,168,0.1); }
+.orphan-btn:focus-visible { outline: 2px solid #f38ba8; outline-offset: 2px; }
+
+.hub-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: #313244;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  padding: 0.15rem 0.55rem;
+  cursor: pointer;
+  color: #cdd6f4;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  transition: border-color 0.12s, background 0.12s;
+}
+.hub-pill:hover { background: #45475a; border-color: #585b70; }
+.hub-pill:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }
+
+.hub-count {
+  background: #45475a;
+  border-radius: 1rem;
+  padding: 0 0.3rem;
+  font-size: 0.65rem;
+  color: #a6adc8;
+}
+
+.refresh-btn {
+  padding: 0.25rem 0.7rem;
+  background: #313244;
+  border: 1px solid #585b70;
+  border-radius: 4px;
+  color: #cdd6f4;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.refresh-btn:hover { background: #45475a; }
+.refresh-btn:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }

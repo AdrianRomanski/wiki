@@ -8,10 +8,6 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { WikiParserService, extractWikilinks, parseFilesToGraphData } from './wiki-parser.service';
 import type { WikiManifest } from '../models/graph.models';
 
-// ---------------------------------------------------------------------------
-// Fixture helpers
-// ---------------------------------------------------------------------------
-
 function makeMarkdown(
   title: string,
   type: string,
@@ -27,10 +23,6 @@ const MANIFEST: WikiManifest = {
   files: ['entities/angular.md', 'concepts/signals.md'],
   generatedAt: '2026-01-01T00:00:00.000Z',
 };
-
-// ---------------------------------------------------------------------------
-// extractWikilinks (pure function)
-// ---------------------------------------------------------------------------
 
 describe('extractWikilinks', () => {
   it('returns empty array for content with no wikilinks', () => {
@@ -71,10 +63,6 @@ describe('extractWikilinks', () => {
     expect(extractWikilinks('[[Change Detection]]')).toEqual(['Change Detection']);
   });
 });
-
-// ---------------------------------------------------------------------------
-// parseFilesToGraphData (pure function)
-// ---------------------------------------------------------------------------
 
 describe('parseFilesToGraphData', () => {
   it('returns empty graph for empty input', () => {
@@ -205,10 +193,6 @@ describe('parseFilesToGraphData', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// WikiParserService (with HttpClient mock)
-// ---------------------------------------------------------------------------
-
 describe('WikiParserService', () => {
   let service: WikiParserService;
   let httpMock: HttpTestingController;
@@ -232,11 +216,9 @@ describe('WikiParserService', () => {
       result = data;
     });
 
-    // Respond to manifest request
     const manifestReq = httpMock.expectOne('wiki/manifest.json');
     manifestReq.flush(MANIFEST);
 
-    // Respond to each file request
     httpMock
       .expectOne('wiki/entities/angular.md')
       .flush(makeMarkdown('Angular', 'entity', ['framework'], '[[Signals]]'));
@@ -286,12 +268,10 @@ describe('WikiParserService', () => {
 
     httpMock.expectOne('wiki/manifest.json').flush(MANIFEST);
 
-    // First file fails
     httpMock.expectOne('wiki/entities/angular.md').flush('Not Found', {
       status: 404,
       statusText: 'Not Found',
     });
-    // Second file succeeds
     httpMock
       .expectOne('wiki/concepts/signals.md')
       .flush(makeMarkdown('Signals', 'concept', []));
@@ -303,8 +283,6 @@ describe('WikiParserService', () => {
   });
 
   it('second loadGraph call completes independently (switchMap behaviour)', () => {
-    // Each call to loadGraph() creates a fresh observable chain via switchMap.
-    // Verify that a second subscription resolves correctly on its own.
     let result: ReturnType<typeof parseFilesToGraphData> | undefined;
 
     service.loadGraph().subscribe((data) => {
