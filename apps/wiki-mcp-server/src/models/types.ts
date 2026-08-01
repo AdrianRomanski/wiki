@@ -1,7 +1,3 @@
-/**
- * Shared TypeScript interfaces for the Wiki MCP Server.
- */
-
 export interface PageMeta {
   title: string;
   type: 'entity' | 'concept' | 'source';
@@ -34,8 +30,6 @@ export interface SearchResult {
   filePath: string;
   excerpt: string;
 }
-
-// Tool response types
 
 export interface ListPagesResult {
   pages: Array<{ title: string; type: string; tags: string[]; filePath: string }>;

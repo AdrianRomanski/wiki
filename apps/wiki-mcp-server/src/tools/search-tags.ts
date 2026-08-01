@@ -1,14 +1,5 @@
-/**
- * Tool Handler: wiki_search_tags
- *
- * Searches for pages by tag(s). Returns pages that have at least one matching tag.
- */
+import { WikiIndex, TagSearchResult } from '../models/types';
 
-import { WikiIndex, TagSearchResult } from '../types';
-
-/**
- * Handles the wiki_search_tags tool invocation.
- */
 export function handleSearchTags(
   index: WikiIndex,
   params: { tags: string[] }
@@ -33,7 +24,6 @@ export function handleSearchTags(
     }
   }
 
-  // Sort alphabetically by title
   pages.sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }));
 
   return { pages };

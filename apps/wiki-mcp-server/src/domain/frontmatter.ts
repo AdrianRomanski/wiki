@@ -1,17 +1,8 @@
-/**
- * Frontmatter Parser - Wraps gray-matter with validation and error handling.
- */
-
 import matter from 'gray-matter';
-import { PageMeta, ParseResult } from './types';
+import { PageMeta, ParseResult } from '../models/types';
 
 const VALID_TYPES = ['entity', 'concept', 'source'] as const;
 
-/**
- * Parses YAML frontmatter from a wiki page file.
- * Validates required fields and returns a structured result.
- * Returns { success: false, error } for malformed/missing frontmatter.
- */
 export function parseFrontmatter(filePath: string, rawContent: string): ParseResult {
   let parsed: matter.GrayMatterFile<string>;
 
@@ -24,17 +15,14 @@ export function parseFrontmatter(filePath: string, rawContent: string): ParseRes
 
   const data = parsed.data;
 
-  // Check if frontmatter is empty (no data extracted)
   if (!data || Object.keys(data).length === 0) {
     return { success: false, error: 'Frontmatter is missing or empty' };
   }
 
-  // Validate required field: title
   if (typeof data.title !== 'string' || data.title.trim() === '') {
     return { success: false, error: 'Required field "title" is missing or not a non-empty string' };
   }
 
-  // Validate required field: type
   if (!VALID_TYPES.includes(data.type)) {
     return {
       success: false,
@@ -42,7 +30,6 @@ export function parseFrontmatter(filePath: string, rawContent: string): ParseRes
     };
   }
 
-  // Validate required field: tags
   if (!Array.isArray(data.tags)) {
     return { success: false, error: 'Field "tags" must be an array' };
   }
@@ -52,21 +39,17 @@ export function parseFrontmatter(filePath: string, rawContent: string): ParseRes
     }
   }
 
-  // Validate required field: created
   if (typeof data.created !== 'string' && !(data.created instanceof Date)) {
     return { success: false, error: 'Required field "created" is missing or not a string' };
   }
 
-  // Validate required field: updated
   if (typeof data.updated !== 'string' && !(data.updated instanceof Date)) {
     return { success: false, error: 'Required field "updated" is missing or not a string' };
   }
 
-  // Normalize date fields — gray-matter may parse dates as Date objects
   const created = data.created instanceof Date ? data.created.toISOString().split('T')[0] : data.created;
   const updated = data.updated instanceof Date ? data.updated.toISOString().split('T')[0] : data.updated;
 
-  // Build PageMeta with required fields
   const meta: PageMeta = {
     title: data.title,
     type: data.type as 'entity' | 'concept' | 'source',
@@ -74,10 +57,9 @@ export function parseFrontmatter(filePath: string, rawContent: string): ParseRes
     created,
     updated,
     filePath,
-    outgoingLinks: [], // Populated later by the index builder
+    outgoingLinks: [],
   };
 
-  // Optional fields
   if (data.sources !== undefined) {
     if (Array.isArray(data.sources)) {
       meta.sources = data.sources as string[];

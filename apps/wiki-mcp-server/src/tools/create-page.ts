@@ -1,13 +1,7 @@
-/**
- * Tool Handler: wiki_create_page
- *
- * Creates a new wiki page with frontmatter and content.
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
-import { WikiIndex, CreatePageResult } from '../types';
-import { generateFileName } from '../filename-gen';
+import { WikiIndex, CreatePageResult } from '../models/types';
+import { generateFileName } from '../domain/filename-gen';
 
 const SUBDIR: Record<string, string> = {
   entity: 'entities',
@@ -15,10 +9,6 @@ const SUBDIR: Record<string, string> = {
   source: 'sources',
 };
 
-/**
- * Handles the wiki_create_page tool invocation.
- * Returns CreatePageResult on success, or { error: string } on failure.
- */
 export function handleCreatePage(
   wikiDir: string,
   index: WikiIndex,
@@ -35,24 +25,20 @@ export function handleCreatePage(
 ): CreatePageResult | { error: string } {
   const { title, type, tags, content, sources, author, date, url } = params;
 
-  // Validate type
   if (!['entity', 'concept', 'source'].includes(type)) {
     return { error: `Invalid type "${type}". Must be one of: entity, concept, source` };
   }
 
-  // Check for duplicate title
   const normalizedTitle = title.toLowerCase();
   if (index.pages.has(normalizedTitle)) {
     return { error: `Page already exists: "${title}"` };
   }
 
-  // Generate filename and path
   const fileName = generateFileName(title, type);
   const subdir = SUBDIR[type];
   const relativeFilePath = `${subdir}/${fileName}`;
   const fullFilePath = path.join(wikiDir, relativeFilePath);
 
-  // Build frontmatter
   const today = new Date().toISOString().split('T')[0];
   const frontmatterLines: string[] = [
     `title: ${title}`,
@@ -73,7 +59,6 @@ export function handleCreatePage(
 
   const fileContent = `---\n${frontmatterLines.join('\n')}\n---\n\n${content}`;
 
-  // Write file
   try {
     fs.writeFileSync(fullFilePath, fileContent, 'utf-8');
   } catch (err: unknown) {
@@ -81,16 +66,13 @@ export function handleCreatePage(
     return { error: `Failed to write page file: ${msg}` };
   }
 
-  // Update wiki/index.md
   try {
     const indexPath = path.join(wikiDir, 'index.md');
     const indexContent = fs.readFileSync(indexPath, 'utf-8');
     const entry = `- [[${title}]] — ${type}`;
-    // Append entry before end of file
     const updated = indexContent.trimEnd() + '\n' + entry + '\n';
     fs.writeFileSync(indexPath, updated, 'utf-8');
   } catch {
-    // Non-fatal: page was written, index update failed
     console.warn(`Warning: Could not update wiki/index.md for new page "${title}"`);
   }
 

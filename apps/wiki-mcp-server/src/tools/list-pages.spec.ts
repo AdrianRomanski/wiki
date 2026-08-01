@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { handleListPages } from '../tools/list-pages';
-import { WikiIndex, PageMeta } from '../types';
+import { handleListPages } from './list-pages';
+import { WikiIndex, PageMeta } from '../models/types';
 
 function createPageMeta(overrides: Partial<PageMeta> & { title: string }): PageMeta {
   return {
@@ -65,9 +65,7 @@ describe('handleListPages', () => {
     });
 
     it('returns empty array when no pages match the type', () => {
-      const index = buildTestIndex([
-        createPageMeta({ title: 'Angular', type: 'entity' }),
-      ]);
+      const index = buildTestIndex([createPageMeta({ title: 'Angular', type: 'entity' })]);
 
       const result = handleListPages(index, { type: 'source' });
 
@@ -102,9 +100,7 @@ describe('handleListPages', () => {
     });
 
     it('returns empty array when no pages have the tag', () => {
-      const index = buildTestIndex([
-        createPageMeta({ title: 'Angular', type: 'entity', tags: ['framework'] }),
-      ]);
+      const index = buildTestIndex([createPageMeta({ title: 'Angular', type: 'entity', tags: ['framework'] })]);
 
       const result = handleListPages(index, { tag: 'nonexistent' });
 
@@ -128,9 +124,7 @@ describe('handleListPages', () => {
     });
 
     it('returns empty when type matches but tag does not', () => {
-      const index = buildTestIndex([
-        createPageMeta({ title: 'Angular', type: 'entity', tags: ['framework'] }),
-      ]);
+      const index = buildTestIndex([createPageMeta({ title: 'Angular', type: 'entity', tags: ['framework'] })]);
 
       const result = handleListPages(index, { type: 'entity', tag: 'nonexistent' });
 

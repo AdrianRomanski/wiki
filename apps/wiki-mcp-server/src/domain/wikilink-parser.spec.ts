@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { extractWikiLinks } from '../wikilink-parser';
+import { extractWikiLinks } from './wikilink-parser';
 
 describe('extractWikiLinks', () => {
   it('extracts simple [[Title]] links', () => {
@@ -65,11 +65,7 @@ describe('extractWikiLinks', () => {
   });
 
   it('handles [[Title#Section|Display]] combined form', () => {
-    // Pipe takes precedence — everything before pipe is the raw target
-    // Then hash is applied to that raw target
     const content = '[[Page Title#Section|Display Text]]';
-    // The pipe splits first: target = "Page Title#Section"
-    // Then hash splits: title = "Page Title"
     expect(extractWikiLinks(content)).toEqual(['Page Title']);
   });
 
@@ -79,11 +75,8 @@ describe('extractWikiLinks', () => {
   });
 
   it('does not match nested brackets like [[[Title]]]', () => {
-    // The regex should still extract the inner [[Title]] from [[[Title]]]
-    // because the pattern matches the first valid [[ ]] pair
     const content = '[[[Nested]]]';
     const result = extractWikiLinks(content);
-    // The outer [ is not a \, so [[Nested]] should still match
     expect(result).toEqual(['Nested']);
   });
 });

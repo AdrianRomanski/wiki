@@ -1,18 +1,10 @@
-/**
- * Wiki Index - Scans wiki directory and builds in-memory index.
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
-import { PageMeta, WikiIndex } from './types';
-import { parseFrontmatter } from './frontmatter';
-import { extractWikiLinks } from './wikilink-parser';
+import { PageMeta, WikiIndex } from '../models/types';
+import { parseFrontmatter } from '../domain/frontmatter';
+import { extractWikiLinks } from '../domain/wikilink-parser';
 
-/**
- * Validates that the wiki directory has the required structure:
- * index.md, entities/, concepts/, sources/
- */
 export function validateStructure(wikiDir: string): { valid: boolean; error?: string } {
   const required = [
     { name: 'index.md', check: (p: string) => fs.existsSync(p) && fs.statSync(p).isFile() },
@@ -37,10 +29,6 @@ export function validateStructure(wikiDir: string): { valid: boolean; error?: st
   return { valid: true };
 }
 
-/**
- * Scans all .md files in entities/, concepts/, sources/,
- * parses frontmatter, extracts WikiLinks, and builds the index.
- */
 export async function buildIndex(wikiDir: string): Promise<WikiIndex> {
   const pages = new Map<string, PageMeta>();
   const backlinks = new Map<string, string[]>();
@@ -48,7 +36,6 @@ export async function buildIndex(wikiDir: string): Promise<WikiIndex> {
 
   const subdirs = ['entities', 'concepts', 'sources'];
 
-  // Scan each subdirectory for .md files
   for (const subdir of subdirs) {
     const dirPath = path.join(wikiDir, subdir);
 
@@ -79,7 +66,6 @@ export async function buildIndex(wikiDir: string): Promise<WikiIndex> {
         continue;
       }
 
-      // Parse frontmatter
       const result = parseFrontmatter(relativePath, rawContent);
 
       if (!result.success || !result.meta) {
@@ -89,18 +75,15 @@ export async function buildIndex(wikiDir: string): Promise<WikiIndex> {
 
       const meta = result.meta;
 
-      // Extract WikiLinks from the content body (not frontmatter)
       const parsed = matter(rawContent);
       const outgoingLinks = extractWikiLinks(parsed.content);
       meta.outgoingLinks = outgoingLinks;
 
-      // Store page keyed by normalized title (lowercase)
       const normalizedTitle = meta.title.toLowerCase();
       pages.set(normalizedTitle, meta);
     }
   }
 
-  // Build backlinks map: target title → source titles
   for (const [, pageMeta] of pages) {
     for (const linkTarget of pageMeta.outgoingLinks) {
       const normalizedTarget = linkTarget.toLowerCase();
@@ -111,7 +94,6 @@ export async function buildIndex(wikiDir: string): Promise<WikiIndex> {
     }
   }
 
-  // Build tags map: tag → page titles
   for (const [, pageMeta] of pages) {
     for (const tag of pageMeta.tags) {
       const normalizedTag = tag.toLowerCase();

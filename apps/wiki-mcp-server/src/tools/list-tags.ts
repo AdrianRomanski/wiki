@@ -1,14 +1,5 @@
-/**
- * Tool Handler: wiki_list_tags
- *
- * Lists all unique tags with page counts.
- */
+import { WikiIndex, ListTagsResult } from '../models/types';
 
-import { WikiIndex, ListTagsResult } from '../types';
-
-/**
- * Handles the wiki_list_tags tool invocation.
- */
 export function handleListTags(index: WikiIndex): ListTagsResult {
   const tagCounts = new Map<string, number>();
 

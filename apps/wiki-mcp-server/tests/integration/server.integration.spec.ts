@@ -1,21 +1,16 @@
-/**
- * Integration tests for the Wiki MCP Server.
- * Tests end-to-end: create page → list → read → search → cross-references.
- */
-
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { validateStructure, buildIndex } from '../wiki-index';
-import { handleListPages } from '../tools/list-pages';
-import { handleReadPage } from '../tools/read-page';
-import { handleSearchContent } from '../tools/search-content';
-import { handleResolveReferences } from '../tools/resolve-references';
-import { handleSearchTags } from '../tools/search-tags';
-import { handleListTags } from '../tools/list-tags';
-import { handleCreatePage } from '../tools/create-page';
-import { WikiIndex } from '../types';
+import { validateStructure, buildIndex } from '../../src/services/wiki-index.service';
+import { handleListPages } from '../../src/tools/list-pages';
+import { handleReadPage } from '../../src/tools/read-page';
+import { handleSearchContent } from '../../src/tools/search-content';
+import { handleResolveReferences } from '../../src/tools/resolve-references';
+import { handleSearchTags } from '../../src/tools/search-tags';
+import { handleListTags } from '../../src/tools/list-tags';
+import { handleCreatePage } from '../../src/tools/create-page';
+import { WikiIndex } from '../../src/models/types';
 
 function createWikiDir(): string {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'wiki-integration-'));
@@ -37,7 +32,11 @@ describe('Wiki MCP Server Integration', () => {
   beforeEach(async () => {
     wikiDir = createWikiDir();
 
-    writePage(wikiDir, 'entities', 'angular.md', `---
+    writePage(
+      wikiDir,
+      'entities',
+      'angular.md',
+      `---
 title: Angular
 type: entity
 tags:
@@ -47,9 +46,14 @@ created: "2024-01-01"
 updated: "2024-01-02"
 ---
 Angular is a platform for building web applications. It uses [[Dependency Injection]] heavily.
-`);
+`
+    );
 
-    writePage(wikiDir, 'concepts', 'dependency-injection.md', `---
+    writePage(
+      wikiDir,
+      'concepts',
+      'dependency-injection.md',
+      `---
 title: Dependency Injection
 type: concept
 tags:
@@ -59,9 +63,14 @@ created: "2024-01-01"
 updated: "2024-01-02"
 ---
 Dependency Injection is a design pattern used in [[Angular]] and many other frameworks.
-`);
+`
+    );
 
-    writePage(wikiDir, 'sources', 'source-angular-docs-2024-01-01.md', `---
+    writePage(
+      wikiDir,
+      'sources',
+      'source-angular-docs-2024-01-01.md',
+      `---
 title: Angular Docs
 type: source
 tags:
@@ -73,7 +82,8 @@ created: "2024-01-01"
 updated: "2024-01-02"
 ---
 Official documentation for [[Angular]].
-`);
+`
+    );
 
     index = await buildIndex(wikiDir);
   });

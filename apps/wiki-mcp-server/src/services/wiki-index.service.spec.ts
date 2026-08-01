@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { validateStructure, buildIndex } from '../wiki-index';
+import { validateStructure, buildIndex } from './wiki-index.service';
 
 describe('validateStructure', () => {
   let tmpDir: string;
@@ -78,7 +78,6 @@ describe('validateStructure', () => {
   });
 });
 
-
 describe('buildIndex', () => {
   let tmpDir: string;
 
@@ -97,7 +96,7 @@ describe('buildIndex', () => {
   function writeWikiPage(subdir: string, filename: string, frontmatter: Record<string, unknown>, content: string) {
     const yamlLines = Object.entries(frontmatter).map(([key, value]) => {
       if (Array.isArray(value)) {
-        return `${key}:\n${value.map(v => `  - ${v}`).join('\n')}`;
+        return `${key}:\n${value.map((v) => `  - ${v}`).join('\n')}`;
       }
       return `${key}: ${value}`;
     });
@@ -106,29 +105,44 @@ describe('buildIndex', () => {
   }
 
   it('indexes pages from all subdirectories', async () => {
-    writeWikiPage('entities', 'angular.md', {
-      title: 'Angular',
-      type: 'entity',
-      tags: ['framework', 'frontend'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Angular is a framework.');
+    writeWikiPage(
+      'entities',
+      'angular.md',
+      {
+        title: 'Angular',
+        type: 'entity',
+        tags: ['framework', 'frontend'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Angular is a framework.'
+    );
 
-    writeWikiPage('concepts', 'dependency-injection.md', {
-      title: 'Dependency Injection',
-      type: 'concept',
-      tags: ['pattern'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'DI is a pattern used in [[Angular]].');
+    writeWikiPage(
+      'concepts',
+      'dependency-injection.md',
+      {
+        title: 'Dependency Injection',
+        type: 'concept',
+        tags: ['pattern'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'DI is a pattern used in [[Angular]].'
+    );
 
-    writeWikiPage('sources', 'source-angular-docs-2024-01-01.md', {
-      title: 'Angular Docs',
-      type: 'source',
-      tags: ['documentation'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Official docs for [[Angular]] and [[Dependency Injection]].');
+    writeWikiPage(
+      'sources',
+      'source-angular-docs-2024-01-01.md',
+      {
+        title: 'Angular Docs',
+        type: 'source',
+        tags: ['documentation'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Official docs for [[Angular]] and [[Dependency Injection]].'
+    );
 
     const index = await buildIndex(tmpDir);
 
@@ -139,13 +153,18 @@ describe('buildIndex', () => {
   });
 
   it('extracts outgoing WikiLinks from content', async () => {
-    writeWikiPage('entities', 'angular.md', {
-      title: 'Angular',
-      type: 'entity',
-      tags: ['framework'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Angular uses [[Dependency Injection]] and [[RxJS]].');
+    writeWikiPage(
+      'entities',
+      'angular.md',
+      {
+        title: 'Angular',
+        type: 'entity',
+        tags: ['framework'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Angular uses [[Dependency Injection]] and [[RxJS]].'
+    );
 
     const index = await buildIndex(tmpDir);
     const page = index.pages.get('angular')!;
@@ -156,29 +175,44 @@ describe('buildIndex', () => {
   });
 
   it('builds backlinks map correctly', async () => {
-    writeWikiPage('entities', 'angular.md', {
-      title: 'Angular',
-      type: 'entity',
-      tags: ['framework'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Angular is a framework.');
+    writeWikiPage(
+      'entities',
+      'angular.md',
+      {
+        title: 'Angular',
+        type: 'entity',
+        tags: ['framework'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Angular is a framework.'
+    );
 
-    writeWikiPage('concepts', 'di.md', {
-      title: 'Dependency Injection',
-      type: 'concept',
-      tags: ['pattern'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'DI is used in [[Angular]].');
+    writeWikiPage(
+      'concepts',
+      'di.md',
+      {
+        title: 'Dependency Injection',
+        type: 'concept',
+        tags: ['pattern'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'DI is used in [[Angular]].'
+    );
 
-    writeWikiPage('sources', 'source-article-2024-01-01.md', {
-      title: 'Article',
-      type: 'source',
-      tags: ['article'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'This article discusses [[Angular]] and [[Dependency Injection]].');
+    writeWikiPage(
+      'sources',
+      'source-article-2024-01-01.md',
+      {
+        title: 'Article',
+        type: 'source',
+        tags: ['article'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'This article discusses [[Angular]] and [[Dependency Injection]].'
+    );
 
     const index = await buildIndex(tmpDir);
 
@@ -194,29 +228,44 @@ describe('buildIndex', () => {
   });
 
   it('builds tags map correctly', async () => {
-    writeWikiPage('entities', 'angular.md', {
-      title: 'Angular',
-      type: 'entity',
-      tags: ['framework', 'frontend'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Angular content.');
+    writeWikiPage(
+      'entities',
+      'angular.md',
+      {
+        title: 'Angular',
+        type: 'entity',
+        tags: ['framework', 'frontend'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Angular content.'
+    );
 
-    writeWikiPage('entities', 'react.md', {
-      title: 'React',
-      type: 'entity',
-      tags: ['framework', 'frontend'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'React content.');
+    writeWikiPage(
+      'entities',
+      'react.md',
+      {
+        title: 'React',
+        type: 'entity',
+        tags: ['framework', 'frontend'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'React content.'
+    );
 
-    writeWikiPage('concepts', 'di.md', {
-      title: 'DI',
-      type: 'concept',
-      tags: ['pattern'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'DI content.');
+    writeWikiPage(
+      'concepts',
+      'di.md',
+      {
+        title: 'DI',
+        type: 'concept',
+        tags: ['pattern'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'DI content.'
+    );
 
     const index = await buildIndex(tmpDir);
 
@@ -233,18 +282,20 @@ describe('buildIndex', () => {
   });
 
   it('skips malformed pages with a warning and continues', async () => {
-    writeWikiPage('entities', 'good.md', {
-      title: 'Good Page',
-      type: 'entity',
-      tags: ['test'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Valid page content.');
-
-    fs.writeFileSync(
-      path.join(tmpDir, 'entities', 'bad.md'),
-      '---\ntitle: \n---\n\nNo valid frontmatter.'
+    writeWikiPage(
+      'entities',
+      'good.md',
+      {
+        title: 'Good Page',
+        type: 'entity',
+        tags: ['test'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Valid page content.'
     );
+
+    fs.writeFileSync(path.join(tmpDir, 'entities', 'bad.md'), '---\ntitle: \n---\n\nNo valid frontmatter.');
 
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
@@ -258,13 +309,18 @@ describe('buildIndex', () => {
   });
 
   it('skips non-.md files', async () => {
-    writeWikiPage('entities', 'angular.md', {
-      title: 'Angular',
-      type: 'entity',
-      tags: ['framework'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Angular content.');
+    writeWikiPage(
+      'entities',
+      'angular.md',
+      {
+        title: 'Angular',
+        type: 'entity',
+        tags: ['framework'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Angular content.'
+    );
 
     fs.writeFileSync(path.join(tmpDir, 'entities', 'notes.txt'), 'not a wiki page');
 
@@ -273,13 +329,18 @@ describe('buildIndex', () => {
   });
 
   it('stores relative filePath in PageMeta', async () => {
-    writeWikiPage('entities', 'angular.md', {
-      title: 'Angular',
-      type: 'entity',
-      tags: ['framework'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Angular content.');
+    writeWikiPage(
+      'entities',
+      'angular.md',
+      {
+        title: 'Angular',
+        type: 'entity',
+        tags: ['framework'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Angular content.'
+    );
 
     const index = await buildIndex(tmpDir);
     const page = index.pages.get('angular')!;
@@ -298,13 +359,18 @@ describe('buildIndex', () => {
   it('handles missing subdirectories gracefully', async () => {
     fs.rmSync(path.join(tmpDir, 'sources'), { recursive: true });
 
-    writeWikiPage('entities', 'angular.md', {
-      title: 'Angular',
-      type: 'entity',
-      tags: ['framework'],
-      created: '2024-01-01',
-      updated: '2024-01-02',
-    }, 'Angular content.');
+    writeWikiPage(
+      'entities',
+      'angular.md',
+      {
+        title: 'Angular',
+        type: 'entity',
+        tags: ['framework'],
+        created: '2024-01-01',
+        updated: '2024-01-02',
+      },
+      'Angular content.'
+    );
 
     const index = await buildIndex(tmpDir);
     expect(index.pages.size).toBe(1);

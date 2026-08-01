@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { generateFileName } from '../filename-gen';
+import { generateFileName } from './filename-gen';
 
 describe('generateFileName', () => {
   afterEach(() => {
@@ -40,18 +40,14 @@ describe('generateFileName', () => {
     });
 
     it('truncates very long titles at a word boundary', () => {
-      const longTitle = 'a '.repeat(60).trim(); // 60 "a" words separated by spaces
+      const longTitle = 'a '.repeat(60).trim();
       const result = generateFileName(longTitle, 'entity');
-      // Should be truncated and end with .md
       expect(result.endsWith('.md')).toBe(true);
-      // The base name (without .md) should be at most 100 chars
       expect(result.length - 3).toBeLessThanOrEqual(100);
     });
 
     it('handles titles with only special characters', () => {
-      // All non-alphanumeric chars become hyphens, then get trimmed
       const result = generateFileName('!!!@@@###', 'entity');
-      // After kebab conversion: empty string (all chars are non-alphanumeric, become hyphens, then trimmed)
       expect(result).toBe('.md');
     });
   });
@@ -104,8 +100,7 @@ describe('generateFileName', () => {
 
       expect(result.startsWith('source-')).toBe(true);
       expect(result.endsWith('-2024-06-01.md')).toBe(true);
-      // Total base name (without .md) should be reasonable
-      expect(result.length - 3).toBeLessThanOrEqual(100 + 18); // kebab + source- + -date
+      expect(result.length - 3).toBeLessThanOrEqual(100 + 18);
     });
   });
 });

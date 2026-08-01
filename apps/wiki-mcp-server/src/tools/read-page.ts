@@ -1,19 +1,8 @@
-/**
- * Tool Handler: wiki_read_page
- *
- * Reads the full content of a wiki page by title or path.
- * Includes parsed frontmatter and backlinks.
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
-import { WikiIndex, ReadPageResult } from '../types';
+import { WikiIndex, ReadPageResult } from '../models/types';
 
-/**
- * Handles the wiki_read_page tool invocation.
- * Returns ReadPageResult on success, or { error: string } if not found.
- */
 export function handleReadPage(
   wikiDir: string,
   index: WikiIndex,
@@ -28,7 +17,6 @@ export function handleReadPage(
     normalizedTitle = title.toLowerCase();
     meta = index.pages.get(normalizedTitle);
   } else if (filePath) {
-    // Find by filePath match
     for (const [key, page] of index.pages) {
       if (page.filePath === filePath) {
         meta = page;
