@@ -97,7 +97,9 @@ describe('GraphStateService', () => {
 
   describe('loadGraph()', () => {
     it('sets isLoading to true while request is in flight', () => {
-      wikiParserSpy.loadGraph.mockReturnValue(new Observable(() => {}));
+      wikiParserSpy.loadGraph.mockReturnValue(new Observable(() => {
+        /* pending */
+      }));
       service.loadGraph();
       expect(service.isLoading()).toBe(true);
     });
@@ -114,7 +116,9 @@ describe('GraphStateService', () => {
     it('clears error signal at the start of a new load attempt', () => {
       wikiParserSpy.loadGraph
         .mockReturnValueOnce(throwError(() => new Error('network error')))
-        .mockReturnValueOnce(new Observable(() => {}));
+        .mockReturnValueOnce(new Observable(() => {
+          /* pending */
+        }));
 
       service.loadGraph();
       expect(service.error()).toBe('network error');

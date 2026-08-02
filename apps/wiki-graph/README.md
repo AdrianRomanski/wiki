@@ -102,25 +102,25 @@ apps/wiki-graph/
 
 ## Core Modules & Engine Subsystems
 
-### 1. Component Architecture ([`src/app/components/`](file:///home/adrian-romanski/projects/demo/wiki/apps/wiki-graph/src/app/components/README.md))
+### 1. Component Architecture ([`./src/app/components/`](./src/app/components/README.md))
 
 - **UI Tier (`components/ui/`)**: Pure presentation components receiving data strictly via `input()` signals and emitting actions via `output()` events. Includes `GraphCanvasComponent`, `GraphToolbarUiComponent`, and `NodeDetailUiComponent`.
 - **Container Tier (`components/containers/`)**: Structural wrapper components like `GraphViewportContainerComponent` composing layout grids, overlays, and canvas wrappers.
 - **Smart Tier (`components/smart/`)**: Page-level orchestrator components like `WikiGraphPageComponent` injecting state services and binding signals to template containers.
 
-### 2. D3 Renderer Engine ([`src/app/d3/`](file:///home/adrian-romanski/projects/demo/wiki/apps/wiki-graph/src/app/d3/README.md))
+### 2. D3 Renderer Engine ([`./src/app/d3/`](./src/app/d3/README.md))
 
 - **`D3ForceRenderer`**: Coordinates graph rendering, simulation ticks, zoom/pan behaviors, and drag interactions.
 - **`force-simulation.ts`**: Configures force charge, link distance, and collision forces.
 - **`graph-svg.ts`**: Handles SVG element creation, node circles, edge path markers, and text labels.
 - **`graph-state.ts`**: Manages node selection focus, highlight links, and dimmed background states.
 
-### 3. Data & State Services ([`src/app/services/`](file:///home/adrian-romanski/projects/demo/wiki/apps/wiki-graph/src/app/services/README.md))
+### 3. Data & State Services ([`./src/app/services/`](./src/app/services/README.md))
 
 - **`WikiParserService`**: Asynchronously fetches `wiki/manifest.json` and referenced markdown files, parses frontmatter and `[[wikilink]]` syntax, and transforms content into renderable `GraphData`.
 - **`GraphStateService`**: Centralized Signal store managing reactive state properties (`graphData`, `selectedNode`, `activeTypeFilters`, `searchQuery`, `activeTagFilter`, `visibleNodes`, `hubNodes`, `orphanNodes`).
 
-### 4. Domain Models ([`src/app/models/`](file:///home/adrian-romanski/projects/demo/wiki/apps/wiki-graph/src/app/models/README.md))
+### 4. Domain Models ([`./src/app/models/`](./src/app/models/README.md))
 
 - TypeScript interfaces and types for `NodeType`, `GraphNode`, `GraphEdge`, `GraphData`, `SimulationNode`, and `WikiManifest`.
 

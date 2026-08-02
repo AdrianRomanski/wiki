@@ -1,30 +1,37 @@
-# Component Architecture (UI / Containers / Smart)
+# Component Subsystem (`apps/wiki-graph/src/app/components`)
 
-This directory implements a strict three-tier component architecture for clarity, testability, and separation of concerns.
+This directory houses the Angular presentation components for the Wiki Visualizer application, organized into a strict three-tier architecture that guarantees complete separation of presentational logic, structural layouts, and reactive state management.
 
-## Architectural Layers
+---
 
-### 1. UI Components (`components/ui/`)
-**Rule**: UI components can ONLY have `input()` signals and `output()` events. They must NEVER inject state/data services directly.
+## 🏛️ Architecture & Component Design Rules
 
-- **`GraphCanvasComponent` (`ui/graph-canvas/`)**:
-  - Inputs: `graphData`, `visibleNodeIds`, `selectedNodeId`
-  - Output: `nodeSelected`
-- **`GraphToolbarUiComponent` (`ui/graph-toolbar-ui/`)**:
-  - Inputs: `nodeTypes`, `activeTypeFilters`, `searchQuery`, `activeTagFilter`, `allTags`, `visibleNodeCount`, `visibleEdgeCount`, `orphanCount`, `hubNodes`, `toolbarVisible`
-  - Outputs: `typeToggled`, `searchChanged`, `tagChanged`, `orphanHighlighted`, `hubSelected`, `refreshRequested`, `toolbarVisibilityToggled`
-- **`NodeDetailUiComponent` (`ui/node-detail-ui/`)**:
-  - Input: `node`
-  - Output: `closed`
+### 1. Presentation Tier (`ui/`)
+- **Strict Isolation**: UI components are purely presentational views. They receive state strictly through Angular `input()` signals and communicate user interactions strictly through `output()` event emitters.
+- **Zero Side Effects**: NEVER inject state management services (`GraphStateService`), data services (`WikiParserService`), or external stores directly into UI components.
 
-### 2. Container Components (`components/containers/`)
-**Rule**: Container components are responsible for wrapping UI components, composing layouts, and organizing lists/containers.
+### 2. Composition & Layout Tier (`containers/`)
+- **Layout & Structure**: Containers wrap presentational UI components, compose grid and overlay viewports, handle responsive positioning, and host loading or error states.
 
-- **`GraphViewportContainerComponent` (`containers/graph-viewport-container/`)**:
-  - Composes the interactive graph canvas, control toolbar UI, detail panel overlay, loading state, and error banner into a responsive viewport container.
+### 3. Orchestration Tier (`smart/`)
+- **State & Data Aware**: Smart components serve as page orchestrators. They inject reactive state services (`GraphStateService`), extract active signal slices, bind state to container and UI inputs, and dispatch user actions back to state services.
 
-### 3. Smart Components (`components/smart/`)
-**Rule**: Smart components know where data comes from. They inject state/data services (`GraphStateService`), bind reactive state to container/UI inputs, and map action outputs to service actions.
+---
 
-- **`WikiGraphPageComponent` (`smart/wiki-graph-smart/`)**:
-  - Main page route orchestrator injecting `GraphStateService`.
+## 💡 Functional Capabilities
+
+- **Interactive Graph Canvas**: Renders the SVG force simulation, nodes, links, and selection overlays while delegating physics calculations to the D3 rendering engine.
+- **Visual Toolbar & Controls**: Enables search query filtering, node classification toggling (Entities, Concepts, Sources), tag isolation, hub page inspection, and isolated orphan detection.
+- **Slide-Over Node Inspector**: Displays comprehensive metadata, frontmatter attributes, degree metrics, outgoing/incoming connection links, and raw markdown previews for any focused node.
+
+---
+
+## 📁 File Index
+
+| Subdirectory / Component | Component Class | Tier | Conceptual Purpose |
+| --- | --- | --- | --- |
+| [`./ui/graph-canvas/`](./ui/graph-canvas/) | `GraphCanvasComponent` | UI | Presentational SVG canvas container hosting the D3 simulation element. |
+| [`./ui/graph-toolbar-ui/`](./ui/graph-toolbar-ui/) | `GraphToolbarUiComponent` | UI | Filter bar presenting search, type toggles, tag dropdowns, and statistics. |
+| [`./ui/node-detail-ui/`](./ui/node-detail-ui/) | `NodeDetailUiComponent` | UI | Slide-over inspector panel displaying focused node properties and links. |
+| [`./containers/graph-viewport-container/`](./containers/graph-viewport-container/) | `GraphViewportContainerComponent` | Container | Layout composition container wrapping canvas, toolbar, overlays, and status banners. |
+| [`./smart/wiki-graph-smart/`](./smart/wiki-graph-smart/) | `WikiGraphPageComponent` | Smart | Top-level route page component binding reactive signal state to presentation tiers. |
