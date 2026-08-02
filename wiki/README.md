@@ -64,87 +64,53 @@ Distill key information from raw source documents.
 - Key points and insights
 - Relevant entities and concepts
 - Notable quotes
-- Link to raw source file
+- **Example Files**: `wcag-guide-2024-05-10.md`, `angular-aria-research-2024-05-10.md`
 
-**Example:** `wcag-guide-2024-05-10.md`, `angular-aria-research-2024-05-10.md`
+## Specification & Single Source of Truth
 
-## Workflows
+> ℹ️ **System Schema Contract**: The authoritative single source of truth (SSOT) for page frontmatter requirements, strict title-based `[[WikiLink]]` conventions, and automated workflows (Ingestion, Query, Maintenance) is documented in [../WIKI_SCHEMA.md](../WIKI_SCHEMA.md).
 
-### Ingestion Workflow
+## Page Types Summary
 
-**Purpose:** Convert raw sources into structured wiki pages.
+For complete YAML frontmatter specifications and field contracts, see [../WIKI_SCHEMA.md](../WIKI_SCHEMA.md#page-types).
 
-**Process:**
-1. Read raw source from `raw/` directory
-2. Analyze content to identify entities, concepts, and insights
-3. Generate appropriate wiki pages with structured content
-4. Add cross-references to related existing pages
-5. Update `index.md` with new pages
-6. Record event in `activity-log.md`
-7. Commit changes to git
+### Entity Pages (`entities/`)
 
-**Trigger:** When new files are added to `raw/` directory
+Describe specific things: libraries, tools, components, APIs, people, or concrete objects.
+- **Example Files**: `angular-cdk.md`, `aria-live-region.md`, `screen-reader.md`
 
-### Query Workflow
+### Concept Pages (`concepts/`)
 
-**Purpose:** Search and retrieve information from the wiki.
+Explain ideas, patterns, principles, or abstract notions.
+- **Example Files**: `progressive-enhancement.md`, `keyboard-navigation.md`, `semantic-html.md`
 
-**Methods:**
-- **Full-Text Search**: Search across all wiki content
-- **Tag-Based Search**: Filter by tags in frontmatter
-- **Name-Based Search**: Find entities or concepts by name
-- **Cross-Reference Navigation**: Follow `[[WikiLink]]` connections
+### Source Summaries (`sources/`)
 
-**Output:** Ranked results with cross-reference context
+Distill key information from raw source documents.
+- **Example Files**: `wcag-guide-2024-05-10.md`, `angular-aria-research-2024-05-10.md`
 
-### Maintenance Workflow
-
-**Purpose:** Review and improve wiki quality.
-
-**Tasks:**
-- Validate all `[[WikiLink]]` references
-- Detect duplicate or overlapping content
-- Identify contradictions across pages
-- Suggest consolidation opportunities
-- Find orphaned pages (no incoming links)
-- Generate maintenance report with recommendations
-
-**Trigger:** Periodic (weekly/monthly) or on-demand
-
-## Cross-Referencing
+## Cross-Referencing Rules
 
 ### WikiLink Syntax
 
-Use `[[WikiLink]]` syntax to link between wiki pages:
+Use `[[WikiLink]]` syntax to link between wiki pages. **Always use the target page's frontmatter `title` property** (not the filename or slug) to prevent ghost nodes in graph visualizers (see [WIKI_SCHEMA.md](../WIKI_SCHEMA.md#wikilink-syntax)):
 
 ```markdown
-The [[angular-cdk]] provides primitives for [[keyboard-navigation]].
+The [[Angular CDK]] provides primitives for [[Keyboard Navigation]].
 
-See [[progressive-enhancement]] for design principles.
+See [[Progressive Enhancement]] for design principles.
 ```
 
 ### Linking Guidelines
 
-- Link entity names when mentioned
-- Link concept names when explained
-- Create bidirectional links (if A links to B, B should reference A)
+- Link entity names when mentioned using exact page titles (e.g. `[[Angular CDK]]`)
+- Link concept names when explained using exact page titles (e.g. `[[Progressive Enhancement]]`)
+- Create bidirectional links (if Page A links to Page B, Page B should reference Page A)
 - Only link when it adds value (avoid over-linking)
-- Validate links during maintenance workflow
 
-## Frontmatter
+## Frontmatter & Workflows
 
-All wiki pages include YAML frontmatter with metadata:
-
-```yaml
----
-title: Page Title
-type: entity | concept | source
-tags: [tag1, tag2, tag3]
-sources: [source-ref-1, source-ref-2]  # Optional
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
----
-```
+All wiki pages require YAML frontmatter. Automated workflows (Ingestion, Query, Maintenance) operate on these fields. Refer to [../WIKI_SCHEMA.md](../WIKI_SCHEMA.md#frontmatter-requirements) for exact field definitions and workflow triggers.
 
 ## Navigation
 
@@ -155,19 +121,12 @@ The index page provides:
 - Lists of all entities, concepts, and recent sources
 - Navigation links to major sections
 - Statistics (total pages, last updated, health score)
-- Quick reference for common workflows
 
 **Always keep the index synchronized with wiki content.**
 
 ### Activity Log (`activity-log.md`)
 
-The activity log records:
-- Wiki page creation events
-- Wiki page update events
-- Raw source ingestion events
-- Maintenance workflow runs
-
-**Entries are in reverse chronological order (newest first).**
+The activity log records chronological wiki page creation, updates, and maintenance events.
 
 ## External Tool Compatibility
 
@@ -207,9 +166,6 @@ git log -- wiki/
 
 # See changes to specific page
 git log -- wiki/entities/angular-cdk.md
-
-# View diff
-git diff HEAD~1 wiki/entities/angular-cdk.md
 ```
 
 **Commit Format:**
@@ -219,33 +175,9 @@ git diff HEAD~1 wiki/entities/angular-cdk.md
 <optional detailed description>
 ```
 
-## Best Practices
-
-### ✓ DO
-
-- Generate structured content following page type templates
-- Add cross-references to related pages
-- Update `index.md` when creating new pages
-- Record events in `activity-log.md`
-- Use descriptive, kebab-case filenames
-- Include all required frontmatter fields
-- Update the `updated` field when modifying pages
-- Run maintenance workflow periodically
-- Commit changes with meaningful messages
-
-### ✗ DON'T
-
-- Modify raw source files (they're immutable)
-- Create pages without proper frontmatter
-- Use broken `[[WikiLink]]` references
-- Nest subdirectories deeply (keep structure flat)
-- Duplicate content across multiple pages
-- Leave orphaned pages (no incoming links)
-- Modify Angular project files (`apps/`, `libs/`, `.kiro/`)
-
 ## Examples
 
-### Creating an Entity Page
+### Entity Page Example
 
 ```markdown
 ---
@@ -271,24 +203,24 @@ An ARIA live region is a section of a web page that announces dynamic content ch
 
 ## Relationships
 
-- Used by [[screen-reader]]
-- Implemented in [[angular-cdk]] LiveAnnouncer
-- Supports [[progressive-enhancement]]
+- Used by [[Screen Reader]]
+- Implemented in [[Angular CDK]] LiveAnnouncer
+- Supports [[Progressive Enhancement]]
 
 ## Examples
 
-\`\`\`html
+```html
 <div aria-live="polite" aria-atomic="true">
   <p>{{ statusMessage }}</p>
 </div>
-\`\`\`
+```
 
 ## References
 
-- [[wcag-guide-2024-05-10]]
+- [[WCAG 2.1 Overview]]
 ```
 
-### Creating a Concept Page
+### Concept Page Example
 
 ```markdown
 ---
@@ -315,13 +247,13 @@ Keyboard navigation is the ability to interact with a web application using only
 
 ## Related Concepts
 
-- [[progressive-enhancement]]
-- [[focus-management]]
-- [[aria-patterns]]
+- [[Progressive Enhancement]]
+- [[Focus Management]]
+- [[ARIA Patterns]]
 
 ## Examples
 
-\`\`\`typescript
+```typescript
 @HostListener('keydown', ['$event'])
 handleKeydown(event: KeyboardEvent) {
   if (event.key === 'Enter' || event.key === ' ') {
@@ -329,15 +261,15 @@ handleKeydown(event: KeyboardEvent) {
     event.preventDefault();
   }
 }
-\`\`\`
+```
 
 ## References
 
-- [[angular-cdk]]
+- [[Angular CDK]]
 ```
 
-## Questions?
+## Questions & Reference Links
 
-- See `WIKI_SCHEMA.md` for complete system documentation
-- See `raw/README.md` for source organization
-- See `index.md` for navigation and overview
+- See [WIKI_SCHEMA.md](../WIKI_SCHEMA.md) for complete system documentation and schema specification
+- See `raw/README.md` for raw source document organization
+- See [index.md](index.md) for navigation and overview

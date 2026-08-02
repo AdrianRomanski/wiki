@@ -20,15 +20,24 @@ Use this skill whenever asked to generate or refactor a `README.md` file anywher
 - Describe real-world domain responsibilities, system architecture, visual encodings, visual/UX flows, and business capabilities.
 - Write for human engineers joining the project who need to grasp the conceptual purpose immediately.
 
-### 2. 🚫 STAGE-1 ANTI-PATTERNS (STRICTLY PROHIBITED)
+### 2. 👋 Warm & Inviting Entry Point (Main Repository README)
+- The root `README.md` serves as the primary entrance and front door to the repository.
+- Provide a friendly, approachable welcome that introduces what the repository is about, its mission, core stack, how to use it, and how to get started in minutes without drowning the reader in jargon upfront.
+
+### 3. 🚫 STAGE-1 ANTI-PATTERNS (STRICTLY PROHIBITED)
 - **NO Dry Public API Dumps**: Do NOT list raw interface field-by-field definitions (`interface Foo { bar: string; baz: number }`), type aliases, or function signatures with parameter lists.
 - **NO Robotic Boilerplate Usage Snippets**: Do NOT paste generic copy-pasted TypeScript import/usage blocks (`import { X } from './x'; const x = new X();`) unless explaining a critical integration flow.
 - **NO Line-by-Line Code Trivia**: Avoid mentioning trivial implementation mechanics or line counts.
 - **NO Redundant Application Inner READMEs**: Every application has **EXACTLY ONE** application README at `apps/[app-name]/README.md`. NEVER create redundant inner `src/app/README.md` or `src/README.md` files right below an application root.
 
-### 3. 🔗 Mandatory Relative Paths
+### 4. 🔗 Mandatory Relative Paths
 - All links in file summaries, module tables, and architecture sections **MUST** use relative Markdown paths (e.g., [`./file-name.ts`](./file-name.ts) or [`./subfolder/README.md`](./subfolder/README.md)).
 - **NEVER** use absolute `file://` URLs in generated README files.
+
+### 5. 📜 Schema Specification vs. Directory README (Separation of Concerns)
+- **Schema Specification (`WIKI_SCHEMA.md` / `[SYSTEM]_SCHEMA.md`)**: When a subsystem or knowledge base has a dedicated schema specification document, that file serves as the **Single Source of Truth (SSOT)** for strict frontmatter schemas, field validation rules, naming conventions, and automated workflow triggers (for AI agents & CLI tools).
+- **Directory README (`wiki/README.md`)**: Subfolder README files act as **lightweight entry points and human navigation guides**. They must **NOT** duplicate detailed schema specifications, workflow rules, or field-by-field validation contracts. Instead, they provide high-level folder structure, usage/search examples, and link directly to the schema specification (`WIKI_SCHEMA.md`).
+- **Title-Based WikiLink Rules**: In wiki/knowledge-base documentation, always enforce title-based WikiLink syntax (`[[Page Title]]`) rather than filename slugs (`[[page-slug]]`) to prevent ghost nodes in graph visualizers (e.g. Obsidian).
 
 ---
 
@@ -40,52 +49,75 @@ Identify which type of README you are generating and follow its dedicated templa
 
 ### Type 1: Repository README (`README.md` at root)
 
-Used for the top-level repository or monorepo root documentation.
+Used for the top-level repository or monorepo root documentation. Acts as a **warm welcome**, explaining the repository's purpose, workspace organization, and how to run and use it.
 
 ```markdown
 # [Repository Name]
 
-[1-2 sentences summarizing the overarching mission, technology stack, and core capability of this repository.]
+👋 **Welcome to [Repository Name]!** 
+
+[Friendly 2-3 sentence welcome introducing the repository, its mission, key capabilities, and underlying technology stack in clear, accessible language.]
 
 ---
 
-## 🌟 Capabilities & System Mission
+## 💡 What is this Repository About?
 
-- **[Core Capability 1]**: [High-level explanation of what this repository accomplishes]
-- **[Core Capability 2]**: [High-level explanation of second core capability]
+[A clear, engaging explanation of what the repository does, the primary problems it solves, and why it exists. Written so anyone joining the project can immediately grasp the domain and vision.]
+
+### Key Highlights
+- **[Highlight 1]**: [Short description of core feature or architecture pillar]
+- **[Highlight 2]**: [Short description of core feature or architecture pillar]
+- **[Highlight 3]**: [Short description of core feature or architecture pillar]
 
 ---
 
 ## 🏗️ Architecture & Project Structure
 
-[Brief overview of the monorepo design, clean architecture layers, or workspace organisation.]
+[Overview of the workspace structure, monorepo layout, and key boundaries.]
 
 ```text
 [ASCII / Mermaid Architectural Diagram showing applications, libraries, and external integrations]
 ```
 
-| Layer / Workspace Area | Location | Purpose & Role |
+| Workspace Area / Layer | Location | Purpose & Role |
 | --- | --- | --- |
-| **Applications** | [`./apps/`](./apps/) | Standalone executables, web applications, and CLI tools. |
-| **Libraries** | [`./libs/`](./libs/) | Reusable domain models, application use cases, and infrastructure adapters. |
-| **Knowledge Base** | [`./wiki/`](./wiki/) | Structured entities, concepts, and research documentation. |
+| **Applications** | [`./apps/`](./apps/) | Standalone web applications, CLI tools, and demo targets. |
+| **Libraries** | [`./libs/`](./libs/) | Reusable domain models, UI components, application logic, and infrastructure adapters. |
+| **Knowledge Base / Wiki** | [`./wiki/`](./wiki/) | Structured knowledge base containing entities, concepts, and research sources. |
 
 ---
 
-## 🚀 Getting Started & Dev Commands
+## 🚀 How to Use & Get Started
 
-| Nx Target / Script | Purpose | Command |
+[Quick, step-by-step guide for getting up and running locally.]
+
+### Prerequisites
+- Node.js (v18+ recommended)
+- npm / pnpm / yarn
+
+### Quick Start Commands
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Start the primary local application
+npx nx serve [app-name]
+```
+
+### Essential Dev Commands
+| Nx Target / Script | Command | Description |
 | --- | --- | --- |
-| `serve` | Launches primary local dev application | `npx nx serve [app-name]` |
-| `build` | Compiles production application bundles | `npx nx run-many -t build` |
-| `test` | Runs test suites across the repository | `npx nx run-many -t test` |
+| `serve` | `npx nx serve [app-name]` | Launches dev server with live reload |
+| `build` | `npx nx run-many -t build` | Compiles production build artifacts across the workspace |
+| `test` | `npx nx run-many -t test` | Executes unit and integration test suites |
 
 ---
 
-## 🔄 Core System Workflows
+## 🔄 Common Workflows & Navigation
 
-1. **[Workflow Step 1 Name]**: [Explanation of workflow]
-2. **[Workflow Step 2 Name]**: [Explanation of workflow]
+1. **Exploring Applications**: Head over to [`./apps/`](./apps/) to see executable applications and UI entry points.
+2. **Developing Libraries**: Check out [`./libs/`](./libs/) for modular components and business logic.
+3. **Research & Wiki**: Browse [`./wiki/`](./wiki/) for architectural concepts, research notes, and domain documentation.
 ```
 
 ---
@@ -223,10 +255,56 @@ Used for specific internal subdirectories (e.g. `components`, `services`, `d3`, 
 
 ---
 
+### Type 5: Knowledge Base / Subsystem Directory README (`wiki/README.md`)
+
+Used for knowledge base root folders, structured vault directories, or subsystems governed by a separate schema specification file (e.g., `WIKI_SCHEMA.md`).
+
+```markdown
+# [Knowledge Base / Subsystem Title]
+
+[1-2 sentence overview of the directory content, knowledge base purpose, or system store.]
+
+---
+
+## 📜 Specification & Single Source of Truth
+
+> ℹ️ **System Schema Contract**: The authoritative single source of truth (SSOT) for page frontmatter requirements, strict title-based `[[WikiLink]]` conventions, and automated workflows is documented in [../WIKI_SCHEMA.md](../WIKI_SCHEMA.md).
+
+---
+
+## 📁 Directory Structure & Categories
+
+| Folder / Category | Purpose & Content | Example Files |
+| --- | --- | --- |
+| [`./entities/`](./entities/) | Pages describing specific things (tools, APIs, libraries) | `angular-cdk.md` |
+| [`./concepts/`](./concepts/) | Explanations of ideas, patterns, or architecture principles | `progressive-enhancement.md` |
+| [`./sources/`](./sources/) | Distilled summaries of raw source documents | `wcag-guide-2024-05-10.md` |
+
+---
+
+## 🔗 Navigation & External Tooling
+
+- **Graph & Vault Browsing**: Open directory in Obsidian or equivalent tools using `[[Page Title]]` WikiLink syntax.
+- **Search CLI**:
+  ```bash
+  rg "search query" wiki/
+  ```
+
+---
+
+## 📖 Reference Links
+
+- See [WIKI_SCHEMA.md](../WIKI_SCHEMA.md) for full schema specifications and validation rules.
+- See [index.md](index.md) for current top-level navigation and statistics.
+```
+
+---
+
 ## 🚀 Execution Steps
 
-1. **Classify Target**: Determine if the target is a Repository, Application, Library, or Module/Directory.
+1. **Classify Target**: Determine if the target is a Repository, Application, Library, Knowledge Base/Subsystem Directory, or Module/Directory.
 2. **Inspect Files**: Read the contents of the target directory to understand its true domain purpose, architectural patterns, and functional capabilities.
 3. **Verify App Uniqueness**: If writing an application README, verify it lives at `apps/[app-name]/README.md` and remove any redundant `src/app/README.md` or `src/README.md` files.
-4. **Enforce Readability Rules**: Ensure no dry interface dumps, parameter lists, or robotic usage code blocks are present.
-5. **Generate README**: Write `README.md` following the exact corresponding template and ensuring relative file links (`./filename.ts`).
+4. **Separate Schema vs README Concerns**: If a dedicated schema specification exists (e.g. `WIKI_SCHEMA.md`), ensure the subfolder `README.md` does not duplicate detailed schema rules or workflow triggers, but links directly to the schema file as SSOT.
+5. **Enforce Readability & Link Conventions**: Ensure no dry interface dumps or robotic usage blocks. Ensure all WikiLinks use title-based syntax (`[[Page Title]]`) and relative file links (`./filename.md`).
+6. **Generate README**: Write `README.md` following the exact corresponding template.
