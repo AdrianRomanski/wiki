@@ -4,7 +4,7 @@
   "sourceRoot": "libs/wiki/infrastructure-frontmatter/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["infrastructure"],
+  "tags": ["scope:wiki", "hexagonal:infrastructure"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",

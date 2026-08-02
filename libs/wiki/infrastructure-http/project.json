@@ -4,7 +4,7 @@
   "sourceRoot": "libs/wiki/infrastructure-http/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["infrastructure"],
+  "tags": ["scope:wiki", "hexagonal:infrastructure"],
   "implicitDependencies": ["domain-research-session", "application-ports"],
   "targets": {
     "build": {

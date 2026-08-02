@@ -4,7 +4,7 @@
   "sourceRoot": "libs/wiki/core/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["presentation"],
+  "tags": ["scope:wiki", "hexagonal:presentation"],
   "implicitDependencies": [
     "domain-models",
     "domain-naming",

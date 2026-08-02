@@ -4,7 +4,8 @@
   "prefix": "lib",
   "projectType": "library",
   "tags": [
-    "application"
+    "scope:wiki",
+    "hexagonal:application"
   ],
   "implicitDependencies": [
     "domain-research-session",

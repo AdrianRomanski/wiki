@@ -4,7 +4,7 @@
   "sourceRoot": "libs/wiki/application-query/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["application"],
+  "tags": ["scope:wiki", "hexagonal:application"],
   "implicitDependencies": ["domain-models", "application-ports", "infrastructure-filesystem", "infrastructure-frontmatter", "infrastructure-markdown"],
   "targets": {
     "build": {

@@ -17,20 +17,29 @@ export default [
           allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
           depConstraints: [
             {
-              sourceTag: 'domain',
-              onlyDependOnLibsWithTags: ['domain'],
+              sourceTag: 'hexagonal:domain',
+              onlyDependOnLibsWithTags: ['hexagonal:domain'],
             },
             {
-              sourceTag: 'application',
-              onlyDependOnLibsWithTags: ['domain', 'application'],
+              sourceTag: 'hexagonal:application',
+              onlyDependOnLibsWithTags: ['hexagonal:domain', 'hexagonal:application'],
             },
             {
-              sourceTag: 'infrastructure',
-              onlyDependOnLibsWithTags: ['domain', 'application', 'infrastructure'],
+              sourceTag: 'hexagonal:infrastructure',
+              onlyDependOnLibsWithTags: [
+                'hexagonal:domain',
+                'hexagonal:application',
+                'hexagonal:infrastructure',
+              ],
             },
             {
-              sourceTag: 'presentation',
-              onlyDependOnLibsWithTags: ['domain', 'application', 'infrastructure', 'presentation'],
+              sourceTag: 'hexagonal:presentation',
+              onlyDependOnLibsWithTags: [
+                'hexagonal:domain',
+                'hexagonal:application',
+                'hexagonal:infrastructure',
+                'hexagonal:presentation',
+              ],
             },
             {
               sourceTag: '*',

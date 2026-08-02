@@ -3,7 +3,7 @@
   "sourceRoot": "libs/wiki/application-cross-reference/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["application"],
+  "tags": ["scope:wiki", "hexagonal:application"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",

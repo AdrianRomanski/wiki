@@ -2,15 +2,15 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { validateStructure, buildIndex } from '../../src/services/wiki-index.service';
-import { handleListPages } from '../../src/tools/list-pages';
-import { handleReadPage } from '../../src/tools/read-page';
-import { handleSearchContent } from '../../src/tools/search-content';
-import { handleResolveReferences } from '../../src/tools/resolve-references';
-import { handleSearchTags } from '../../src/tools/search-tags';
-import { handleListTags } from '../../src/tools/list-tags';
-import { handleCreatePage } from '../../src/tools/create-page';
-import { WikiIndex } from '../../src/models/types';
+import { validateStructure, buildIndex } from './services/wiki-index.service';
+import { handleListPages } from './tools/list-pages';
+import { handleReadPage } from './tools/read-page';
+import { handleSearchContent } from './tools/search-content';
+import { handleResolveReferences } from './tools/resolve-references';
+import { handleSearchTags } from './tools/search-tags';
+import { handleListTags } from './tools/list-tags';
+import { handleCreatePage } from './tools/create-page';
+import { WikiIndex } from './models/types';
 
 function createWikiDir(): string {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'wiki-integration-'));

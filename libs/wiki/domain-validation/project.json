@@ -3,7 +3,7 @@
   "sourceRoot": "libs/wiki/domain-validation/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["domain"],
+  "tags": ["scope:wiki", "hexagonal:domain"],
   "targets": {
     "build": {
       "executor": "@nx/angular:ng-packagr-lite",

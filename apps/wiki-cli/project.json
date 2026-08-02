@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/wiki-cli/src",
-  "tags": ["presentation"],
+  "tags": ["scope:wiki", "hexagonal:presentation"],
   "implicitDependencies": [
     "application-index-manager",
     "application-tag-validation",

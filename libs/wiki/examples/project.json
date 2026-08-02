@@ -3,7 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/wiki/examples/src",
   "projectType": "library",
-  "tags": ["examples"],
+  "tags": ["scope:wiki", "hexagonal:presentation"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

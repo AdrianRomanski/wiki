@@ -4,7 +4,7 @@
   "sourceRoot": "libs/wiki/application-activity-log/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["application"],
+  "tags": ["scope:wiki", "hexagonal:application"],
   "implicitDependencies": ["domain-models", "application-ports"],
   "targets": {
     "build": {

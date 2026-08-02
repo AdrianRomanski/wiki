@@ -4,7 +4,7 @@
   "sourceRoot": "libs/wiki/application-ports/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["application"],
+  "tags": ["scope:wiki", "hexagonal:application"],
   "implicitDependencies": ["domain-models", "domain-research-session"],
   "targets": {
     "build": {

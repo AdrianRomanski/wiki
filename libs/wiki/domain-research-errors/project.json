@@ -4,7 +4,7 @@
   "sourceRoot": "libs/wiki/domain-research-errors/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["domain"],
+  "tags": ["scope:wiki", "hexagonal:domain"],
   "implicitDependencies": [],
   "targets": {
     "build": {
