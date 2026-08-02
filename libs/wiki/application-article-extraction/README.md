@@ -1,23 +1,27 @@
-# application-article-extraction
+# Article Extraction Pipeline (`libs/wiki/application-article-extraction`)
 
-Application Layer library for the Content_Extractor subsystem of the article
-research workflow.
+`@wiki/application-article-extraction` handles parsing external web articles, blog posts, and raw documentation files into normalized source data ready for ingestion into the wiki knowledge base.
 
-Provides use cases for turning raw article markdown into structured,
-analyzable content:
+---
 
-- `parseArticle` — parses raw markdown (frontmatter + body) into an
-  `ArticleContent` (title, author, date, body, code blocks, links). Pure
-  function, no I/O.
-- `identifyCandidates` — heuristically identifies candidate entity and
-  concept names from article body text. Pure function, no I/O.
-- `generateAnalysis` — renders `article-analysis.md` from `ArticleContent` +
-  `ArticleMetadata` and writes it via `FileSystemPort.writeFile`.
-- `saveArticleContent` / `loadArticleContent` — serializes/deserializes
-  `article-content.json` via `FileSystemPort.writeFile` / `readFile`.
+## 🎯 Architectural Layer & Domain Responsibility
 
-All session-directory file I/O is routed through the generic
-`FileSystemPort.readFile` / `writeFile` methods (workspace-root-relative),
-since research session directories (`.kiro/research/sessions/[id]/`) live
-outside the `raw/` and `wiki/` trees that the port's other methods are scoped
-to.
+- **Architectural Layer**: Application Use Cases & Extraction Pipeline
+- **Core Responsibility**: Extracts main text content, cleans HTML/Markdown markup, parses author and publishing date headers from external raw articles.
+- **Upstream Dependencies**: `@wiki/domain-*`, `@wiki/application-ports`
+- **Downstream Consumers**: Article research skills, ingestion workflows.
+
+---
+
+## ⚡ Domain Capabilities
+
+- **Article Content Normalization**: Extracts core article text while stripping navigation elements, ads, and unneeded markup.
+- **Metadata Discovery**: Extracts publication date, author details, source URL, and suggested tags.
+
+---
+
+## 📁 Module Summary
+
+| File / Folder | Primary Role & Responsibility |
+| --- | --- |
+| [`./src/lib/extract-article.use-case.ts`](./src/lib/extract-article.use-case.ts) | Use case extracting normalized source data from raw article inputs. |

@@ -1,22 +1,27 @@
-# application-scaffolding
+# Wiki Directory Scaffolding (`libs/wiki/application-scaffolding`)
 
-Application Layer library for scaffolding the wiki + `raw/` directory
-structure.
+`@wiki/application-scaffolding` implements use cases for initializing and bootstrapping workspace directory structures (`wiki/`, `wiki/entities`, `wiki/concepts`, `wiki/sources`, `raw/`).
 
-Provides `ScaffoldWikiUseCase`, which idempotently creates the fixed set of
-`raw/*` and `wiki/*` directories (via `FileSystemPort.ensureDir`), mirroring
-the pre-migration `scripts/init-wiki.ts` behavior.
+---
 
-## Known simplification: `created` vs `existing`
+## 🎯 Architectural Layer & Domain Responsibility
 
-`FileSystemPort` has no directory-existence-check method (only file-existence
-checks: `rawFileExists` / `wikiFileExists`), and `ensureDir` itself does not
-report whether it created a new directory or found one that already existed.
-Because of this, `ScaffoldWikiUseCase` cannot cleanly distinguish "created"
-from "existing" purely through the port. As a pragmatic simplification, every
-directory processed by `ensureDir` is reported in the `created` list; the
-`existing` list is always empty. This preserves the fixed-list iteration and
-idempotence behavior of the original `scripts/init-wiki.ts` script (calling
-`execute()` again on an already-scaffolded tree is a no-op on disk), while
-the created/existing distinction is not observable through the current port
-surface.
+- **Architectural Layer**: Application Scaffolding Use Cases
+- **Core Responsibility**: Initializes required directory hierarchies, seeds baseline `index.md` files, and ensures missing folders exist prior to ingestion runs.
+- **Upstream Dependencies**: `@wiki/domain-*`, `@wiki/application-ports`
+- **Downstream Consumers**: `nx run wiki-cli:init`, setup scripts, `@wiki/core`.
+
+---
+
+## ⚡ Domain Capabilities
+
+- **Directory Scaffolding (`ScaffoldWikiDirectoriesUseCase`)**: Scaffolds standard folder hierarchy with appropriate initial overview markdown files.
+- **Initialization Check**: Validates whether target directory structure is already present.
+
+---
+
+## 📁 Module Summary
+
+| File / Folder | Primary Role & Responsibility |
+| --- | --- |
+| [`./src/lib/scaffold-wiki-directories.use-case.ts`](./src/lib/scaffold-wiki-directories.use-case.ts) | Use case bootstrapping initial folder hierarchy and baseline files. |
