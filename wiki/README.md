@@ -1,275 +1,72 @@
-# Wiki Directory
+# Wiki Knowledge Vault (`wiki/`)
 
-## Overview
+The `wiki/` directory serves as the structured Markdown knowledge vault for the project. It stores AI-generated and human-curated knowledge pages organized into entities, concepts, and source summaries that form an interconnected graph.
 
-The `wiki/` directory contains **AI-generated, structured wiki pages** that form the knowledge base of the LLM Wiki Second Brain system. These pages are created from raw sources through the ingestion workflow and are cross-referenced to create a navigable knowledge graph.
+---
 
-## Purpose
-
-- **Structured Knowledge**: Organize information into entities, concepts, and source summaries
-- **Cross-Referenced**: Link related pages to create a knowledge graph
-- **Searchable**: Enable efficient querying by tags, names, and full-text
-- **Maintainable**: Support periodic review, consolidation, and quality improvements
-- **Git-Versioned**: Track all changes for history and collaboration
-
-## Directory Structure
-
-```
-wiki/
-├── README.md              # This file
-├── index.md               # Top-level navigation and overview
-├── activity-log.md        # Chronological record of wiki changes
-├── entities/              # Pages about specific things
-│   └── angular-cdk.md
-├── concepts/              # Pages about ideas and patterns
-│   └── progressive-enhancement.md
-└── sources/               # Summaries of raw source documents
-    └── example-source-2024-05-10.md
-```
-
-## Page Types
-
-### Entity Pages (`entities/`)
-
-Describe specific things: libraries, tools, components, APIs, people, or concrete objects.
-
-**Structure:**
-- Definition
-- Properties and characteristics
-- Relationships to other entities
-- Code examples
-- References to sources
-
-**Example:** `angular-cdk.md`, `aria-live-region.md`, `screen-reader.md`
-
-### Concept Pages (`concepts/`)
-
-Explain ideas, patterns, principles, or abstract notions.
-
-**Structure:**
-- Explanation and context
-- Applications and use cases
-- Related concepts
-- Examples and demonstrations
-- References to sources
-
-**Example:** `progressive-enhancement.md`, `keyboard-navigation.md`, `semantic-html.md`
-
-### Source Summaries (`sources/`)
-
-Distill key information from raw source documents.
-
-**Structure:**
-- Source metadata (author, date, URL)
-- Key points and insights
-- Relevant entities and concepts
-- Notable quotes
-- **Example Files**: `wcag-guide-2024-05-10.md`, `angular-aria-research-2024-05-10.md`
-
-## Specification & Single Source of Truth
+## 📜 Specification & Single Source of Truth
 
 > ℹ️ **System Schema Contract**: The authoritative single source of truth (SSOT) for page frontmatter requirements, strict title-based `[[WikiLink]]` conventions, and automated workflows (Ingestion, Query, Maintenance) is documented in [../WIKI_SCHEMA.md](../WIKI_SCHEMA.md).
 
-## Page Types Summary
+---
 
-For complete YAML frontmatter specifications and field contracts, see [../WIKI_SCHEMA.md](../WIKI_SCHEMA.md#page-types).
+## 📁 Directory Structure & Categories
 
-### Entity Pages (`entities/`)
+| Folder / File | Purpose & Role | Example / Target Files |
+| --- | --- | --- |
+| [`./entities/`](./entities/) | Pages describing specific tools, libraries, APIs, or components | `angular-aria.md`, `nx.md` |
+| [`./concepts/`](./concepts/) | Explanations of architectural patterns, design principles, or ideas | `hexagonal-architecture.md`, `adapters.md` |
+| [`./sources/`](./sources/) | Distilled summaries and key takeaways of raw research sources | `angular-aria-big-picture-2026-05-30.md` |
+| [`./guides/`](./guides/) | System guides, ingestion procedures, and workflow instructions | `adr-ingestion.md` |
+| [`./index.md`](./index.md) | Synchronized top-level wiki navigation index and vault statistics | `index.md` |
+| [`./activity-log.md`](./activity-log.md) | Chronological log of wiki additions, updates, and maintenance events | `activity-log.md` |
 
-Describe specific things: libraries, tools, components, APIs, people, or concrete objects.
-- **Example Files**: `angular-cdk.md`, `aria-live-region.md`, `screen-reader.md`
+---
 
-### Concept Pages (`concepts/`)
+## 🛠️ Git Integration & Seed Scripts
 
-Explain ideas, patterns, principles, or abstract notions.
-- **Example Files**: `progressive-enhancement.md`, `keyboard-navigation.md`, `semantic-html.md`
+The `wiki/` directory content (except `README.md` and `.gitkeep` files) is git-ignored so developers can freely generate, experiment with, and rebuild graph content locally without dirtying version control.
 
-### Source Summaries (`sources/`)
+### Seeding & Initializing the Knowledge Graph
 
-Distill key information from raw source documents.
-- **Example Files**: `wcag-guide-2024-05-10.md`, `angular-aria-research-2024-05-10.md`
-
-## Cross-Referencing Rules
-
-### WikiLink Syntax
-
-Use `[[WikiLink]]` syntax to link between wiki pages. **Always use the target page's frontmatter `title` property** (not the filename or slug) to prevent ghost nodes in graph visualizers (see [WIKI_SCHEMA.md](../WIKI_SCHEMA.md#wikilink-syntax)):
-
-```markdown
-The [[Angular CDK]] provides primitives for [[Keyboard Navigation]].
-
-See [[Progressive Enhancement]] for design principles.
-```
-
-### Linking Guidelines
-
-- Link entity names when mentioned using exact page titles (e.g. `[[Angular CDK]]`)
-- Link concept names when explained using exact page titles (e.g. `[[Progressive Enhancement]]`)
-- Create bidirectional links (if Page A links to Page B, Page B should reference Page A)
-- Only link when it adds value (avoid over-linking)
-
-## Frontmatter & Workflows
-
-All wiki pages require YAML frontmatter. Automated workflows (Ingestion, Query, Maintenance) operate on these fields. Refer to [../WIKI_SCHEMA.md](../WIKI_SCHEMA.md#frontmatter-requirements) for exact field definitions and workflow triggers.
-
-## Navigation
-
-### Index Page (`index.md`)
-
-The index page provides:
-- Overview of the wiki
-- Lists of all entities, concepts, and recent sources
-- Navigation links to major sections
-- Statistics (total pages, last updated, health score)
-
-**Always keep the index synchronized with wiki content.**
-
-### Activity Log (`activity-log.md`)
-
-The activity log records chronological wiki page creation, updates, and maintenance events.
-
-## External Tool Compatibility
-
-### Obsidian
-
-The wiki is fully compatible with Obsidian:
-
-- ✓ Open `wiki/` directory in Obsidian
-- ✓ Use graph view to visualize cross-references
-- ✓ Navigate with `[[WikiLink]]` syntax
-- ✓ Search by tags (frontmatter or inline `#tag`)
-- ✓ View and edit markdown files
-
-### Search Tools (qmd, ripgrep, etc.)
-
-The wiki structure supports external search tools:
+You can populate, reset, or experiment with the graph using the npm initialization scripts:
 
 ```bash
-# Search with qmd
-qmd "accessibility" wiki/
+# Seed the full demo knowledge graph
+npm run init:all
 
-# Search with ripgrep
-rg "keyboard navigation" wiki/
+# Generate graph manifest and index files
+npm run build:manifest
+npm run build:wiki-index
 
-# Find by tag
-rg "tags:.*accessibility" wiki/
+# Clean generated markdown files
+npm run init:clean
 ```
 
-## Git Integration
+#### Available Seed Scripts:
+- `npm run init:frontend-libs`: Generates frontend library entity pages
+- `npm run init:backend-libs`: Generates backend library entity pages
+- `npm run init:testing-libs`: Generates testing tool entity pages
+- `npm run init:articles-blog`: Generates blog article source summaries
+- `npm run init:articles-docs`: Generates documentation article source summaries
+- `npm run init:close-concepts`: Generates closely related concept nodes
+- `npm run init:far-concepts`: Generates distant concept nodes
+- `npm run init:cross-domain`: Establishes cross-domain relationship links
 
-All wiki changes are tracked in version control:
-
-**View History:**
-```bash
-# See all wiki changes
-git log -- wiki/
-
-# See changes to specific page
-git log -- wiki/entities/angular-cdk.md
-```
-
-**Commit Format:**
-```
-[wiki] <action>: <brief description>
-
-<optional detailed description>
-```
-
-## Examples
-
-### Entity Page Example
-
-```markdown
----
-title: ARIA Live Region
-type: entity
-tags: [aria, accessibility, screen-reader]
-sources: [wcag-guide-2024-05-10]
-created: 2024-05-10
-updated: 2024-05-10
 ---
 
-# ARIA Live Region
+## 🔗 Navigation & External Tooling
 
-## Definition
+- **Obsidian / Markdown Graph Tools**: Open the `wiki/` directory in Obsidian or Markdown graph viewers. Use title-based `[[WikiLink]]` syntax to navigate between nodes.
+- **CLI Search**:
+  ```bash
+  # Search graph content using ripgrep
+  rg "hexagonal architecture" wiki/
+  ```
 
-An ARIA live region is a section of a web page that announces dynamic content changes to screen readers without requiring user focus.
-
-## Properties
-
-- **aria-live**: Politeness level (off, polite, assertive)
-- **aria-atomic**: Announce entire region or just changes
-- **aria-relevant**: What changes to announce (additions, removals, text, all)
-
-## Relationships
-
-- Used by [[Screen Reader]]
-- Implemented in [[Angular CDK]] LiveAnnouncer
-- Supports [[Progressive Enhancement]]
-
-## Examples
-
-```html
-<div aria-live="polite" aria-atomic="true">
-  <p>{{ statusMessage }}</p>
-</div>
-```
-
-## References
-
-- [[WCAG 2.1 Overview]]
-```
-
-### Concept Page Example
-
-```markdown
----
-title: Keyboard Navigation
-type: concept
-tags: [accessibility, keyboard, interaction]
-sources: [accessibility-patterns-2024-05-10]
-created: 2024-05-10
-updated: 2024-05-10
 ---
 
-# Keyboard Navigation
+## 📖 Reference Links
 
-## Explanation
-
-Keyboard navigation is the ability to interact with a web application using only keyboard input, without requiring a mouse or touch input.
-
-## Applications
-
-- Essential for users with motor disabilities
-- Required for screen reader users
-- Improves efficiency for power users
-- Necessary for WCAG compliance
-
-## Related Concepts
-
-- [[Progressive Enhancement]]
-- [[Focus Management]]
-- [[ARIA Patterns]]
-
-## Examples
-
-```typescript
-@HostListener('keydown', ['$event'])
-handleKeydown(event: KeyboardEvent) {
-  if (event.key === 'Enter' || event.key === ' ') {
-    this.activate();
-    event.preventDefault();
-  }
-}
-```
-
-## References
-
-- [[Angular CDK]]
-```
-
-## Questions & Reference Links
-
-- See [WIKI_SCHEMA.md](../WIKI_SCHEMA.md) for complete system documentation and schema specification
-- See `raw/README.md` for raw source document organization
-- See [index.md](index.md) for navigation and overview
+- See [WIKI_SCHEMA.md](../WIKI_SCHEMA.md) for full frontmatter schemas, field validation rules, and automated workflow contracts.
+- See [index.md](index.md) for top-level wiki navigation and vault statistics.

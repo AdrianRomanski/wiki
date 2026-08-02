@@ -72,10 +72,15 @@ Follow these steps to set up and run the workspace locally.
 # 1. Install dependencies
 npm install
 
-# 2. Start the primary graph visualizer application (runs on http://localhost:4300)
+# 2. Populate the wiki with seed data for the graph
+npm run init:all
+npm run build:manifest
+npm run build:wiki-index
+
+# 3. Start the primary graph visualizer application (runs on http://localhost:4300)
 npm run start:graph
 
-# 3. Launch Storybook to explore research prototypes
+# 4. Launch Storybook to explore research prototypes
 npx nx storybook prototype-playground
 ```
 
@@ -83,11 +88,29 @@ npx nx storybook prototype-playground
 | Nx Target / Script | Command | Description |
 | --- | --- | --- |
 | `start:graph` | `npm run start:graph` | Starts dev server for `wiki-graph` at http://localhost:4300 |
+| `init:all` | `npm run init:all` | Seeds full demo knowledge graph (libraries, articles, concepts) |
+| `init:clean` | `npm run init:clean` | Clears all generated entities, concepts, and source markdown files |
 | `build:manifest` | `npm run build:manifest` | Regenerates `wiki/manifest.json` for graph visualization |
 | `build:wiki-index` | `npm run build:wiki-index` | Regenerates `wiki/index.md` indexing all entities and concepts |
 | `validate:tags` | `npm run validate:tags` | Validates tag compliance across all wiki Markdown files |
 | `build:mcp` | `npm run build:mcp` | Compiles production build for `wiki-mcp-server` |
 | `test` | `npx nx run-many -t test` | Executes unit and integration test suites across all apps and libs |
+
+### 🛠️ Wiki Initialization Scripts
+The `wiki/` directory content is git-ignored (except `README.md` and `.gitkeep` files) so you can experiment with and generate graph content locally without dirtying version control.
+
+You can populate or reset the graph using the following initialization commands:
+- **`npm run init:all`**: Runs all seed scripts below to populate a full sample graph.
+- **`npm run init:clean`**: Cleans generated markdown files (`wiki/entities/*.md`, `wiki/concepts/*.md`, `wiki/sources/*.md`).
+- **Granular Seed Scripts**:
+  - `npm run init:frontend-libs` - Seeds frontend library entities
+  - `npm run init:backend-libs` - Seeds backend library entities
+  - `npm run init:testing-libs` - Seeds testing tool entities
+  - `npm run init:articles-blog` - Seeds blog article sources
+  - `npm run init:articles-docs` - Seeds documentation article sources
+  - `npm run init:close-concepts` - Seeds closely related concepts
+  - `npm run init:far-concepts` - Seeds distant concept nodes
+  - `npm run init:cross-domain` - Seeds cross-domain relationship links
 
 ---
 

@@ -56,10 +56,9 @@ storybook-static
 # Research sessions (private knowledge exploration)
 .kiro/research/
 
-# Wiki content (private knowledge base)
-wiki/concepts/
-wiki/entities/
-wiki/guides/
-wiki/sources/
-wiki/index.md
-wiki/manifest.json
+# Wiki content (local knowledge base)
+wiki/**
+!wiki/
+!wiki/**/
+!wiki/README.md
+!wiki/**/.gitkeep
