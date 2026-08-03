@@ -8,6 +8,8 @@ import {
   viewChild,
 } from '@angular/core';
 import type { GraphNode } from '../../../models/graph.models';
+import type { ProgressState } from '../../../models/progress.models';
+import { PROGRESS_STATE_LABELS } from '../../../models/progress.constants';
 
 @Component({
   selector: 'app-node-detail-ui',
@@ -20,7 +22,11 @@ import type { GraphNode } from '../../../models/graph.models';
 })
 export class NodeDetailUiComponent {
   node = input<GraphNode | null>(null);
+  /** Current progress state + assessment count for the selected concept, or null if unavailable. */
+  progress = input<{ state: ProgressState; assessmentCount: number } | null>(null);
   closed = output<void>();
+
+  protected readonly progressStateLabels = PROGRESS_STATE_LABELS;
 
   private readonly panelRef = viewChild<ElementRef<HTMLElement>>('panel');
 

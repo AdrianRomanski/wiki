@@ -6,6 +6,12 @@ export interface SimEdge extends d3.SimulationLinkDatum<SimulationNode> {
   target: SimulationNode;
 }
 
+/** A plain x/y coordinate, used to snapshot/restore a node's on-screen position across renders. */
+export interface NodePosition {
+  x: number;
+  y: number;
+}
+
 export type SvgSelection = d3.Selection<SVGSVGElement, unknown, null, undefined>;
 export type RootSelection = d3.Selection<SVGGElement, unknown, null, undefined>;
 export type EdgeSelection = d3.Selection<SVGLineElement, SimEdge, SVGGElement, unknown>;

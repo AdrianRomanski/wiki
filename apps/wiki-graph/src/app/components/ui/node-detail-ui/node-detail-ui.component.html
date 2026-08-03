@@ -47,6 +47,18 @@
 
       <dt>Incoming links</dt>
       <dd>{{ node()!.inDegree }}</dd>
+
+      @if (progress()) {
+        <dt>Progress</dt>
+        <dd>
+          <span class="progress-badge progress-{{ progress()!.state }}">
+            {{ progressStateLabels[progress()!.state] }}
+          </span>
+        </dd>
+
+        <dt>Assessments</dt>
+        <dd>{{ progress()!.assessmentCount }}</dd>
+      }
     </dl>
   </section>
 }

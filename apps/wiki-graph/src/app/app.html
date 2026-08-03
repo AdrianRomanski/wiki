@@ -1,2 +1,15 @@
+@if (progressInitError()) {
+  <div class="progress-init-banner" role="alert">
+    <span>{{ progressInitError() }}</span>
+    <button
+      type="button"
+      (click)="initializeProgressTracking()"
+      [disabled]="initializingProgress()"
+    >
+      {{ initializingProgress() ? 'Connecting…' : 'Grant Access' }}
+    </button>
+  </div>
+}
+
 <router-outlet>
 </router-outlet>

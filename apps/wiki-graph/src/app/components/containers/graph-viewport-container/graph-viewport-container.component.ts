@@ -3,6 +3,8 @@ import { GraphCanvasComponent } from '../../ui/graph-canvas/graph-canvas.compone
 import { GraphToolbarUiComponent } from '../../ui/graph-toolbar-ui/graph-toolbar-ui.component';
 import { NodeDetailUiComponent } from '../../ui/node-detail-ui/node-detail-ui.component';
 import type { GraphData, GraphNode, NodeType } from '../../../models/graph.models';
+import type { ProgressState } from '../../../models/progress.models';
+import type { VisualizationMode } from '../../../models/progress.constants';
 
 @Component({
   selector: 'app-graph-viewport-container',
@@ -28,6 +30,15 @@ export class GraphViewportContainerComponent {
   isLoading = input<boolean>(false);
   error = input<string | null>(null);
 
+  /** Active visualization mode, forwarded to the graph canvas for node coloring. */
+  visualizationMode = input<VisualizationMode>('wiki');
+  /** Lookup of concept ID to current progress state, forwarded to the graph canvas. */
+  progressStates = input<ReadonlyMap<string, ProgressState>>(new Map());
+  /** Active progress state filters, forwarded to the graph canvas for node visibility. */
+  activeProgressFilters = input<ProgressState[]>([]);
+  /** Progress state + assessment count for the selected node, forwarded to the detail panel. */
+  selectedNodeProgress = input<{ state: ProgressState; assessmentCount: number } | null>(null);
+
   nodeSelected = output<string | null>();
   typeToggled = output<NodeType>();
   searchChanged = output<string>();
@@ -37,4 +48,8 @@ export class GraphViewportContainerComponent {
   refreshRequested = output<void>();
   toolbarVisibilityToggled = output<boolean>();
   detailClosed = output<void>();
+  /** Emitted when the learner requests a knowledge assessment for a node. */
+  assessmentRequested = output<string>();
+  /** Emitted when the learner toggles between wiki structure and progress views. */
+  visualizationModeChanged = output<VisualizationMode>();
 }

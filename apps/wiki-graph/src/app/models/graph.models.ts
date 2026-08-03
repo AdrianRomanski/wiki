@@ -1,4 +1,5 @@
 import type * as d3 from 'd3';
+import type { ProgressState } from './progress.models';
 
 export type NodeType = 'entity' | 'concept' | 'source';
 
@@ -34,4 +35,22 @@ export interface SimulationNode extends GraphNode, d3.SimulationNodeDatum {
 export interface WikiManifest {
   files: string[];
   generatedAt: string;
+}
+
+/**
+ * Extends GraphNode with progress tracking data, used when rendering
+ * the graph in progress visualization mode.
+ */
+export interface GraphNodeWithProgress extends GraphNode {
+  progressState: ProgressState;
+  lastAssessed: string | null;
+  assessmentCount: number;
+}
+
+/**
+ * Extends GraphData with a lookup of progress states per concept ID,
+ * produced by GraphStateService.applyProgressData().
+ */
+export interface GraphDataWithProgress extends GraphData {
+  progressStates: Map<string, ProgressState>;
 }

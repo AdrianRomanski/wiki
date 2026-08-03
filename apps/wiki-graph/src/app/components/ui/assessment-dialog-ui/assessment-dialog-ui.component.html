@@ -1,0 +1,115 @@
+@if (session() || errorMessage()) {
+  <div class="dialog-overlay" (click)="cancel()">
+    <div class="dialog-container" (click)="$event.stopPropagation()" role="dialog" 
+         [attr.aria-labelledby]="'dialog-title'" [attr.aria-describedby]="'dialog-description'">
+      
+      <!-- Header -->
+      <div class="dialog-header">
+        <h2 id="dialog-title" class="dialog-title">
+          Knowledge Assessment{{ session() ? ': ' + session()?.conceptTitle : '' }}
+        </h2>
+        <button 
+          type="button"
+          class="close-button"
+          (click)="cancel()"
+          aria-label="Cancel assessment">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Service Error Notification -->
+      @if (errorMessage(); as error) {
+        <div class="error-banner" role="alert">
+          <span class="error-message">{{ error }}</span>
+          <div class="error-actions">
+            <button
+              type="button"
+              class="button button-secondary"
+              (click)="cancel()">
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="button button-primary"
+              (click)="retry()">
+              Retry
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (session() && !errorMessage(); as activeSession) {
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="progressPercentage()"></div>
+        <div class="progress-text">
+          Question {{ currentQuestionIndex() + 1 }} of {{ totalQuestions() }}
+        </div>
+      </div>
+
+      <!-- Question Display -->
+      @if (currentQuestion(); as question) {
+        <div class="dialog-body">
+          <div class="question-container">
+            <div class="question-type-badge" [attr.data-type]="question.type">
+              {{ question.type }}
+            </div>
+            <p id="dialog-description" class="question-text">
+              {{ question.text }}
+            </p>
+          </div>
+
+          <!-- Response Textarea -->
+          <div class="response-container">
+            <label for="response-input" class="response-label">
+              Your Response:
+            </label>
+            <textarea
+              id="response-input"
+              class="response-input"
+              [ngModel]="responseText()"
+              (ngModelChange)="responseText.set($event)"
+              (keydown)="handleResponseKeydown($event)"
+              placeholder="Type your answer here... (Ctrl+Enter to submit)"
+              rows="8"
+              [attr.aria-required]="true"
+              [attr.aria-invalid]="isSubmitDisabled()"
+              autofocus>
+            </textarea>
+            <div class="character-count" [class.minimum-warning]="responseText().length < 20">
+              {{ responseText().length }} characters
+              @if (responseText().length < 20) {
+                <span class="hint">(aim for at least 20 characters)</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer with Action Buttons -->
+        <div class="dialog-footer">
+          <button
+            type="button"
+            class="button button-secondary"
+            (click)="cancel()">
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="button button-primary"
+            (click)="submitResponse()"
+            [disabled]="isSubmitDisabled()">
+            @if (isLastQuestion()) {
+              <span>Submit Assessment</span>
+            } @else {
+              <span>Next Question</span>
+            }
+          </button>
+        </div>
+      }
+      }
+    </div>
+  </div>
+}

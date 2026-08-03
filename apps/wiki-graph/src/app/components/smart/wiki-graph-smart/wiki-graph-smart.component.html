@@ -14,6 +14,10 @@
   [toolbarVisible]="toolbarVisible()"
   [isLoading]="graphState.isLoading()"
   [error]="graphState.error()"
+  [visualizationMode]="graphState.visualizationMode()"
+  [progressStates]="graphState.progressStates()"
+  [activeProgressFilters]="graphState.activeProgressFiltersList()"
+  [selectedNodeProgress]="graphState.selectedNodeProgress()"
   (nodeSelected)="graphState.selectNode($event)"
   (typeToggled)="toggleType($event)"
   (searchChanged)="graphState.setSearchQuery($event)"
@@ -23,4 +27,25 @@
   (refreshRequested)="graphState.loadGraph()"
   (toolbarVisibilityToggled)="toolbarVisible.set($event)"
   (detailClosed)="graphState.selectNode(null)"
+  (assessmentRequested)="graphState.requestAssessment($event)"
+  (visualizationModeChanged)="graphState.setVisualizationMode($event)"
+/>
+
+<app-assessment-dialog-ui
+  [session]="visibleSession()"
+  [errorMessage]="assessmentError()"
+  (responseSubmitted)="handleResponseSubmitted($event)"
+  (cancelled)="handleCancelled()"
+  (retried)="handleAssessmentRetried()"
+/>
+
+<app-progress-dashboard-ui
+  [progressStats]="graphState.progressStats()"
+  [lastSyncTime]="progressStateService.getLastSyncTime()()"
+  [lastError]="progressStateService.getLastError()()"
+  [hasPendingRetry]="!!progressStateService.getLastFailedWrite()()"
+  (filterChanged)="handleFilterChanged($event)"
+  (refreshRequested)="handleRefreshRequested()"
+  (retryRequested)="handleRetryRequested()"
+  (rebuildIndexRequested)="handleRebuildIndexRequested()"
 />

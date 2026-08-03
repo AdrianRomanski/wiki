@@ -1,5 +1,22 @@
 <div class="toolbar" [class.toolbar-collapsed]="!toolbarVisible()" role="toolbar" aria-label="Graph controls">
 
+  <button
+    type="button"
+    class="mode-toggle-btn"
+    [class.active]="visualizationMode() === 'progress'"
+    [attr.aria-pressed]="visualizationMode() === 'progress'"
+    aria-label="Toggle between wiki structure and progress view"
+    (click)="toggleVisualizationMode()"
+  >
+    @if (visualizationMode() === 'progress') {
+      <span>📊 Progress View</span>
+    } @else {
+      <span>🗺️ Wiki View</span>
+    }
+  </button>
+
+  <div class="sep"></div>
+
   @for (type of nodeTypes(); track type) {
     <button
       type="button"

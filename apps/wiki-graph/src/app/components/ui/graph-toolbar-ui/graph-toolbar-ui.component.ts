@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import type { GraphNode, NodeType } from '../../../models/graph.models';
+import type { VisualizationMode } from '../../../models/progress.constants';
 
 @Component({
   selector: 'app-graph-toolbar-ui',
@@ -18,6 +19,8 @@ export class GraphToolbarUiComponent {
   orphanCount = input<number>(0);
   hubNodes = input<GraphNode[]>([]);
   toolbarVisible = input<boolean>(true);
+  /** Active visualization mode ('wiki' | 'progress'), for the mode toggle button. */
+  visualizationMode = input<VisualizationMode>('wiki');
 
   typeToggled = output<NodeType>();
   searchChanged = output<string>();
@@ -26,6 +29,13 @@ export class GraphToolbarUiComponent {
   hubSelected = output<string>();
   refreshRequested = output<void>();
   toolbarVisibilityToggled = output<boolean>();
+  /** Emitted when the learner toggles between wiki structure and progress views. */
+  visualizationModeChanged = output<VisualizationMode>();
+
+  protected toggleVisualizationMode(): void {
+    const next: VisualizationMode = this.visualizationMode() === 'wiki' ? 'progress' : 'wiki';
+    this.visualizationModeChanged.emit(next);
+  }
 
   protected onSearchInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;

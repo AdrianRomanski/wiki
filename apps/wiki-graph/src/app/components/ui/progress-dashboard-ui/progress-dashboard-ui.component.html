@@ -1,0 +1,137 @@
+<div class="progress-dashboard" role="region" aria-label="Progress Dashboard">
+
+  <!-- File System Error Notification (Requirements 2.1, 2.3) -->
+  @if (lastError()) {
+    <div class="error-banner" role="alert" aria-label="Progress storage error">
+      <span class="error-message">{{ lastError() }}</span>
+      <div class="error-actions">
+        @if (hasPendingRetry()) {
+          <button
+            type="button"
+            class="error-action-btn retry-btn"
+            aria-label="Retry the failed save"
+            (click)="retry()"
+          >
+            Retry
+          </button>
+        }
+        <button
+          type="button"
+          class="error-action-btn rebuild-index-btn"
+          aria-label="Rebuild index.json from concept files"
+          (click)="rebuildIndex()"
+        >
+          Rebuild Index
+        </button>
+        <button
+          type="button"
+          class="error-action-btn reload-btn"
+          aria-label="Reload progress from disk"
+          (click)="refresh()"
+        >
+          Reload from Disk
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Statistics Cards Section -->
+  <div class="stats-section" role="group" aria-label="Progress statistics">
+    
+    <!-- Total Concepts Card -->
+    <div class="stat-card stat-card-total">
+      <div class="stat-value">{{ progressStats().total }}</div>
+      <div class="stat-label">Total Concepts</div>
+    </div>
+    
+    <!-- Not Started Card -->
+    <div class="stat-card stat-card-not-started">
+      <div class="stat-value">{{ progressStats().notStarted }}</div>
+      <div class="stat-label">Not Started</div>
+    </div>
+    
+    <!-- In Progress Card -->
+    <div class="stat-card stat-card-in-progress">
+      <div class="stat-value">{{ progressStats().inProgress }}</div>
+      <div class="stat-label">In Progress</div>
+    </div>
+    
+    <!-- Understood Card -->
+    <div class="stat-card stat-card-understood">
+      <div class="stat-value">{{ progressStats().understood }}</div>
+      <div class="stat-label">Understood</div>
+    </div>
+    
+    <!-- Mastered Card -->
+    <div class="stat-card stat-card-mastered">
+      <div class="stat-value">{{ progressStats().mastered }}</div>
+      <div class="stat-label">Mastered</div>
+    </div>
+    
+    <!-- Completion Percentage -->
+    <div class="stat-card stat-card-complete">
+      <div class="stat-value">{{ progressStats().percentComplete }}%</div>
+      <div class="stat-label">Complete</div>
+    </div>
+    
+  </div>
+  
+  <div class="divider"></div>
+  
+  <!-- Filter Controls Section -->
+  <div class="filters-section" role="group" aria-label="Progress filters">
+    <h3 class="section-title">Filter by Progress</h3>
+    
+    <div class="filter-controls">
+      @for (state of progressStates; track state) {
+        <button
+          type="button"
+          class="filter-btn"
+          [class.filter-btn-active]="isFilterActive(state)"
+          [class.filter-btn-not-started]="state === 'Not_Started'"
+          [class.filter-btn-in-progress]="state === 'In_Progress'"
+          [class.filter-btn-understood]="state === 'Understood'"
+          [class.filter-btn-mastered]="state === 'Mastered'"
+          [attr.aria-pressed]="isFilterActive(state)"
+          [attr.aria-label]="'Filter ' + stateLabels[state] + ' concepts'"
+          (click)="toggleFilter(state)"
+        >
+          <span class="filter-label">{{ stateLabels[state] }}</span>
+          <span class="filter-count">{{ getCount(state) }}</span>
+        </button>
+      }
+    </div>
+    
+    @if (activeFilters().size > 0) {
+      <button
+        type="button"
+        class="clear-filters-btn"
+        aria-label="Clear all filters"
+        (click)="clearFilters()"
+      >
+        Clear Filters
+      </button>
+    }
+  </div>
+  
+  <div class="divider"></div>
+  
+  <!-- Actions Section -->
+  <div class="actions-section">
+    <div class="sync-status">
+      <span class="sync-label">Last synced:</span>
+      <span class="sync-time">{{ lastSyncFormatted() }}</span>
+    </div>
+    
+    <button
+      type="button"
+      class="refresh-btn"
+      aria-label="Refresh progress from disk"
+      (click)="refresh()"
+    >
+      <span class="refresh-icon">↻</span>
+      Refresh
+    </button>
+  </div>
+  
+</div>

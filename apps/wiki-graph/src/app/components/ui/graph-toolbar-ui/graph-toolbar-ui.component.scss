@@ -169,3 +169,22 @@ button.stat, .orphan-btn {
 }
 .refresh-btn:hover { background: #45475a; }
 .refresh-btn:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }
+
+.mode-toggle-btn {
+  padding: 0.25rem 0.7rem;
+  border: 1px solid #89b4fa;
+  border-radius: 1rem;
+  background: transparent;
+  color: #89b4fa;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.12s, color 0.12s;
+}
+.mode-toggle-btn.active {
+  background: #89b4fa;
+  color: #1e1e2e;
+}
+.mode-toggle-btn:hover:not(.active) { background: rgba(137, 180, 250, 0.12); }
+.mode-toggle-btn:focus-visible { outline: 2px solid #89b4fa; outline-offset: 2px; }

@@ -82,6 +82,18 @@
 .type-badge.type-concept { background: rgba(166, 227, 161, 0.15); color: #a6e3a1; border: 1px solid #a6e3a1; }
 .type-badge.type-source  { background: rgba(250, 179, 135, 0.15); color: #fab387; border: 1px solid #fab387; }
 
+.progress-badge {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 1rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.progress-badge.progress-Not_Started { background: rgba(156, 163, 175, 0.15); color: #9ca3af; border: 1px solid #9ca3af; }
+.progress-badge.progress-In_Progress { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid #fbbf24; }
+.progress-badge.progress-Understood  { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; }
+.progress-badge.progress-Mastered    { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; }
+
 .tag-list {
   display: flex;
   flex-wrap: wrap;

@@ -3,7 +3,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Observable, of, throwError } from 'rxjs';
 import { GraphStateService } from './graph-state.service';
 import { WikiParserService } from './wiki-parser.service';
+import { ProgressStateService } from './progress-state.service';
 import type { GraphData, GraphNode } from '../models/graph.models';
+import type { ProgressState } from '../models/progress.models';
+import { PROGRESS_COLORS, WIKI_NODE_COLORS, DEFAULT_NODE_SIZE } from '../models/progress.constants';
 
 function makeNode(id: string, overrides: Partial<GraphNode> = {}): GraphNode {
   return {
@@ -36,14 +39,29 @@ function loadData(service: GraphStateService, data: GraphData): void {
 describe('GraphStateService', () => {
   let service: GraphStateService;
   let wikiParserSpy: { loadGraph: ReturnType<typeof vi.fn> };
+  let progressStateSpy: {
+    getProgress: ReturnType<typeof vi.fn>;
+    getAllProgress: ReturnType<typeof vi.fn>;
+    getAssessmentCount: ReturnType<typeof vi.fn>;
+    getAllAssessmentCounts: ReturnType<typeof vi.fn>;
+    setKnownConceptIds: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     wikiParserSpy = { loadGraph: vi.fn() };
+    progressStateSpy = {
+      getProgress: vi.fn().mockReturnValue('Not_Started'),
+      getAllProgress: vi.fn().mockReturnValue(new Map()),
+      getAssessmentCount: vi.fn().mockReturnValue(0),
+      getAllAssessmentCounts: vi.fn().mockReturnValue(new Map()),
+      setKnownConceptIds: vi.fn(),
+    };
 
     TestBed.configureTestingModule({
       providers: [
         GraphStateService,
         { provide: WikiParserService, useValue: wikiParserSpy },
+        { provide: ProgressStateService, useValue: progressStateSpy },
       ],
     });
 
@@ -92,6 +110,14 @@ describe('GraphStateService', () => {
 
     it('orphanNodes is empty before any load', () => {
       expect(service.orphanNodes()).toEqual([]);
+    });
+
+    it('visualizationMode is "wiki" by default', () => {
+      expect(service.visualizationMode()).toBe('wiki');
+    });
+
+    it('activeProgressFilters is empty set initially', () => {
+      expect(service.activeProgressFilters().size).toBe(0);
     });
   });
 
@@ -425,6 +451,356 @@ describe('GraphStateService', () => {
     it('returns all nodes as orphans when graph has no edges', () => {
       loadData(service, makeGraphData([makeNode('a'), makeNode('b'), makeNode('c')]));
       expect(service.orphanNodes()).toHaveLength(3);
+    });
+  });
+
+  describe('setVisualizationMode()', () => {
+    it('updates visualizationMode signal to "progress"', () => {
+      service.setVisualizationMode('progress');
+      expect(service.visualizationMode()).toBe('progress');
+    });
+
+    it('updates visualizationMode signal back to "wiki"', () => {
+      service.setVisualizationMode('progress');
+      service.setVisualizationMode('wiki');
+      expect(service.visualizationMode()).toBe('wiki');
+    });
+
+    it('maintains mode when set to same value', () => {
+      service.setVisualizationMode('wiki');
+      expect(service.visualizationMode()).toBe('wiki');
+    });
+  });
+
+  describe('filterByProgress()', () => {
+    it('sets activeProgressFilters with single state', () => {
+      service.filterByProgress(['In_Progress']);
+      const filters = service.activeProgressFilters();
+      expect(filters.has('In_Progress')).toBe(true);
+      expect(filters.size).toBe(1);
+    });
+
+    it('sets activeProgressFilters with multiple states', () => {
+      service.filterByProgress(['Understood', 'Mastered']);
+      const filters = service.activeProgressFilters();
+      expect(filters.has('Understood')).toBe(true);
+      expect(filters.has('Mastered')).toBe(true);
+      expect(filters.size).toBe(2);
+    });
+
+    it('clears filters when called with empty array', () => {
+      service.filterByProgress(['In_Progress']);
+      service.filterByProgress([]);
+      expect(service.activeProgressFilters().size).toBe(0);
+    });
+
+    it('replaces previous filters when called again', () => {
+      service.filterByProgress(['In_Progress']);
+      service.filterByProgress(['Mastered']);
+      const filters = service.activeProgressFilters();
+      expect(filters.has('In_Progress')).toBe(false);
+      expect(filters.has('Mastered')).toBe(true);
+      expect(filters.size).toBe(1);
+    });
+
+    it('handles all four progress states', () => {
+      service.filterByProgress(['Not_Started', 'In_Progress', 'Understood', 'Mastered']);
+      const filters = service.activeProgressFilters();
+      expect(filters.has('Not_Started')).toBe(true);
+      expect(filters.has('In_Progress')).toBe(true);
+      expect(filters.has('Understood')).toBe(true);
+      expect(filters.has('Mastered')).toBe(true);
+      expect(filters.size).toBe(4);
+    });
+  });
+
+  describe('applyProgressData()', () => {
+    it('merges progress states into graph data for every node', () => {
+      const data = makeGraphData([makeNode('angular'), makeNode('signals')]);
+      progressStateSpy.getAllProgress.mockReturnValue(
+        new Map([
+          ['angular', 'Understood'],
+          ['signals', 'Mastered'],
+        ])
+      );
+
+      const result = service.applyProgressData(data);
+
+      expect(result.progressStates.get('angular')).toBe('Understood');
+      expect(result.progressStates.get('signals')).toBe('Mastered');
+    });
+
+    it('defaults to Not_Started for concepts without recorded progress', () => {
+      const data = makeGraphData([makeNode('rxjs')]);
+      progressStateSpy.getAllProgress.mockReturnValue(new Map());
+
+      const result = service.applyProgressData(data);
+
+      expect(result.progressStates.get('rxjs')).toBe('Not_Started');
+    });
+
+    it('preserves original nodes and edges in the returned data', () => {
+      const data = makeGraphData(
+        [makeNode('angular'), makeNode('signals')],
+        [{ sourceId: 'angular', targetId: 'signals' }]
+      );
+      progressStateSpy.getAllProgress.mockReturnValue(new Map());
+
+      const result = service.applyProgressData(data);
+
+      expect(result.nodes).toBe(data.nodes);
+      expect(result.edges).toEqual(data.edges);
+    });
+
+    it('graphDataWithProgress computed signal reflects applyProgressData for loaded graph', () => {
+      const data = makeGraphData([makeNode('angular')]);
+      progressStateSpy.getAllProgress.mockReturnValue(new Map([['angular', 'In_Progress']]));
+      loadData(service, data);
+
+      const result = service.graphDataWithProgress();
+      expect(result?.progressStates.get('angular')).toBe('In_Progress');
+    });
+
+    it('graphDataWithProgress is null before any graph is loaded', () => {
+      expect(service.graphDataWithProgress()).toBeNull();
+    });
+  });
+
+  describe('getNodeColor()', () => {
+    it('returns the wiki type color in wiki mode', () => {
+      const node = makeNode('angular', { type: 'entity' });
+      const color = service.getNodeColor(node, 'wiki');
+      expect(color).toBe(WIKI_NODE_COLORS.entity);
+    });
+
+    it('returns different wiki colors for different node types', () => {
+      expect(service.getNodeColor(makeNode('a', { type: 'concept' }), 'wiki')).toBe(
+        WIKI_NODE_COLORS.concept
+      );
+      expect(service.getNodeColor(makeNode('b', { type: 'source' }), 'wiki')).toBe(
+        WIKI_NODE_COLORS.source
+      );
+    });
+
+    it('returns the progress state color in progress mode', () => {
+      progressStateSpy.getProgress.mockReturnValue('Mastered');
+      const node = makeNode('angular');
+      const color = service.getNodeColor(node, 'progress');
+      expect(color).toBe(PROGRESS_COLORS.Mastered);
+      expect(progressStateSpy.getProgress).toHaveBeenCalledWith('angular');
+    });
+
+    it('defaults to Not_Started color in progress mode when no progress recorded', () => {
+      progressStateSpy.getProgress.mockReturnValue('Not_Started');
+      const color = service.getNodeColor(makeNode('rxjs'), 'progress');
+      expect(color).toBe(PROGRESS_COLORS.Not_Started);
+    });
+  });
+
+  describe('getNodeSize()', () => {
+    it('returns the default size in wiki mode', () => {
+      const size = service.getNodeSize(makeNode('angular'), 'wiki');
+      expect(size).toBe(DEFAULT_NODE_SIZE);
+    });
+
+    it('returns the default size in progress mode when sizeByAssessment is false', () => {
+      progressStateSpy.getAssessmentCount.mockReturnValue(10);
+      const size = service.getNodeSize(makeNode('angular'), 'progress');
+      expect(size).toBe(DEFAULT_NODE_SIZE);
+    });
+
+    it('scales size by assessment count in progress mode when enabled', () => {
+      progressStateSpy.getAssessmentCount.mockReturnValue(2);
+      const size = service.getNodeSize(makeNode('angular'), 'progress', true);
+      expect(size).toBeGreaterThan(DEFAULT_NODE_SIZE);
+      expect(progressStateSpy.getAssessmentCount).toHaveBeenCalledWith('angular');
+    });
+
+    it('caps size at the maximum for very high assessment counts', () => {
+      progressStateSpy.getAssessmentCount.mockReturnValue(1000);
+      const size = service.getNodeSize(makeNode('angular'), 'progress', true);
+      expect(size).toBe(20);
+    });
+
+    it('does not scale by assessment count in wiki mode even if enabled', () => {
+      progressStateSpy.getAssessmentCount.mockReturnValue(10);
+      const size = service.getNodeSize(makeNode('angular'), 'wiki', true);
+      expect(size).toBe(DEFAULT_NODE_SIZE);
+    });
+  });
+
+  describe('requestAssessment() / clearAssessmentRequest()', () => {
+    it('assessmentRequestedConceptId is null before any request', () => {
+      expect(service.assessmentRequestedConceptId()).toBeNull();
+    });
+
+    it('sets assessmentRequestedConceptId to the requested concept id', () => {
+      service.requestAssessment('angular');
+      expect(service.assessmentRequestedConceptId()).toBe('angular');
+    });
+
+    it('overwrites a pending request with a new concept id', () => {
+      service.requestAssessment('angular');
+      service.requestAssessment('rxjs');
+      expect(service.assessmentRequestedConceptId()).toBe('rxjs');
+    });
+
+    it('clears the pending request back to null', () => {
+      service.requestAssessment('angular');
+      service.clearAssessmentRequest();
+      expect(service.assessmentRequestedConceptId()).toBeNull();
+    });
+  });
+
+  describe('setKnownConceptIds correlation', () => {
+    it('registers the known concept IDs from real (non-ghost) nodes with ProgressStateService on graph load', () => {
+      loadData(
+        service,
+        makeGraphData([
+          makeNode('typescript'),
+          makeNode('rxjs'),
+          makeNode('ghost-target', { isGhost: true }),
+        ])
+      );
+
+      expect(progressStateSpy.setKnownConceptIds).toHaveBeenCalledTimes(1);
+      const registeredIds = Array.from(progressStateSpy.setKnownConceptIds.mock.calls[0][0] as Iterable<string>);
+      expect(registeredIds.sort()).toEqual(['rxjs', 'typescript']);
+      expect(registeredIds).not.toContain('ghost-target');
+    });
+
+    it('re-registers known concept IDs on each subsequent graph load', () => {
+      loadData(service, makeGraphData([makeNode('typescript')]));
+      loadData(service, makeGraphData([makeNode('rxjs')]));
+
+      expect(progressStateSpy.setKnownConceptIds).toHaveBeenCalledTimes(2);
+      const secondCallIds = Array.from(progressStateSpy.setKnownConceptIds.mock.calls[1][0] as Iterable<string>);
+      expect(secondCallIds).toEqual(['rxjs']);
+    });
+  });
+
+  describe('progressStates', () => {
+    it('reflects ProgressStateService.getAllProgress()', () => {
+      const progress = new Map<string, ProgressState>([['angular', 'Understood']]);
+      progressStateSpy.getAllProgress.mockReturnValue(progress);
+
+      // Fresh service instance so the computed's first read picks up this mock value.
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          GraphStateService,
+          { provide: WikiParserService, useValue: wikiParserSpy },
+          { provide: ProgressStateService, useValue: progressStateSpy },
+        ],
+      });
+      const freshService = TestBed.inject(GraphStateService);
+
+      expect(freshService.progressStates()).toBe(progress);
+    });
+  });
+
+  describe('activeProgressFiltersList', () => {
+    it('returns an empty array when no filters are active', () => {
+      expect(service.activeProgressFiltersList()).toEqual([]);
+    });
+
+    it('returns the active filters as an array', () => {
+      service.filterByProgress(['Understood', 'Mastered']);
+      expect(service.activeProgressFiltersList().sort()).toEqual(['Mastered', 'Understood']);
+    });
+  });
+
+  describe('progressStats', () => {
+    it('returns all-zero stats with 0% complete when there is no progress data', () => {
+      progressStateSpy.getAllProgress.mockReturnValue(new Map());
+      expect(service.progressStats()).toEqual({
+        total: 0,
+        notStarted: 0,
+        inProgress: 0,
+        understood: 0,
+        mastered: 0,
+        percentComplete: 0,
+      });
+    });
+
+    it('tallies counts per progress state', () => {
+      progressStateSpy.getAllProgress.mockReturnValue(
+        new Map<string, ProgressState>([
+          ['a', 'Not_Started'],
+          ['b', 'Not_Started'],
+          ['c', 'In_Progress'],
+          ['d', 'Understood'],
+          ['e', 'Mastered'],
+        ])
+      );
+
+      // Fresh service instance so the computed's first read picks up this mock value.
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          GraphStateService,
+          { provide: WikiParserService, useValue: wikiParserSpy },
+          { provide: ProgressStateService, useValue: progressStateSpy },
+        ],
+      });
+      const freshService = TestBed.inject(GraphStateService);
+
+      expect(freshService.progressStats()).toEqual({
+        total: 5,
+        notStarted: 2,
+        inProgress: 1,
+        understood: 1,
+        mastered: 1,
+        percentComplete: 40, // (understood + mastered) / total = 2/5 = 40%
+      });
+    });
+
+    it('rounds percentComplete to the nearest integer', () => {
+      progressStateSpy.getAllProgress.mockReturnValue(
+        new Map<string, ProgressState>([
+          ['a', 'Understood'],
+          ['b', 'Not_Started'],
+          ['c', 'Not_Started'],
+        ])
+      );
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          GraphStateService,
+          { provide: WikiParserService, useValue: wikiParserSpy },
+          { provide: ProgressStateService, useValue: progressStateSpy },
+        ],
+      });
+      const freshService = TestBed.inject(GraphStateService);
+
+      // 1/3 = 33.33...% -> rounds to 33
+      expect(freshService.progressStats().percentComplete).toBe(33);
+    });
+  });
+
+  describe('selectedNodeProgress', () => {
+    it('is null when no node is selected', () => {
+      expect(service.selectedNodeProgress()).toBeNull();
+    });
+
+    it('returns the progress state and assessment count for the selected node', () => {
+      loadData(service, makeGraphData([makeNode('angular')]));
+      progressStateSpy.getProgress.mockReturnValue('Understood');
+      progressStateSpy.getAssessmentCount.mockReturnValue(3);
+
+      service.selectNode('angular');
+
+      expect(service.selectedNodeProgress()).toEqual({ state: 'Understood', assessmentCount: 3 });
+      expect(progressStateSpy.getProgress).toHaveBeenCalledWith('angular');
+      expect(progressStateSpy.getAssessmentCount).toHaveBeenCalledWith('angular');
+    });
+
+    it('is null again after the selection is cleared', () => {
+      loadData(service, makeGraphData([makeNode('angular')]));
+      service.selectNode('angular');
+      service.selectNode(null);
+      expect(service.selectedNodeProgress()).toBeNull();
     });
   });
 });
