@@ -1,3 +1,7 @@
+---
+inclusion: manual
+---
+
 # Article Research Session Workflow
 
 ## Project Context
