@@ -9,7 +9,7 @@ describe('ProgressStateService', () => {
   let storageServiceMock: StorageService;
 
   beforeEach(() => {
-    // Create mock for StorageService
+
     storageServiceMock = {
       readProgressFile: vi.fn(),
       writeProgressFile: vi.fn(),
@@ -47,7 +47,7 @@ describe('ProgressStateService', () => {
     });
 
     it('should return the stored progress state for existing concepts', async () => {
-      // Set progress first
+
       vi.mocked(storageServiceMock.readProgressFile).mockResolvedValue(null);
       vi.mocked(storageServiceMock.writeProgressFile).mockResolvedValue(undefined);
       vi.mocked(storageServiceMock.writeIndexFile).mockResolvedValue(undefined);
@@ -67,7 +67,6 @@ describe('ProgressStateService', () => {
 
       await service.setProgress('typescript', 'TypeScript', 'In_Progress');
 
-      // Verify storage service was called correctly
       expect(storageServiceMock.writeProgressFile).toHaveBeenCalledWith(
         'typescript',
         expect.objectContaining({
@@ -79,7 +78,6 @@ describe('ProgressStateService', () => {
         })
       );
 
-      // Verify index file was updated
       expect(storageServiceMock.writeIndexFile).toHaveBeenCalledWith(
         expect.objectContaining({
           version: '1.0.0',
@@ -88,7 +86,6 @@ describe('ProgressStateService', () => {
         })
       );
 
-      // Verify in-memory state was updated
       expect(service.getProgress('typescript')).toBe('In_Progress');
     });
 
@@ -108,7 +105,6 @@ describe('ProgressStateService', () => {
 
       await service.setProgress('typescript', 'TypeScript', 'Understood');
 
-      // Verify assessment count was incremented
       expect(storageServiceMock.writeProgressFile).toHaveBeenCalledWith(
         'typescript',
         expect.objectContaining({
@@ -138,7 +134,7 @@ describe('ProgressStateService', () => {
     it('should set loading state during operation', async () => {
       vi.mocked(storageServiceMock.readProgressFile).mockResolvedValue(null);
       vi.mocked(storageServiceMock.writeProgressFile).mockImplementation(() => {
-        // Check that loading is true during the operation
+
         expect(service.isLoading()()).toBe(true);
         return Promise.resolve();
       });
@@ -146,7 +142,6 @@ describe('ProgressStateService', () => {
 
       await service.setProgress('typescript', 'TypeScript', 'In_Progress');
 
-      // Loading should be false after completion
       expect(service.isLoading()()).toBe(false);
     });
 
@@ -160,15 +155,12 @@ describe('ProgressStateService', () => {
         service.setProgress('typescript', 'TypeScript', 'In_Progress')
       ).rejects.toThrow('Failed to save progress for TypeScript');
 
-      // Error should be stored
       const lastError = service.getLastError()();
       expect(lastError).toContain('TypeScript');
       expect(lastError).toContain('Disk full');
 
-      // Loading should be false after error
       expect(service.isLoading()()).toBe(false);
 
-      // In-memory state should not be updated on failure
       expect(service.getProgress('typescript')).toBe('Not_Started');
     });
 
@@ -181,10 +173,9 @@ describe('ProgressStateService', () => {
       try {
         await service.setProgress('typescript', 'TypeScript', 'Understood');
       } catch {
-        // Expected error
+
       }
 
-      // State should remain Not_Started
       expect(service.getProgress('typescript')).toBe('Not_Started');
     });
   });
@@ -221,12 +212,10 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // Verify all files were loaded
       expect(storageServiceMock.listProgressFiles).toHaveBeenCalled();
       expect(storageServiceMock.readProgressFile).toHaveBeenCalledWith('typescript');
       expect(storageServiceMock.readProgressFile).toHaveBeenCalledWith('rxjs');
 
-      // Verify in-memory state was updated
       expect(service.getProgress('typescript')).toBe('Understood');
       expect(service.getProgress('rxjs')).toBe('In_Progress');
 
@@ -262,11 +251,9 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // Should load the valid files
       expect(service.getProgress('typescript')).toBe('Understood');
       expect(service.getProgress('rxjs')).toBe('In_Progress');
 
-      // Should have an error message about the corrupted file
       const lastError = service.getLastError()();
       expect(lastError).toContain('corrupted-file');
     });
@@ -280,7 +267,6 @@ describe('ProgressStateService', () => {
         'Failed to load progress data from disk'
       );
 
-      // Error should be stored
       const lastError = service.getLastError()();
       expect(lastError).toContain('Permission denied');
     });
@@ -323,7 +309,7 @@ describe('ProgressStateService', () => {
 
   describe('clearAllProgress', () => {
     it('should delete all progress files and clear in-memory state', async () => {
-      // Set up initial state
+
       vi.mocked(storageServiceMock.readProgressFile).mockResolvedValue(null);
       vi.mocked(storageServiceMock.writeProgressFile).mockResolvedValue(undefined);
       vi.mocked(storageServiceMock.writeIndexFile).mockResolvedValue(undefined);
@@ -334,19 +320,15 @@ describe('ProgressStateService', () => {
 
       expect(service.getAllProgress().size).toBe(2);
 
-      // Clear all progress
       await service.clearAllProgress();
 
-      // Verify all files were deleted
       expect(storageServiceMock.deleteProgressFile).toHaveBeenCalledWith('typescript');
       expect(storageServiceMock.deleteProgressFile).toHaveBeenCalledWith('rxjs');
 
-      // Verify in-memory state was cleared
       expect(service.getAllProgress().size).toBe(0);
       expect(service.getProgress('typescript')).toBe('Not_Started');
       expect(service.getProgress('rxjs')).toBe('Not_Started');
 
-      // Verify index was updated
       expect(storageServiceMock.writeIndexFile).toHaveBeenCalledWith(
         expect.objectContaining({
           totalConcepts: 0,
@@ -356,14 +338,13 @@ describe('ProgressStateService', () => {
     });
 
     it('should handle file deletion failures', async () => {
-      // Set up initial state
+
       vi.mocked(storageServiceMock.readProgressFile).mockResolvedValue(null);
       vi.mocked(storageServiceMock.writeProgressFile).mockResolvedValue(undefined);
       vi.mocked(storageServiceMock.writeIndexFile).mockResolvedValue(undefined);
 
       await service.setProgress('typescript', 'TypeScript', 'In_Progress');
 
-      // Mock deletion failure
       vi.mocked(storageServiceMock.deleteProgressFile).mockRejectedValue(
         new Error('File locked')
       );
@@ -372,7 +353,6 @@ describe('ProgressStateService', () => {
         'Failed to delete 1 progress file(s)'
       );
 
-      // Error should be stored
       const lastError = service.getLastError()();
       expect(lastError).toContain('typescript');
     });
@@ -455,13 +435,9 @@ describe('ProgressStateService', () => {
 
     it('should return a read-only map', () => {
       const progressMap = service.getAllProgress();
-      
-      // TypeScript enforces read-only at compile time
-      // At runtime, the returned Map is the same reference from the signal
+
       expect(progressMap).toBeInstanceOf(Map);
-      
-      // Verify that the type is ReadonlyMap at compile time
-      // (TypeScript will catch any attempts to call .set(), .delete(), etc.)
+
       const _typeCheck: ReadonlyMap<string, any> = progressMap;
       expect(_typeCheck).toBe(progressMap);
     });
@@ -637,14 +613,11 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // Verify quarantine was called for the corrupted file
       expect(storageServiceMock.quarantineProgressFile).toHaveBeenCalledWith('corrupted-file');
 
-      // Should load the valid files
       expect(service.getProgress('typescript')).toBe('Understood');
       expect(service.getProgress('rxjs')).toBe('In_Progress');
 
-      // Should have an error message about the corrupted file
       const lastError = service.getLastError()();
       expect(lastError).toContain('Corrupted progress data quarantined');
       expect(lastError).toContain('corrupted-file');
@@ -668,7 +641,6 @@ describe('ProgressStateService', () => {
         conceptIds: []
       });
 
-      // Should not throw, just log the error
       await service.loadFromFiles();
 
       expect(storageServiceMock.quarantineProgressFile).toHaveBeenCalledWith('corrupted-file');
@@ -688,7 +660,6 @@ describe('ProgressStateService', () => {
         version: '1.0.0'
       };
 
-      // First load - set initial timestamp
       vi.mocked(storageServiceMock.ensureDirectories).mockResolvedValue(undefined);
       vi.mocked(storageServiceMock.listProgressFiles).mockResolvedValue(['typescript']);
       vi.mocked(storageServiceMock.readProgressFile).mockResolvedValue(externalEntry);
@@ -698,23 +669,20 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // Now simulate external modification
       vi.mocked(storageServiceMock.getFileTimestamp)
-        .mockResolvedValueOnce(modifiedTimestamp) // Check timestamp
-        .mockResolvedValueOnce(modifiedTimestamp); // Update timestamp after write
+        .mockResolvedValueOnce(modifiedTimestamp) 
+        .mockResolvedValueOnce(modifiedTimestamp); 
       vi.mocked(storageServiceMock.readProgressFile).mockResolvedValue(externalEntry);
       vi.mocked(storageServiceMock.writeProgressFile).mockResolvedValue(undefined);
 
       await service.setProgress('typescript', 'TypeScript', 'Mastered');
 
-      // Should have reloaded the file to get external assessment count
       expect(storageServiceMock.readProgressFile).toHaveBeenCalledWith('typescript');
 
-      // Should have used external assessment count as base
       expect(storageServiceMock.writeProgressFile).toHaveBeenCalledWith(
         'typescript',
         expect.objectContaining({
-          assessmentCount: 6 // External count (5) + 1
+          assessmentCount: 6 
         })
       );
     });
@@ -724,8 +692,8 @@ describe('ProgressStateService', () => {
 
       vi.mocked(storageServiceMock.readProgressFile).mockResolvedValue(null);
       vi.mocked(storageServiceMock.getFileTimestamp)
-        .mockResolvedValueOnce(null) // No existing file
-        .mockResolvedValueOnce(timestamp); // After write
+        .mockResolvedValueOnce(null) 
+        .mockResolvedValueOnce(timestamp); 
       vi.mocked(storageServiceMock.writeProgressFile).mockResolvedValue(undefined);
       vi.mocked(storageServiceMock.writeIndexFile).mockResolvedValue(undefined);
 
@@ -764,7 +732,7 @@ describe('ProgressStateService', () => {
           assessmentCount: 1,
           version: '1.0.0'
         });
-      vi.mocked(storageServiceMock.readIndexFile).mockResolvedValue(null); // Index missing
+      vi.mocked(storageServiceMock.readIndexFile).mockResolvedValue(null); 
       vi.mocked(storageServiceMock.writeIndexFile).mockResolvedValue(undefined);
       vi.mocked(storageServiceMock.getFileTimestamp)
         .mockResolvedValueOnce(Date.now())
@@ -772,7 +740,6 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // Verify index was rebuilt
       expect(storageServiceMock.writeIndexFile).toHaveBeenCalledWith(
         expect.objectContaining({
           version: '1.0.0',
@@ -801,7 +768,6 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // Verify index was rebuilt
       expect(storageServiceMock.writeIndexFile).toHaveBeenCalledWith(
         expect.objectContaining({
           version: '1.0.0',
@@ -812,9 +778,7 @@ describe('ProgressStateService', () => {
     });
 
     it('should drop orphaned concept IDs (file missing but tracked) from the rebuilt index', async () => {
-      // Only 'typescript' has a file on disk; 'rxjs' was previously tracked
-      // (e.g. in a stale in-memory map) but has no corresponding file, and
-      // must not be carried forward into the rebuilt index.
+
       vi.mocked(storageServiceMock.ensureDirectories).mockResolvedValue(undefined);
       vi.mocked(storageServiceMock.listProgressFiles).mockResolvedValue(['typescript']);
       vi.mocked(storageServiceMock.readProgressFile).mockResolvedValue({
@@ -825,15 +789,12 @@ describe('ProgressStateService', () => {
         assessmentCount: 3,
         version: '1.0.0'
       });
-      vi.mocked(storageServiceMock.readIndexFile).mockResolvedValue(null); // Index missing, triggers rebuild
+      vi.mocked(storageServiceMock.readIndexFile).mockResolvedValue(null); 
       vi.mocked(storageServiceMock.writeIndexFile).mockResolvedValue(undefined);
       vi.mocked(storageServiceMock.getFileTimestamp).mockResolvedValue(Date.now());
 
       await service.loadFromFiles();
 
-      // Since loadFromFiles() only populates newMap from files that exist on
-      // disk, the rebuilt index should only contain 'typescript' -- 'rxjs'
-      // (no file) is never added and therefore correctly dropped.
       expect(storageServiceMock.writeIndexFile).toHaveBeenCalledWith(
         expect.objectContaining({
           totalConcepts: 1,
@@ -881,7 +842,6 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // Register 'typescript' as the only concept still present in the wiki graph.
       service.setKnownConceptIds(['typescript']);
     }
 
@@ -911,7 +871,6 @@ describe('ProgressStateService', () => {
       await loadWithOrphan();
       vi.mocked(storageServiceMock.writeIndexFile).mockClear();
 
-      // Trigger an index rebuild via the public rebuildIndex() API.
       await service.rebuildIndex();
 
       expect(storageServiceMock.writeIndexFile).toHaveBeenCalledWith(
@@ -953,7 +912,6 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // setKnownConceptIds() was never called, so nothing is considered orphaned yet.
       expect(service.getAllProgress().has('deprecated-concept')).toBe(true);
     });
   });
@@ -990,16 +948,12 @@ describe('ProgressStateService', () => {
 
       await service.loadFromFiles();
 
-      // Quarantined with .conflict extension via StorageService
       expect(storageServiceMock.quarantineConflictedFile).toHaveBeenCalledWith('conflicted-concept');
 
-      // Concept treated as Not_Started until manually resolved
       expect(service.getProgress('conflicted-concept')).toBe('Not_Started');
 
-      // Valid file still loaded normally
       expect(service.getProgress('typescript')).toBe('Understood');
 
-      // Error surfaced for visibility
       const lastError = service.getLastError()();
       expect(lastError).toContain('merge conflicts');
       expect(lastError).toContain('conflicted-concept');
@@ -1060,7 +1014,6 @@ describe('ProgressStateService', () => {
       vi.mocked(storageServiceMock.readIndexFile).mockResolvedValue(null);
       vi.mocked(storageServiceMock.writeIndexFile).mockResolvedValue(undefined);
 
-      // Should not throw, just log the error
       await service.loadFromFiles();
 
       expect(storageServiceMock.quarantineConflictedFile).toHaveBeenCalledWith('conflicted-concept');

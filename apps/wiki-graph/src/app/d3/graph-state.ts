@@ -4,13 +4,6 @@ import { PROGRESS_COLORS, VisualizationMode, WIKI_NODE_COLORS } from '../models/
 import { DIM_OPACITY, EDGE_COLOR, TYPE_COLORS } from './graph-style';
 import type { RootSelection, SimEdge } from './renderer.types';
 
-/**
- * Resolve the fill color for a node's circle based on the active
- * visualization mode. Ghost nodes are never filled (outline only).
- * @param node - The node being rendered
- * @param mode - 'wiki' colors by node type, 'progress' colors by learning state
- * @param progressStates - Lookup of concept ID to current progress state
- */
 export function nodeFillColor(
   node: SimulationNode,
   mode: VisualizationMode,
@@ -20,13 +13,6 @@ export function nodeFillColor(
   return nodeTypeColor(node, mode, progressStates);
 }
 
-/**
- * Resolve the "identity" color for a node (used for fill in wiki/progress
- * mode, and for the ghost-node outline in both modes).
- * @param node - The node being rendered
- * @param mode - 'wiki' colors by node type, 'progress' colors by learning state
- * @param progressStates - Lookup of concept ID to current progress state
- */
 export function nodeTypeColor(
   node: SimulationNode,
   mode: VisualizationMode,
@@ -39,15 +25,6 @@ export function nodeTypeColor(
   return WIKI_NODE_COLORS[node.type] ?? TYPE_COLORS[node.type] ?? '#888';
 }
 
-/**
- * Apply fill/stroke colors to every rendered node circle based on the
- * current visualization mode and progress state lookup, without touching
- * selection highlighting. Call `updateSelection()` afterwards (or let the
- * caller reapply it) to restore the selection ring/dimming on top.
- * @param root - The root SVG group selection
- * @param mode - Active visualization mode
- * @param progressStates - Lookup of concept ID to current progress state
- */
 export function updateNodeStyles(
   root: RootSelection,
   mode: VisualizationMode,
@@ -127,26 +104,8 @@ export function updateVisibility(root: RootSelection, visibleNodeIds: Set<string
     );
 }
 
-/** Arrow keys recognized for keyboard navigation between connected nodes. */
 export type ArrowKey = 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight';
 
-/**
- * Determine the id of the node that keyboard focus should move to when an
- * arrow key is pressed while `currentId` has focus (Requirements 3.4, 3.5).
- *
- * Only nodes directly connected to the current node by an edge (in either
- * direction) are considered. Among those, nodes positioned in the pressed
- * arrow's direction relative to the current node's simulation coordinates
- * are preferred; the nearest such node (by Euclidean distance) is chosen.
- * If no connected node lies in that direction (e.g. all connected nodes are
- * below when ArrowUp is pressed), the nearest connected node overall is
- * chosen instead so arrow navigation never gets stuck.
- *
- * @param root - The root SVG group selection containing rendered nodes/edges
- * @param currentId - The id of the node that currently has DOM focus
- * @param key - The arrow key that was pressed
- * @returns The id of the node to focus next, or null if there are no connected nodes
- */
 export function handleKeyboardNavigation(
   root: RootSelection,
   currentId: string,
@@ -200,34 +159,11 @@ export function handleKeyboardNavigation(
   ).id;
 }
 
-/**
- * Update the roving tabindex so that exactly one node (`activeId`) is a Tab
- * stop (`tabindex="0"`) and every other rendered node is removed from the
- * default Tab order (`tabindex="-1"`).
- *
- * Without this, every node keeps `tabindex="0"` and pressing Tab steps
- * through each node one at a time before reaching the next control (e.g.
- * the progress dashboard), which makes Tab unusable for moving between the
- * graph and surrounding UI on graphs with more than a couple of nodes.
- * With a single roving Tab stop, Tab moves directly from the graph to the
- * next focusable control, while arrow keys remain the way to move focus
- * between nodes within the graph (Requirement 3.4).
- * @param root - The root SVG group selection containing rendered nodes
- * @param activeId - The id of the node that should be the sole Tab stop
- */
 export function updateRovingTabIndex(root: RootSelection, activeId: string): void {
   root.selectAll<SVGGElement, SimulationNode>('g.node')
     .attr('tabindex', node => node.id === activeId ? '0' : '-1');
 }
 
-/**
- * Determine whether a node matches the active progress-state filters.
- * When no filters are active, every node matches (all nodes shown).
- * Nodes without a recorded progress entry default to 'Not_Started'.
- * @param node - The node being tested
- * @param activeFilters - Set of progress states currently enabled as filters
- * @param progressStates - Lookup of concept ID to current progress state
- */
 export function matchesProgressFilter(
   node: SimulationNode,
   activeFilters: ReadonlySet<ProgressState>,
@@ -238,15 +174,6 @@ export function matchesProgressFilter(
   return activeFilters.has(state);
 }
 
-/**
- * Show/hide rendered nodes based on the active progress-state filters
- * (OR logic across multiple enabled states; all nodes shown when no filter
- * is active). Edges are hidden whenever either endpoint is filtered out,
- * keeping edge visibility limited to connections between visible nodes.
- * @param root - The root SVG group selection
- * @param activeFilters - Progress states currently enabled as filters
- * @param progressStates - Lookup of concept ID to current progress state
- */
 export function applyFilters(
   root: RootSelection,
   activeFilters: ProgressState[],

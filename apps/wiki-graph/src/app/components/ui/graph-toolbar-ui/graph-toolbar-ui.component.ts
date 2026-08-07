@@ -19,7 +19,7 @@ export class GraphToolbarUiComponent {
   orphanCount = input<number>(0);
   hubNodes = input<GraphNode[]>([]);
   toolbarVisible = input<boolean>(true);
-  /** Active visualization mode ('wiki' | 'progress'), for the mode toggle button. */
+
   visualizationMode = input<VisualizationMode>('wiki');
 
   typeToggled = output<NodeType>();
@@ -29,7 +29,7 @@ export class GraphToolbarUiComponent {
   hubSelected = output<string>();
   refreshRequested = output<void>();
   toolbarVisibilityToggled = output<boolean>();
-  /** Emitted when the learner toggles between wiki structure and progress views. */
+
   visualizationModeChanged = output<VisualizationMode>();
 
   protected toggleVisualizationMode(): void {

@@ -22,7 +22,6 @@ function makeGraphData(nodes: GraphNode[]): GraphData {
   return { nodes: new Map(nodes.map(n => [n.id, n])), edges: [], allTags: [] };
 }
 
-/** Creates a detached SVG element with non-zero client dimensions stubbed for jsdom. */
 function createSvgElement(width = 800, height = 600): SVGSVGElement {
   const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   Object.defineProperty(svgElement, 'clientWidth', { value: width, configurable: true });
@@ -36,12 +35,6 @@ describe('D3ForceRenderer layout transitions', () => {
     expect(LAYOUT_TRANSITION_DURATION_MS).toBe(500);
   });
 
-  /**
-   * **Validates: Requirements 4.4**
-   * Re-rendering with new graph data must not reset the zoom/pan transform
-   * already applied to the root group - the viewport position should be
-   * preserved across layout changes.
-   */
   it('preserves the current zoom/pan transform on the root group across a re-render', () => {
     const svgElement = createSvgElement();
     const renderer = new D3ForceRenderer(svgElement, () => undefined);
@@ -80,11 +73,9 @@ describe('D3ForceRenderer layout transitions', () => {
     const renderer = new D3ForceRenderer(svgElement, () => undefined);
 
     renderer.render(makeGraphData([makeNode('a'), makeNode('b')]), new Set());
-    // Immediately supersede with another render before the first transition
-    // (500ms) can complete.
+
     renderer.render(makeGraphData([makeNode('a'), makeNode('b'), makeNode('c')]), new Set());
 
-    // Give any pending microtasks/timers a chance to run without throwing.
     await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(() => renderer.destroy()).not.toThrow();
@@ -108,16 +99,11 @@ describe('D3ForceRenderer layout transitions', () => {
     const onNodeClick = vi.fn();
     const renderer = new D3ForceRenderer(svgElement, onNodeClick);
 
-    // First render: node 'a' starts undrawn (no prior position), so its
-    // synchronously-drawn starting transform is the default translate(0,0).
     renderer.render(makeGraphData([makeNode('a'), makeNode('b')]), new Set());
     const nodeA = d3.select(svgElement).selectAll<SVGGElement, { id: string }>('g.node')
       .filter(n => n.id === 'a').node();
     expect(nodeA?.getAttribute('transform')).toBe('translate(0,0)');
 
-    // Second render: node 'a' continues to exist, so its starting position
-    // for this transition should be carried forward from the settled
-    // target layout computed during the first render, not reset to (0,0).
     renderer.render(makeGraphData([makeNode('a'), makeNode('b'), makeNode('c')]), new Set());
     const nodeAAfter = d3.select(svgElement).selectAll<SVGGElement, { id: string }>('g.node')
       .filter(n => n.id === 'a').node();

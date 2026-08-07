@@ -4,7 +4,6 @@ import { StorageService } from './storage.service';
 import { ProgressEntry, ProgressIndex } from '../models/progress.models';
 import { SCHEMA_VERSION } from '../models/progress.schemas';
 
-// Mock FileSystemDirectoryHandle
 class MockFileSystemDirectoryHandle {
   private directories = new Map<string, MockFileSystemDirectoryHandle>();
   private files = new Map<string, MockFileSystemFileHandle>();
@@ -103,7 +102,6 @@ describe('StorageService', () => {
     service = TestBed.inject(StorageService);
     mockRootHandle = new MockFileSystemDirectoryHandle();
 
-    // Mock window.showDirectoryPicker
     (window as any).showDirectoryPicker = vi.fn().mockResolvedValue(mockRootHandle);
   });
 
@@ -225,7 +223,7 @@ describe('StorageService', () => {
 
     it('should throw error if progress entry validation fails', async () => {
       const invalidEntry = { ...validEntry, state: 'InvalidState' };
-      
+
       await expect(
         service.writeProgressFile('invalid', invalidEntry as any)
       ).rejects.toThrow('Invalid progress entry data for concept: invalid');
@@ -233,7 +231,7 @@ describe('StorageService', () => {
 
     it('should validate conceptId is kebab-case', async () => {
       const invalidEntry = { ...validEntry, conceptId: 'TypeScript' };
-      
+
       await expect(
         service.writeProgressFile('TypeScript', invalidEntry)
       ).rejects.toThrow('Invalid progress entry data for concept: TypeScript');
@@ -241,7 +239,7 @@ describe('StorageService', () => {
 
     it('should validate assessmentCount is non-negative', async () => {
       const invalidEntry = { ...validEntry, assessmentCount: -1 };
-      
+
       await expect(
         service.writeProgressFile('typescript', invalidEntry)
       ).rejects.toThrow('Invalid progress entry data for concept: typescript');
@@ -277,7 +275,7 @@ describe('StorageService', () => {
 
     it('should throw error if index validation fails', async () => {
       const invalidIndex = { ...validIndex, totalConcepts: -1 };
-      
+
       await expect(
         service.writeIndexFile(invalidIndex)
       ).rejects.toThrow('Invalid index data');
@@ -285,7 +283,7 @@ describe('StorageService', () => {
 
     it('should validate conceptIds are unique', async () => {
       const invalidIndex = { ...validIndex, conceptIds: ['typescript', 'typescript'] };
-      
+
       await expect(
         service.writeIndexFile(invalidIndex)
       ).rejects.toThrow('Invalid index data');
@@ -293,7 +291,7 @@ describe('StorageService', () => {
 
     it('should validate conceptIds match kebab-case pattern', async () => {
       const invalidIndex = { ...validIndex, conceptIds: ['TypeScript'] };
-      
+
       await expect(
         service.writeIndexFile(invalidIndex)
       ).rejects.toThrow('Invalid index data');
@@ -338,9 +336,9 @@ describe('StorageService', () => {
     });
 
     it('should return empty array if concepts directory does not exist', async () => {
-      // Don't create directories, just initialize
+
       await service.initialize();
-      
+
       const result = await service.listProgressFiles();
       expect(result).toEqual([]);
     });
@@ -414,11 +412,9 @@ describe('StorageService', () => {
 
       expect(quarantinedPath).toBe('wiki/progress/concepts/typescript.json.conflict');
 
-      // Original file should no longer exist
       const result = await service.readProgressFile('typescript');
       expect(result).toBeNull();
 
-      // Quarantined content should be preserved
       const conceptsHandle = await (await (await mockRootHandle.getDirectoryHandle('wiki')).getDirectoryHandle('progress')).getDirectoryHandle('concepts');
       const quarantinedHandle = await conceptsHandle.getFileHandle('typescript.json.conflict') as any as MockFileSystemFileHandle;
       expect(JSON.parse(quarantinedHandle.getContent())).toEqual(validEntry);
@@ -450,7 +446,7 @@ describe('StorageService', () => {
 
     it('should delete an existing progress file', async () => {
       await service.writeProgressFile('typescript', validEntry);
-      
+
       let result = await service.readProgressFile('typescript');
       expect(result).toEqual(validEntry);
 

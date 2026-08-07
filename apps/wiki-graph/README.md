@@ -1,155 +1,68 @@
-# Wiki Visualizer App (`apps/wiki-graph`)
+# Wiki Graph (`apps/wiki-graph`)
 
-`wiki-graph` is the interactive web visualizer application for the LLM Wiki Knowledge Monorepo. Built as a standalone Angular application with a D3 force-directed rendering engine, it provides topological graph exploration, search, multi-criteria filtering, and detailed metadata inspection for interlinked markdown documents (`entities`, `concepts`, and `sources`).
+An interactive 2D learning graph visualizer and AI-driven knowledge assessment application built with Angular, D3.js force-directed physics, and Signal-based reactive state.
 
 ---
 
-## Architectural Role
+## 🏛️ Architectural Role & Visual Flow
 
-`wiki-graph` serves as the **Interactive Presentation & Exploration Layer** of the monorepo architecture:
+`apps/wiki-graph` serves as the primary visual interface for exploring, assessing, and tracking mastery across concepts in the knowledge wiki. It uses a clean Smart-Container-UI architecture separation to isolate state management from visual rendering.
 
 ```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                        apps/wiki-graph                                 │
-│  - src/main.ts / app.routes.ts                                         │
-│                                                                        │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                    Smart Components                              │  │
-│  │  - WikiGraphPageComponent (Route Orchestrator)                   │  │
-│  └──────────────────────────────┬───────────────────────────────────┘  │
-│                                 │ Injects & Binds State                │
-│                                 ▼                                      │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                 Reactive State & Data Layer                      │  │
-│  │  - GraphStateService (Angular Signals state & filtering)        │  │
-│  │  - WikiParserService (Manifest & Markdown Parsing)              │  │
-│  └──────────────┬───────────────────────────────┬───────────────────┘  │
-│                 │                               │                      │
-│                 ▼ Binds Data                    ▼ Fetches Static Assets│
-│  ┌──────────────────────────────┐ ┌─────────────────────────────────┐  │
-│  │     Containers & UI          │ │     Static Assets / Build       │  │
-│  │  - Viewport Container        │ │  - wiki/manifest.json           │  │
-│  │  - Canvas / Toolbar / Detail │ │  - wiki/**/*.md                 │  │
-│  └──────────────┬───────────────┘ └─────────────────────────────────┘  │
-│                 │ Renders SVG DOM                                      │
-│                 ▼                                                      │
-│  ┌──────────────────────────────┐                                      │
-│  │    D3 Force Engine           │                                      │
-│  │  - D3ForceRenderer           │                                      │
-│  │  - Force Simulation & SVG    │                                      │
-│  └──────────────────────────────┘                                      │
-└────────────────────────────────────────────────────────────────────────┘
-```
-
-- **Clean Component Hierarchy**: Enforces a strict 3-tier architecture: presentational UI components (`components/ui/`), layout container components (`components/containers/`), and service-injecting smart page components (`components/smart/`).
-- **Reactive Signal-Driven State**: All application state (node selection, type/tag filters, search query, visible node subsets, hub and orphan nodes) is managed reactively via Angular Signals in `GraphStateService`.
-- **Decoupled Physics Engine**: Graph layout simulation, DOM rendering, zoom/pan behaviors, and visual highlight state are encapsulated within a dedicated D3 rendering engine (`d3/`).
-
----
-
-## Key Capabilities & Features
-
-- **Topological Force-Directed Layout**: Physics-based D3 simulation with collision avoidance, link strength repulsion, dynamic node radii based on connection degree, and smooth drag-and-drop node positioning.
-- **Visual Encoding & Type System**:
-  - Color-coded node classifications: `entity` (orange), `concept` (cyan), and `source` (green).
-  - Ghost nodes rendered with dashed borders for referenced but uncreated `[[wikilink]]` pages.
-  - Directed edge arrows pointing from source documents to reference targets.
-- **Search & Multi-criteria Filtering**:
-  - Real-time title search matching.
-  - Multi-select node type toggles (`entity`, `concept`, `source`).
-  - Tag filter selector for fine-grained category isolation.
-  - One-click filters for top connected **hub nodes** and isolated **orphan pages** (degree 0).
-- **Navigation & Detail Panel Overlay**:
-  - Smooth viewport zoom (0.1x to 8x) and canvas panning controls.
-  - Slide-over detail panel displaying frontmatter attributes, degree metrics, direct link connections, and raw markdown preview.
-- **Accessibility & UX**:
-  - Full keyboard selection support (`Enter` / `Space` to inspect nodes, `Esc` to dismiss detail panel).
-  - ARIA element attributes for screen readers.
-  - Visual loading states and error banner handling.
-
----
-
-## Directory Structure
-
-```text
-apps/wiki-graph/
-├── project.json                 # Nx project configuration & target definitions
-├── eslint.config.mjs            # ESLint rules configuration
-├── tsconfig.json                # TypeScript base configuration
-├── tsconfig.app.json            # Application-specific TS configuration
-├── tsconfig.spec.json           # Unit test TS configuration
-├── README.md                    # Main application documentation
-├── public/                      # Static public web assets
-└── src/
-    ├── index.html               # Main HTML entry document
-    ├── main.ts                  # Application bootstrap entry point
-    ├── styles.scss              # Global application styles & design tokens
-    └── app/
-        ├── app.config.ts        # Standalone app providers & router setup
-        ├── app.routes.ts        # Application route definitions
-        ├── app.ts               # Root component container
-        ├── README.md            # App architecture documentation
-        ├── components/          # Standalone component hierarchy
-        │   ├── ui/              # Presentational components (Inputs & Outputs ONLY)
-        │   ├── containers/      # Layout composition & wrapper containers
-        │   └── smart/           # State-aware page components
-        ├── d3/                  # D3 force-directed simulation & SVG renderer
-        ├── models/              # Graph domain & manifest TypeScript models
-        └── services/            # Parser service & reactive signal state management
++-----------------------------------------------------------------------+
+|                         Wiki Graph Application                        |
++-----------------------------------------------------------------------+
+| Smart Tier (WikiGraphSmartComponent)                                  |
+|  ├── Injects GraphStateService, AssessmentService, ProgressStateStore |
+|  └── Coordinates State Signals, Assessment Dialogs & Storage Sync    |
++-----------------------------------------------------------------------+
+| Container Tier (GraphViewportContainerComponent)                      |
+|  ├── Header Toolbar (GraphToolbarUiComponent)                         |
+|  ├── Visual Graph Canvas (GraphCanvasComponent -> D3 Renderer Engine) |
+|  ├── Node Inspector (NodeDetailUiComponent)                           |
+|  ├── Progress Dashboard (ProgressDashboardUiComponent)                |
+|  └── Knowledge Assessment Modal (AssessmentDialogUiComponent)         |
++-----------------------------------------------------------------------+
 ```
 
 ---
 
-## Core Modules & Engine Subsystems
+## 💡 Key Capabilities & UX Features
 
-### 1. Component Architecture ([`./src/app/components/`](./src/app/components/README.md))
+- **Interactive Force-Directed Graph Visualization**
+  - D3.js force simulation rendering concept nodes, dependencies, and structural relationships
+  - Smooth pan/zoom controls, node highlight focus, and dynamic filters by domain status and tags
 
-- **UI Tier (`components/ui/`)**: Pure presentation components receiving data strictly via `input()` signals and emitting actions via `output()` events. Includes `GraphCanvasComponent`, `GraphToolbarUiComponent`, and `NodeDetailUiComponent`.
-- **Container Tier (`components/containers/`)**: Structural wrapper components like `GraphViewportContainerComponent` composing layout grids, overlays, and canvas wrappers.
-- **Smart Tier (`components/smart/`)**: Page-level orchestrator components like `WikiGraphPageComponent` injecting state services and binding signals to template containers.
+- **AI-Driven Knowledge Assessment Sessions**
+  - Presentational dialog workflow for step-by-step concept evaluations
+  - Real-time scoring advancing learner progress from *Not Started* through *In Progress*, *Understood*, to *Mastered*
 
-### 2. D3 Renderer Engine ([`./src/app/d3/`](./src/app/d3/README.md))
+- **Progress Dashboard & Accessibility**
+  - Domain coverage breakdown, completion metrics, and category stats
+  - Screen reader announcements for state updates via dedicated ARIA live regions
 
-- **`D3ForceRenderer`**: Coordinates graph rendering, simulation ticks, zoom/pan behaviors, and drag interactions.
-- **`force-simulation.ts`**: Configures force charge, link distance, and collision forces.
-- **`graph-svg.ts`**: Handles SVG element creation, node circles, edge path markers, and text labels.
-- **`graph-state.ts`**: Manages node selection focus, highlight links, and dimmed background states.
-
-### 3. Data & State Services ([`./src/app/services/`](./src/app/services/README.md))
-
-- **`WikiParserService`**: Asynchronously fetches `wiki/manifest.json` and referenced markdown files, parses frontmatter and `[[wikilink]]` syntax, and transforms content into renderable `GraphData`.
-- **`GraphStateService`**: Centralized Signal store managing reactive state properties (`graphData`, `selectedNode`, `activeTypeFilters`, `searchQuery`, `activeTagFilter`, `visibleNodes`, `hubNodes`, `orphanNodes`).
-
-### 4. Domain Models ([`./src/app/models/`](./src/app/models/README.md))
-
-- TypeScript interfaces and types for `NodeType`, `GraphNode`, `GraphEdge`, `GraphData`, `SimulationNode`, and `WikiManifest`.
+- **Resilient Persistence & Storage Adapters**
+  - Persistent state backup supporting File System Access API with local storage fallbacks
 
 ---
 
-## Build, Serve & Test Commands
+## 📁 Subsystem & Module Map
 
-Commands are executed via Nx targets from the monorepo root:
+| Subsystem | Folder | Responsibility |
+| --- | --- | --- |
+| **Containers** | [`./src/app/components/containers/`](./src/app/components/containers/) | Layout composition and presentational wrappers |
+| **Smart Components** | [`./src/app/components/smart/`](./src/app/components/smart/) | Service injection, signal binding, and reactive state orchestration |
+| **UI Components** | [`./src/app/components/ui/`](./src/app/components/ui/) | Pure presentational components receiving `input()` and emitting `output()` |
+| **D3 Simulation Engine** | [`./src/app/d3/`](./src/app/d3/) | Force simulation physics, SVG DOM manipulation, and style encodings |
+| **Domain Models** | [`./src/app/models/`](./src/app/models/) | Domain entities, Zod validation schemas, and constants |
+| **Services & State** | [`./src/app/services/`](./src/app/services/) | Assessment workflow, graph state stores, and persistence adapters |
 
-| Nx Target      | Purpose                                                          | Command                              |
-| -------------- | ---------------------------------------------------------------- | ------------------------------------ |
-| `serve`        | Starts local development server with live reloading              | `npx nx run wiki-graph:serve`        |
-| `build`        | Compiles production application bundle to `dist/apps/wiki-graph` | `npx nx run wiki-graph:build`        |
-| `test`         | Executes unit test suite                                         | `npx nx run wiki-graph:test`         |
-| `lint`         | Runs ESLint analysis across the application codebase             | `npx nx run wiki-graph:lint`         |
-| `serve-static` | Serves compiled production build locally on port 4200            | `npx nx run wiki-graph:serve-static` |
+---
 
-### Development Workflow
+## 🚀 Build, Run & Test Targets
 
-1. Generate or update wiki manifest using `wiki-cli`:
-
-   ```bash
-   npx nx run wiki-cli:generate-manifest
-   ```
-
-2. Start local `wiki-graph` development server:
-
-   ```bash
-   npx nx run wiki-graph:serve
-   ```
-
-3. Open your browser and navigate to `http://localhost:4200/`.
+| Target | Command | Purpose |
+| --- | --- | --- |
+| `serve` | `npx nx run wiki-graph:serve` | Starts local dev server with live reload |
+| `build` | `npx nx run wiki-graph:build` | Compiles production application bundle |
+| `test` | `npx nx run wiki-graph:test` | Executes complete unit test suite |

@@ -5,13 +5,6 @@ import { RouterModule } from '@angular/router';
 import { StorageService } from './services/storage.service';
 import { ProgressStateService } from './services/progress-state.service';
 
-/**
- * ngOnInit fires off initialization as a detached promise chain
- * (`void this.initializeProgressTracking()`), which isn't tracked by
- * Angular's zoneless change detection scheduler. `fixture.whenStable()`
- * alone can resolve before that chain's microtasks finish, so tests flush
- * the microtask queue explicitly before asserting on its result.
- */
 function flushMicrotasks(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
@@ -99,7 +92,6 @@ describe('App', () => {
 
     expect(fixture.componentInstance['progressInitError']()).toContain('Grant Access');
 
-    // Second attempt succeeds
     vi.mocked(storageServiceMock.initialize).mockResolvedValueOnce(undefined);
     await fixture.componentInstance['initializeProgressTracking']();
 

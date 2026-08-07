@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProgressDashboardUiComponent } from './progress-dashboard-ui.component';
-import type { ProgressStats } from '../../../models/progress.models';
+import type { ProgressStats, ProgressState } from '../../../models/progress.models';
 
 describe('ProgressDashboardUiComponent', () => {
   let component: ProgressDashboardUiComponent;
@@ -22,8 +22,7 @@ describe('ProgressDashboardUiComponent', () => {
 
     fixture = TestBed.createComponent(ProgressDashboardUiComponent);
     component = fixture.componentInstance;
-    
-    // Set required inputs
+
     fixture.componentRef.setInput('progressStats', mockStats);
     fixture.detectChanges();
   });
@@ -35,18 +34,18 @@ describe('ProgressDashboardUiComponent', () => {
   describe('Statistics Display', () => {
     it('should display all progress statistics', () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      
-      expect(compiled.textContent).toContain('100'); // total
-      expect(compiled.textContent).toContain('30'); // notStarted
-      expect(compiled.textContent).toContain('25'); // inProgress
-      expect(compiled.textContent).toContain('30'); // understood (appears twice)
-      expect(compiled.textContent).toContain('15'); // mastered
-      expect(compiled.textContent).toContain('45%'); // percentComplete
+
+      expect(compiled.textContent).toContain('100'); 
+      expect(compiled.textContent).toContain('30'); 
+      expect(compiled.textContent).toContain('25'); 
+      expect(compiled.textContent).toContain('30'); 
+      expect(compiled.textContent).toContain('15'); 
+      expect(compiled.textContent).toContain('45%'); 
     });
 
     it('should display stat labels', () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      
+
       expect(compiled.textContent).toContain('Total Concepts');
       expect(compiled.textContent).toContain('Not Started');
       expect(compiled.textContent).toContain('In Progress');
@@ -60,15 +59,15 @@ describe('ProgressDashboardUiComponent', () => {
     it('should render filter buttons for all progress states', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const filterButtons = compiled.querySelectorAll('.filter-btn');
-      
+
       expect(filterButtons.length).toBe(4);
     });
 
     it('should toggle filter on button click', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const filterButton = compiled.querySelector('.filter-btn') as HTMLButtonElement;
-      
-      let emittedFilters: any = null;
+
+      let emittedFilters: ProgressState[] | null = null;
       component.filterChanged.subscribe((filters) => {
         emittedFilters = filters;
       });
@@ -83,76 +82,67 @@ describe('ProgressDashboardUiComponent', () => {
     it('should allow multiple filters to be active', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const filterButtons = compiled.querySelectorAll('.filter-btn') as NodeListOf<HTMLButtonElement>;
-      
-      let emittedFilters: any = null;
+
+      let emittedFilters: ProgressState[] | null = null;
       component.filterChanged.subscribe((filters) => {
         emittedFilters = filters;
       });
 
-      // Click first filter
       filterButtons[0].click();
       fixture.detectChanges();
-      
-      expect(emittedFilters?.length).toBe(1);
 
-      // Click second filter
+      expect((emittedFilters as ProgressState[] | null)?.length).toBe(1);
+
       filterButtons[1].click();
       fixture.detectChanges();
-      
-      expect(emittedFilters?.length).toBe(2);
+
+      expect((emittedFilters as ProgressState[] | null)?.length).toBe(2);
     });
 
     it('should deactivate filter when clicked again', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const filterButton = compiled.querySelector('.filter-btn') as HTMLButtonElement;
-      
-      let emittedFilters: any = null;
+
+      let emittedFilters: ProgressState[] | null = null;
       component.filterChanged.subscribe((filters) => {
         emittedFilters = filters;
       });
 
-      // Activate filter
       filterButton.click();
       fixture.detectChanges();
-      expect(emittedFilters?.length).toBe(1);
+      expect((emittedFilters as ProgressState[] | null)?.length).toBe(1);
 
-      // Deactivate filter
       filterButton.click();
       fixture.detectChanges();
-      expect(emittedFilters?.length).toBe(0);
+      expect((emittedFilters as ProgressState[] | null)?.length).toBe(0);
       expect(filterButton.getAttribute('aria-pressed')).toBe('false');
     });
 
     it('should display clear filters button when filters are active', () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      
-      // No clear button initially
+
       expect(compiled.querySelector('.clear-filters-btn')).toBeNull();
 
-      // Activate a filter
       const filterButton = compiled.querySelector('.filter-btn') as HTMLButtonElement;
       filterButton.click();
       fixture.detectChanges();
 
-      // Clear button should appear
       expect(compiled.querySelector('.clear-filters-btn')).toBeTruthy();
     });
 
     it('should clear all filters when clear button clicked', () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      
-      let emittedFilters: any = null;
+
+      let emittedFilters: ProgressState[] | null = null;
       component.filterChanged.subscribe((filters) => {
         emittedFilters = filters;
       });
 
-      // Activate multiple filters
       const filterButtons = compiled.querySelectorAll('.filter-btn') as NodeListOf<HTMLButtonElement>;
       filterButtons[0].click();
       filterButtons[1].click();
       fixture.detectChanges();
 
-      // Click clear button
       const clearButton = compiled.querySelector('.clear-filters-btn') as HTMLButtonElement;
       clearButton.click();
       fixture.detectChanges();
@@ -163,12 +153,11 @@ describe('ProgressDashboardUiComponent', () => {
     it('should display correct counts for each filter', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const filterButtons = compiled.querySelectorAll('.filter-btn');
-      
-      // Check that each filter button shows its count
-      expect(filterButtons[0].textContent).toContain('30'); // Not Started
-      expect(filterButtons[1].textContent).toContain('25'); // In Progress
-      expect(filterButtons[2].textContent).toContain('30'); // Understood
-      expect(filterButtons[3].textContent).toContain('15'); // Mastered
+
+      expect(filterButtons[0].textContent).toContain('30'); 
+      expect(filterButtons[1].textContent).toContain('25'); 
+      expect(filterButtons[2].textContent).toContain('30'); 
+      expect(filterButtons[3].textContent).toContain('15'); 
     });
   });
 
@@ -221,7 +210,7 @@ describe('ProgressDashboardUiComponent', () => {
   describe('Refresh Button', () => {
     it('should emit refreshRequested event when clicked', () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      
+
       let refreshEmitted = false;
       component.refreshRequested.subscribe(() => {
         refreshEmitted = true;
@@ -316,7 +305,7 @@ describe('ProgressDashboardUiComponent', () => {
     it('should have proper ARIA labels for the dashboard', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const dashboard = compiled.querySelector('.progress-dashboard');
-      
+
       expect(dashboard?.getAttribute('role')).toBe('region');
       expect(dashboard?.getAttribute('aria-label')).toBe('Progress Dashboard');
     });
@@ -324,7 +313,7 @@ describe('ProgressDashboardUiComponent', () => {
     it('should have proper ARIA labels for statistics section', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const statsSection = compiled.querySelector('.stats-section');
-      
+
       expect(statsSection?.getAttribute('role')).toBe('group');
       expect(statsSection?.getAttribute('aria-label')).toBe('Progress statistics');
     });
@@ -332,7 +321,7 @@ describe('ProgressDashboardUiComponent', () => {
     it('should have proper ARIA labels for filters section', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const filtersSection = compiled.querySelector('.filters-section');
-      
+
       expect(filtersSection?.getAttribute('role')).toBe('group');
       expect(filtersSection?.getAttribute('aria-label')).toBe('Progress filters');
     });
@@ -340,20 +329,20 @@ describe('ProgressDashboardUiComponent', () => {
     it('should have aria-pressed attribute on filter buttons', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const filterButton = compiled.querySelector('.filter-btn') as HTMLButtonElement;
-      
+
       expect(filterButton.hasAttribute('aria-pressed')).toBe(true);
       expect(filterButton.getAttribute('aria-pressed')).toBe('false');
-      
+
       filterButton.click();
       fixture.detectChanges();
-      
+
       expect(filterButton.getAttribute('aria-pressed')).toBe('true');
     });
 
     it('should have descriptive aria-label for refresh button', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const refreshButton = compiled.querySelector('.refresh-btn') as HTMLButtonElement;
-      
+
       expect(refreshButton.getAttribute('aria-label')).toBe('Refresh progress from disk');
     });
   });

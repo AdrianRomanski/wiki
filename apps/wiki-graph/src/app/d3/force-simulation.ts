@@ -31,18 +31,10 @@ export function attachNodeDrag(
   nodes.call(drag);
 }
 
-/** Fraction of the viewport height reserved as top/bottom margin for the prerequisite layout. */
 const LAYOUT_VERTICAL_MARGIN_RATIO = 0.1;
-/** Strength of the prerequisite forceY pull, kept low so charge/link/collision still dominate local spacing. */
+
 const PREREQUISITE_FORCE_STRENGTH = 0.3;
 
-/**
- * Computes the target Y coordinate for a node based on its inDegree, so that
- * concepts with fewer inbound edges (fewer prerequisites) are pulled toward
- * the top of the viewport and concepts with more inbound edges are pulled
- * further down. Falls back to vertical center when no node has any inbound
- * edges (maxInDegree is 0), avoiding a division by zero.
- */
 export function prerequisiteTargetY(inDegree: number, maxInDegree: number, height: number): number {
   const margin = height * LAYOUT_VERTICAL_MARGIN_RATIO;
   const usableHeight = height - margin * 2;
@@ -58,12 +50,6 @@ function maxNodeInDegree(nodes: SimulationNode[]): number {
   return nodes.reduce((max, node) => Math.max(max, node.inDegree), 0);
 }
 
-/**
- * Configure the shared set of forces (link, charge, center, collision,
- * prerequisite) on a simulation instance. Extracted so both the live,
- * continuously-ticking simulation and the one-off settle computation used
- * for animated layout transitions stay in sync.
- */
 function configureForces(
   simulation: ForceSimulation,
   nodes: SimulationNode[],
@@ -96,17 +82,8 @@ export function createSimulation(
   return simulation.on('tick', onTick);
 }
 
-/** Default number of manual ticks used to settle a layout ahead of an animated transition. */
 const SETTLE_ITERATIONS = 300;
 
-/**
- * Synchronously advance a disposable simulation until the layout is
- * effectively settled, mutating `x`/`y` directly on the given node objects.
- * No `tick` listener is attached and the automatic timer-driven loop is
- * stopped immediately, so this has no visible/DOM side effects - it is used
- * to precompute the target positions for an animated D3 transition between
- * layout states (Requirement 4.4).
- */
 export function computeSettledPositions(
   nodes: SimulationNode[],
   edges: SimEdge[],
@@ -133,20 +110,8 @@ export function updateSimulationPositions(
   nodes.attr('transform', node => `translate(${node.x ?? 0},${node.y ?? 0})`);
 }
 
-/** Matches the `translate(x,y)` transform written by `updateSimulationPositions()`/`renderNodes()`. */
 const TRANSLATE_PATTERN = /translate\(\s*([-\d.eE]+)\s*,\s*([-\d.eE]+)\s*\)/;
 
-/**
- * Linearly interpolate a node's `transform="translate(x,y)"` attribute from
- * whatever position it is currently drawn at to its target `x`/`y`.
- *
- * Built as a manual `attrTween` (rather than `.attr('transform', ...)`,
- * which delegates to d3-interpolate's SVG transform matrix decomposition)
- * because that decomposition reads `SVGTransform.baseVal`, which jsdom does
- * not implement - relying on it would crash under Vitest/jsdom. Since every
- * node transform here is always a plain translate, a direct x/y lerp is
- * both simpler and avoids that dependency entirely.
- */
 function translateTween(this: SVGGElement, node: SimulationNode): (t: number) => string {
   const current = this.getAttribute('transform') ?? '';
   const match = TRANSLATE_PATTERN.exec(current);
@@ -157,21 +122,6 @@ function translateTween(this: SVGGElement, node: SimulationNode): (t: number) =>
   return (t: number) => `translate(${startX + (endX - startX) * t},${startY + (endY - startY) * t})`;
 }
 
-/**
- * Animate already-rendered node/edge elements from whatever position they
- * are currently drawn at to the (already-computed) `x`/`y` coordinates on
- * their bound data, using a D3 transition instead of an instant attribute
- * jump (Requirement 4.4). Callers are expected to have set the starting
- * position first (e.g. via `updateSimulationPositions()`), then mutated
- * `x`/`y` to the target layout (e.g. via `computeSettledPositions()`)
- * before calling this.
- *
- * Returns a promise that resolves once both the node and edge transitions
- * have finished, so callers can defer follow-up work (e.g. starting the
- * live, interactive simulation) until the animation completes. If a
- * transition is interrupted (e.g. a subsequent layout change starts before
- * this one finishes), its rejection is swallowed rather than propagated.
- */
 export function animateToSettledPositions(
   edges: EdgeSelection,
   nodes: NodeSelection,

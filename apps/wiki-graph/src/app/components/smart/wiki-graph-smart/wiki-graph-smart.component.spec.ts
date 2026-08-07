@@ -44,8 +44,6 @@ describe('WikiGraphPageComponent', () => {
   let fixture: ComponentFixture<WikiGraphPageComponent>;
   let component: WikiGraphPageComponent;
 
-  // Fake GraphStateService built from real signals so template bindings and
-  // the assessment-request effect react the same way they would in production.
   let assessmentRequestedConceptId: ReturnType<typeof signal<string | null>>;
   let graphDataSig: ReturnType<typeof signal<GraphData | null>>;
   let graphStateFake: {
@@ -228,7 +226,7 @@ describe('WikiGraphPageComponent', () => {
       fixture.detectChanges();
 
       component['handleResponseSubmitted']('Detailed answer');
-      // Allow the setProgress() promise microtask to resolve.
+
       await Promise.resolve();
       await Promise.resolve();
 

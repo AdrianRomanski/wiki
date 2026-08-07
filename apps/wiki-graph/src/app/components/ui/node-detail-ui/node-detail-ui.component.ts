@@ -22,7 +22,7 @@ import { PROGRESS_STATE_LABELS } from '../../../models/progress.constants';
 })
 export class NodeDetailUiComponent {
   node = input<GraphNode | null>(null);
-  /** Current progress state + assessment count for the selected concept, or null if unavailable. */
+
   progress = input<{ state: ProgressState; assessmentCount: number } | null>(null);
   closed = output<void>();
 

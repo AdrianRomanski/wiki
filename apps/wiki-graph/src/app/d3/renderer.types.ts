@@ -6,7 +6,6 @@ export interface SimEdge extends d3.SimulationLinkDatum<SimulationNode> {
   target: SimulationNode;
 }
 
-/** A plain x/y coordinate, used to snapshot/restore a node's on-screen position across renders. */
 export interface NodePosition {
   x: number;
   y: number;

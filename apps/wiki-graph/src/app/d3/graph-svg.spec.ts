@@ -52,8 +52,6 @@ describe('graph-svg zoom behavior', () => {
 
       attachSvgInteractions(svg, svgElement, zoom, () => undefined);
 
-      // d3.zoom() attached via selection.call(zoom) provides pan-via-background-drag
-      // and zoom-via-mouse-scroll by default; here we verify the behavior is attached.
       expect(callSpy).toHaveBeenCalledWith(zoom);
     });
 
@@ -67,8 +65,6 @@ describe('graph-svg zoom behavior', () => {
       attachSvgInteractions(svg, svgElement, zoom, onNodeClick);
       svg.dispatch('click', { detail: { target: svgElement } } as never);
 
-      // jsdom dispatch doesn't set event.target reliably for custom dispatch,
-      // so we invoke the handler directly to verify the null-click contract.
       const handler = svg.on('click') as ((event: MouseEvent) => void) | undefined;
       handler?.call(svgElement, { target: svgElement } as unknown as MouseEvent);
 
@@ -256,7 +252,7 @@ describe('renderNodes() interaction handlers', () => {
   });
 
   it('moves DOM focus to a connected node when an arrow key is pressed', () => {
-    // Elements must be attached to the document for jsdom to update document.activeElement on focus().
+
     const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     document.body.appendChild(svgElement);
     const svg = d3.select(svgElement);

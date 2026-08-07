@@ -3,7 +3,7 @@ import { AssessmentDialogUiComponent } from './assessment-dialog-ui.component';
 import type { AssessmentSession, Question } from '../../../models/assessment.models';
 
 describe('AssessmentDialogUiComponent', () => {
-  let component: AssessmentDialogUiComponent;
+  let component: any;
   let fixture: ComponentFixture<AssessmentDialogUiComponent>;
 
   const mockQuestions: Question[] = [
@@ -102,13 +102,13 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should calculate progress percentage correctly', () => {
-      expect(component.progressPercentage()).toBe(50); // Question 1 of 2
+      expect(component.progressPercentage()).toBe(50); 
     });
 
     it('should update progress when advancing to next question', () => {
       component.currentQuestionIndex.set(1);
       fixture.detectChanges();
-      expect(component.progressPercentage()).toBe(100); // Question 2 of 2
+      expect(component.progressPercentage()).toBe(100); 
     });
   });
 
@@ -147,8 +147,7 @@ describe('AssessmentDialogUiComponent', () => {
 
       component.responseText.set('My test response');
       fixture.detectChanges();
-      // NgModel's writeValue is applied via a queued microtask in this
-      // Angular version, so flush microtasks before asserting the DOM value.
+
       await Promise.resolve();
       fixture.detectChanges();
       expect(textarea.value).toBe('My test response');
@@ -213,7 +212,7 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should show "Submit Assessment" text for final question', () => {
-      component.currentQuestionIndex.set(1); // Last question
+      component.currentQuestionIndex.set(1); 
       component.responseText.set('Valid response');
       fixture.detectChanges();
       const submitButton = fixture.nativeElement.querySelector('.button-primary');
@@ -229,7 +228,7 @@ describe('AssessmentDialogUiComponent', () => {
 
     it('should emit responseSubmitted event with trimmed response text', () => {
       let emittedResponse: string | undefined;
-      component.responseSubmitted.subscribe((response) => {
+      component.responseSubmitted.subscribe((response: string) => {
         emittedResponse = response;
       });
 
@@ -264,10 +263,10 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should not advance question index on final question', () => {
-      component.currentQuestionIndex.set(1); // Last question (index 1 of 2)
+      component.currentQuestionIndex.set(1); 
       component.responseText.set('Valid response');
       component.submitResponse();
-      expect(component.currentQuestionIndex()).toBe(1); // Stays at 1
+      expect(component.currentQuestionIndex()).toBe(1); 
     });
   });
 
@@ -278,9 +277,9 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should increment the current question index', () => {
-      expect(component.currentQuestionIndex()).toBe(0);
-      component.nextQuestion();
-      expect(component.currentQuestionIndex()).toBe(1);
+      expect((component as any).currentQuestionIndex()).toBe(0);
+      (component as any).nextQuestion();
+      expect((component as any).currentQuestionIndex()).toBe(1);
     });
   });
 
@@ -296,20 +295,20 @@ describe('AssessmentDialogUiComponent', () => {
         cancelEmitted = true;
       });
 
-      component.cancel();
+      (component as any).cancel();
       expect(cancelEmitted).toBe(true);
     });
 
     it('should reset question index to 0', () => {
-      component.currentQuestionIndex.set(1);
-      component.cancel();
-      expect(component.currentQuestionIndex()).toBe(0);
+      (component as any).currentQuestionIndex.set(1);
+      (component as any).cancel();
+      expect((component as any).currentQuestionIndex()).toBe(0);
     });
 
     it('should clear response text', () => {
-      component.responseText.set('Some response text');
-      component.cancel();
-      expect(component.responseText()).toBe('');
+      (component as any).responseText.set('Some response text');
+      (component as any).cancel();
+      expect((component as any).responseText()).toBe('');
     });
 
     it('should trigger cancel on close button click', () => {
@@ -366,11 +365,11 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should submit response on Ctrl+Enter key press in textarea', () => {
-      component.responseText.set('Valid response');
+      (component as any).responseText.set('Valid response');
       fixture.detectChanges();
 
       let emittedResponse: string | undefined;
-      component.responseSubmitted.subscribe((response) => {
+      component.responseSubmitted.subscribe((response: string) => {
         emittedResponse = response;
       });
 
@@ -383,11 +382,11 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should submit response on Cmd+Enter (metaKey) key press in textarea', () => {
-      component.responseText.set('Valid response');
+      (component as any).responseText.set('Valid response');
       fixture.detectChanges();
 
       let emittedResponse: string | undefined;
-      component.responseSubmitted.subscribe((response) => {
+      component.responseSubmitted.subscribe((response: string) => {
         emittedResponse = response;
       });
 
@@ -400,7 +399,7 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should not submit response on plain Enter key press in textarea (allows newline)', () => {
-      component.responseText.set('Valid response');
+      (component as any).responseText.set('Valid response');
       fixture.detectChanges();
 
       let emitCount = 0;
@@ -417,7 +416,7 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should not submit on Ctrl+Enter when response is empty', () => {
-      component.responseText.set('');
+      (component as any).responseText.set('');
       fixture.detectChanges();
 
       let emitCount = 0;
@@ -522,7 +521,7 @@ describe('AssessmentDialogUiComponent', () => {
         retried = true;
       });
 
-      component.retry();
+      (component as any).retry();
 
       expect(retried).toBe(true);
     });
@@ -531,22 +530,22 @@ describe('AssessmentDialogUiComponent', () => {
   describe('Computed Properties', () => {
     it('should compute totalQuestions correctly', () => {
       fixture.componentRef.setInput('session', mockSession);
-      expect(component.totalQuestions()).toBe(2);
+      expect((component as any).totalQuestions()).toBe(2);
     });
 
     it('should return 0 for totalQuestions when session is null', () => {
       fixture.componentRef.setInput('session', null);
-      expect(component.totalQuestions()).toBe(0);
+      expect((component as any).totalQuestions()).toBe(0);
     });
 
     it('should compute isLastQuestion correctly', () => {
       fixture.componentRef.setInput('session', mockSession);
-      
-      component.currentQuestionIndex.set(0);
-      expect(component.isLastQuestion()).toBe(false);
 
-      component.currentQuestionIndex.set(1);
-      expect(component.isLastQuestion()).toBe(true);
+      (component as any).currentQuestionIndex.set(0);
+      expect((component as any).isLastQuestion()).toBe(false);
+
+      (component as any).currentQuestionIndex.set(1);
+      expect((component as any).isLastQuestion()).toBe(true);
     });
   });
 });

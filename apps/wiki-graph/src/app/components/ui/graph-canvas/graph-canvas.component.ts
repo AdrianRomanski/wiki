@@ -26,18 +26,16 @@ export class GraphCanvasComponent implements OnInit, OnDestroy {
   visibleNodeIds = input<Set<string>>(new Set());
   selectedNodeId = input<string | null>(null);
 
-  /** Active visualization mode: 'wiki' colors nodes by type, 'progress' colors by learning state. */
   visualizationMode$ = input<VisualizationMode>('wiki');
-  /** Lookup of concept ID to current progress state, used when visualizationMode$ is 'progress'. */
+
   progressStates$ = input<ReadonlyMap<string, ProgressState>>(new Map());
-  /** Progress states currently active as filters (applied to node visibility by the container). */
+
   activeFilters$ = input<ProgressState[]>([]);
 
   nodeSelected = output<string | null>();
-  /** Emitted when the learner requests a knowledge assessment for a node (e.g. Enter on focused node). */
+
   assessmentRequested = output<string>();
 
-  /** Text announced via the ARIA live region when a concept's progress state changes (Requirement 3.4/5.6). */
   protected readonly progressAnnouncement = signal('');
 
   private readonly svgElRef = viewChild.required<ElementRef<SVGSVGElement>>('svgEl');
@@ -80,10 +78,6 @@ export class GraphCanvasComponent implements OnInit, OnDestroy {
       this.renderer.updateNodeStyles(mode, progressStates);
     });
 
-    // Announce progress state changes to screen readers via the ARIA live
-    // region (Requirements 3.4, 5.6). Only announces concepts whose state
-    // actually changed since the last render, so unrelated re-renders (e.g.
-    // mode toggles) don't produce noisy announcements.
     effect(() => {
       const progressStates = this.progressStates$();
       const previous = this.lastProgressStates;

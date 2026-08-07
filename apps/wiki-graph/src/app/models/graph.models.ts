@@ -37,20 +37,12 @@ export interface WikiManifest {
   generatedAt: string;
 }
 
-/**
- * Extends GraphNode with progress tracking data, used when rendering
- * the graph in progress visualization mode.
- */
 export interface GraphNodeWithProgress extends GraphNode {
   progressState: ProgressState;
   lastAssessed: string | null;
   assessmentCount: number;
 }
 
-/**
- * Extends GraphData with a lookup of progress states per concept ID,
- * produced by GraphStateService.applyProgressData().
- */
 export interface GraphDataWithProgress extends GraphData {
   progressStates: Map<string, ProgressState>;
 }

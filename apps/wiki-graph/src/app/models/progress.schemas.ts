@@ -1,12 +1,4 @@
-/**
- * JSON schemas for validating progress data files.
- * Used by the StorageService to ensure data integrity.
- */
 
-/**
- * JSON schema for individual concept progress files.
- * Files are stored at: wiki/progress/concepts/[conceptId].json
- */
 export const PROGRESS_ENTRY_SCHEMA = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
@@ -47,10 +39,6 @@ export const PROGRESS_ENTRY_SCHEMA = {
   additionalProperties: false
 } as const;
 
-/**
- * JSON schema for the progress index file.
- * File is stored at: wiki/progress/index.json
- */
 export const PROGRESS_INDEX_SCHEMA = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
@@ -84,7 +72,4 @@ export const PROGRESS_INDEX_SCHEMA = {
   additionalProperties: false
 } as const;
 
-/**
- * Current schema version for all progress data
- */
 export const SCHEMA_VERSION = '1.0.0';

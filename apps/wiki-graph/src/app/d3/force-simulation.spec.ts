@@ -42,12 +42,6 @@ describe('prerequisiteTargetY()', () => {
     expect(prerequisiteTargetY(999, 10, 600)).toBeCloseTo(540, 5);
   });
 
-  /**
-   * **Validates: Requirements 4.2**
-   * Prerequisite concepts (fewer dependencies / lower inDegree) must be
-   * positioned higher (lower Y) than concepts with more dependencies,
-   * across arbitrary inDegree/height combinations.
-   */
   it('property: a lower inDegree never yields a strictly greater target Y than a higher inDegree', () => {
     fc.assert(
       fc.property(
@@ -66,11 +60,6 @@ describe('prerequisiteTargetY()', () => {
     );
   });
 
-  /**
-   * **Validates: Requirements 4.2**
-   * The computed Y must always stay within the vertical margin bounds of
-   * the viewport, regardless of inDegree or height.
-   */
   it('property: target Y always stays within the vertical margin bounds', () => {
     fc.assert(
       fc.property(
@@ -108,7 +97,7 @@ describe('createSimulation()', () => {
     const nodes: SimulationNode[] = [lowDegreeNode, highDegreeNode];
 
     const simulation = createSimulation(nodes, [], 800, 600, () => undefined);
-    // Run enough ticks for the prerequisite force to noticeably separate the nodes.
+
     for (let i = 0; i < 300; i++) simulation.tick();
     simulation.stop();
 
@@ -127,7 +116,6 @@ describe('nodeRadius()', () => {
   });
 });
 
-/** Builds a detached SVG root group with rendered (translated) node/edge elements for transition tests. */
 function buildRenderedGraph(
   nodes: SimulationNode[],
   edges: SimEdge[],
@@ -149,33 +137,22 @@ function buildRenderedGraph(
     .join('g')
     .attr('class', 'node');
 
-  // Draw at the starting position, mirroring what render() does before
-  // mutating x/y to the target layout and animating.
   updateSimulationPositions(edgeSelection, nodeSelection);
 
   return { root, nodeSelection, edgeSelection };
 }
 
 describe('animateToSettledPositions()', () => {
-  /**
-   * **Validates: Requirements 4.4**
-   * A layout transition must run over the caller-specified duration rather
-   * than jumping instantly, so intermediate frames should show the node
-   * partway between its start and end position.
-   */
+
   it('animates a node from its starting position toward the target over the given duration', async () => {
     const node = makeNode('a', { x: 0, y: 0 });
     const { nodeSelection, edgeSelection } = buildRenderedGraph([node], []);
 
-    // Mutate to the target layout position, as render() does after drawing
-    // the starting position and before calling animateToSettledPositions().
     node.x = 100;
     node.y = 200;
 
     const donePromise = animateToSettledPositions(edgeSelection, nodeSelection, 500);
 
-    // Advance timers is unavailable here (real d3 timers), so just await
-    // completion and assert the final, settled position was reached.
     await donePromise;
 
     const el = nodeSelection.node();

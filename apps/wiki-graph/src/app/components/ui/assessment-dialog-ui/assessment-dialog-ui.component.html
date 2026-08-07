@@ -2,8 +2,7 @@
   <div class="dialog-overlay" (click)="cancel()">
     <div class="dialog-container" (click)="$event.stopPropagation()" role="dialog" 
          [attr.aria-labelledby]="'dialog-title'" [attr.aria-describedby]="'dialog-description'">
-      
-      <!-- Header -->
+
       <div class="dialog-header">
         <h2 id="dialog-title" class="dialog-title">
           Knowledge Assessment{{ session() ? ': ' + session()?.conceptTitle : '' }}
@@ -20,7 +19,6 @@
         </button>
       </div>
 
-      <!-- Service Error Notification -->
       @if (errorMessage(); as error) {
         <div class="error-banner" role="alert">
           <span class="error-message">{{ error }}</span>
@@ -42,7 +40,7 @@
       }
 
       @if (session() && !errorMessage(); as activeSession) {
-      <!-- Progress Bar -->
+
       <div class="progress-container">
         <div class="progress-bar" [style.width.%]="progressPercentage()"></div>
         <div class="progress-text">
@@ -50,7 +48,6 @@
         </div>
       </div>
 
-      <!-- Question Display -->
       @if (currentQuestion(); as question) {
         <div class="dialog-body">
           <div class="question-container">
@@ -62,7 +59,6 @@
             </p>
           </div>
 
-          <!-- Response Textarea -->
           <div class="response-container">
             <label for="response-input" class="response-label">
               Your Response:
@@ -88,7 +84,6 @@
           </div>
         </div>
 
-        <!-- Footer with Action Buttons -->
         <div class="dialog-footer">
           <button
             type="button"

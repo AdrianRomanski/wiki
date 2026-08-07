@@ -9,14 +9,6 @@ import type { EdgeSelection, NodeSelection, RootSelection, SimEdge, SvgSelection
 
 const ARROW_KEYS: ReadonlySet<string> = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
 
-/**
- * Build the ARIA label for a node, including its concept name, type, and
- * (in progress mode) its current progress state so screen reader users know
- * both what the node represents and its learning status (Requirement 3.4).
- * @param node - The node being rendered
- * @param mode - Active visualization mode
- * @param progressStates - Lookup of concept ID to current progress state
- */
 export function nodeAriaLabel(
   node: SimulationNode,
   mode: VisualizationMode,
@@ -37,7 +29,6 @@ export function createZoom(root: RootSelection): d3.ZoomBehavior<SVGSVGElement, 
     });
 }
 
-/** Duration (ms) for the double-click-to-reset zoom transition (Requirement 6.4). */
 const ZOOM_RESET_DURATION_MS = 500;
 
 function isBackgroundTarget(event: { target: EventTarget | null }, svgElement: SVGSVGElement): boolean {
@@ -52,8 +43,7 @@ export function attachSvgInteractions(
 ): void {
   svg
     .call(zoom)
-    // Disable D3's default dblclick-to-zoom-in behavior so double-click can be
-    // repurposed to reset zoom instead (Requirement 6.4).
+
     .on('dblclick.zoom', null)
     .on('click', event => {
       if (isBackgroundTarget(event, svgElement)) {
@@ -61,7 +51,7 @@ export function attachSvgInteractions(
       }
     })
     .on('dblclick', event => {
-      // Only reset when double-clicking the background, not a node.
+
       if (isBackgroundTarget(event, svgElement)) {
         svg
           .transition()
@@ -114,9 +104,7 @@ export function renderNodes(
     .join('g')
     .attr('class', 'node')
     .attr('role', 'button')
-    // Roving tabindex (Requirement 3.4): only the first node is a Tab stop
-    // so Tab moves past the whole graph in one step, while arrow keys move
-    // focus between nodes within the graph.
+
     .attr('tabindex', (_node, index) => index === 0 ? '0' : '-1')
     .attr('aria-label', node => nodeAriaLabel(node, mode, progressStates))
     .style('cursor', 'pointer');
@@ -140,16 +128,12 @@ export function renderNodes(
   nodeSelection
     .on('click', function (event: MouseEvent, node: SimulationNode) {
       event.stopPropagation();
-      // Move the roving Tab stop to the clicked node so a subsequent Tab
-      // press continues from here rather than from wherever the graph was
-      // first rendered (Requirement 3.4).
+
       updateRovingTabIndex(root, node.id);
       onNodeClick(node.id);
     })
     .on('keydown', function (event: KeyboardEvent, node: SimulationNode) {
-      // Enter initiates a knowledge assessment for the focused node (Requirement 5.6).
-      // Space selects/highlights the node, mirroring click behavior.
-      // Arrow keys move DOM focus to a directly connected node (Requirements 3.4, 3.5).
+
       if (event.key === 'Enter') {
         event.preventDefault();
         onAssessmentRequest(node.id);

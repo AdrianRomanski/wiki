@@ -28,7 +28,6 @@ function makeNode(id: string, overrides: Partial<SimulationNode> = {}): Simulati
   };
 }
 
-/** Builds a detached SVG root group with rendered node circles for testing D3 style helpers. */
 function buildRootWithNodes(nodes: SimulationNode[]): RootSelection {
   const svg = d3.select(document.createElement('svg'));
   const root = svg.append('g') as unknown as RootSelection;
@@ -45,7 +44,6 @@ function buildRootWithNodes(nodes: SimulationNode[]): RootSelection {
   return root;
 }
 
-/** Builds a detached SVG root group with rendered nodes and edges for testing filter/visibility helpers. */
 function buildRootWithGraph(nodes: SimulationNode[], edges: SimEdge[]): RootSelection {
   const root = buildRootWithNodes(nodes);
 
@@ -224,7 +222,6 @@ describe('graph-state color helpers', () => {
       const nodeB = makeNode('b', { x: 0, y: 100 });
       const root = buildRootWithGraph([nodeA, nodeB], [{ source: nodeA, target: nodeB }]);
 
-      // Only a node below exists, but ArrowUp is pressed; should still navigate rather than getting stuck.
       expect(handleKeyboardNavigation(root, 'a', 'ArrowUp')).toBe('b');
     });
 

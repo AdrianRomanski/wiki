@@ -87,7 +87,6 @@ describe('AssessmentService', () => {
 
       service.cancelAssessment(session.sessionId);
 
-      // Wait for the cancellation delay
       await new Promise((resolve) => setTimeout(resolve, 150));
 
       expect(service.currentSession()).toBeNull();
@@ -116,10 +115,8 @@ describe('AssessmentService', () => {
         service.submitResponse(session.sessionId, responseText)
       );
 
-      // Should return null because there are still questions remaining
       expect(result).toBeNull();
 
-      // Response should be recorded in the session
       const updatedSession = service.currentSession();
       expect(updatedSession?.responses.length).toBe(1);
       expect(updatedSession?.responses[0].text).toBe(responseText);
@@ -129,7 +126,7 @@ describe('AssessmentService', () => {
     });
 
     it('should evaluate and complete the session when all questions are answered', async () => {
-      // Answer all questions
+
       for (let i = 0; i < session.questions.length; i++) {
         const isLastQuestion = i === session.questions.length - 1;
         const responseText = 'This is a detailed response with sufficient information to demonstrate understanding.';
@@ -139,7 +136,7 @@ describe('AssessmentService', () => {
         );
 
         if (isLastQuestion) {
-          // Last question should return an AssessmentResult
+
           expect(result).not.toBeNull();
           expect(result?.sessionId).toBe(session.sessionId);
           expect(result?.evaluatedState).toBeDefined();
@@ -147,11 +144,10 @@ describe('AssessmentService', () => {
           expect(result?.confidence).toBeLessThanOrEqual(1);
           expect(result?.feedback).toBeDefined();
 
-          // Session should be marked as completed
           const completedSession = service.currentSession();
           expect(completedSession?.status).toBe('completed');
         } else {
-          // Non-final questions should return null
+
           expect(result).toBeNull();
         }
       }
@@ -172,14 +168,13 @@ describe('AssessmentService', () => {
     });
 
     it('should throw error if all questions already answered', async () => {
-      // Answer all questions
+
       for (const question of session.questions) {
         await firstValueFrom(
           service.submitResponse(session.sessionId, 'response')
         );
       }
 
-      // Try to submit another response
       await expect(
         firstValueFrom(service.submitResponse(session.sessionId, 'response'))
       ).rejects.toThrow('All questions already answered');
@@ -193,7 +188,7 @@ describe('AssessmentService', () => {
 
     it('sets a user-friendly lastError and logs when the AI agent call fails during initiateAssessment', async () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       vi.spyOn(service as any, 'callAIAgent').mockReturnValue(
         throwError(() => new Error('Network error'))
       );
@@ -209,7 +204,7 @@ describe('AssessmentService', () => {
         '[AssessmentService] initiateAssessment failed:',
         expect.any(Error)
       );
-      // Session must not be created when the AI agent call fails.
+
       expect(service.currentSession()).toBeNull();
       consoleErrorSpy.mockRestore();
     });
@@ -220,9 +215,6 @@ describe('AssessmentService', () => {
         service.initiateAssessment('rxjs', 'RxJS')
       );
 
-      // Force the mock AI evaluation to return a malformed result (invalid
-      // evaluatedState is not one of the valid Progress_State values).
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       vi.spyOn(service as any, 'evaluateResponses').mockReturnValue({
         sessionId: session.sessionId,
         evaluatedState: 'Invalid_State',
@@ -242,9 +234,6 @@ describe('AssessmentService', () => {
         }
       }
 
-      // Non-final questions resolve to null (more questions remain); the
-      // final question's evaluation throws, so lastResult is never
-      // assigned a real AssessmentResult.
       expect(lastResult).toBeNull();
       expect(lastError).toBeInstanceOf(Error);
       expect(service.lastError()).toBe(
@@ -255,15 +244,12 @@ describe('AssessmentService', () => {
         expect.objectContaining({ evaluatedState: 'Invalid_State' })
       );
 
-      // The session must revert to 'active' rather than being left
-      // 'completed' with an invalid result, so no ProgressStateService
-      // write would ever be attempted with this data.
       expect(service.currentSession()?.status).toBe('active');
       consoleErrorSpy.mockRestore();
     });
 
     it('clears lastError when a new operation is attempted', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       vi.spyOn(service as any, 'callAIAgent').mockReturnValueOnce(
         throwError(() => new Error('Network error'))
       );
@@ -277,7 +263,7 @@ describe('AssessmentService', () => {
     });
 
     it('clearError() resets lastError to null', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       vi.spyOn(service as any, 'callAIAgent').mockReturnValueOnce(
         throwError(() => new Error('Network error'))
       );
@@ -336,12 +322,10 @@ describe('AssessmentService', () => {
         service.initiateAssessment('concept', 'Concept')
       );
 
-      // Submit short responses
       for (let i = 0; i < session.questions.length - 1; i++) {
         await firstValueFrom(service.submitResponse(session.sessionId, 'Short'));
       }
 
-      // Final response triggers evaluation
       const result = await firstValueFrom(
         service.submitResponse(session.sessionId, 'Short')
       );

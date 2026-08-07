@@ -14,9 +14,6 @@ const meta: Meta<ProgressDashboardUiComponent> = {
 export default meta;
 type Story = StoryObj<ProgressDashboardUiComponent>;
 
-/**
- * Default state with balanced progress across all states
- */
 export const Default: Story = {
   args: {
     progressStats: {
@@ -27,13 +24,10 @@ export const Default: Story = {
       mastered: 15,
       percentComplete: 45
     },
-    lastSyncTime: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
+    lastSyncTime: new Date(Date.now() - 5 * 60 * 1000), 
   },
 };
 
-/**
- * Early learning stage - most concepts not started
- */
 export const EarlyStage: Story = {
   args: {
     progressStats: {
@@ -44,13 +38,10 @@ export const EarlyStage: Story = {
       mastered: 0,
       percentComplete: 4
     },
-    lastSyncTime: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
+    lastSyncTime: new Date(Date.now() - 30 * 60 * 1000), 
   },
 };
 
-/**
- * Mid learning stage - active learning in progress
- */
 export const MidStage: Story = {
   args: {
     progressStats: {
@@ -61,13 +52,10 @@ export const MidStage: Story = {
       mastered: 5,
       percentComplete: 31
     },
-    lastSyncTime: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    lastSyncTime: new Date(Date.now() - 2 * 60 * 60 * 1000), 
   },
 };
 
-/**
- * Advanced stage - mostly understood or mastered
- */
 export const AdvancedStage: Story = {
   args: {
     progressStats: {
@@ -78,13 +66,10 @@ export const AdvancedStage: Story = {
       mastered: 35,
       percentComplete: 79
     },
-    lastSyncTime: new Date(), // Just now
+    lastSyncTime: new Date(), 
   },
 };
 
-/**
- * Complete mastery - all concepts mastered
- */
 export const AllMastered: Story = {
   args: {
     progressStats: {
@@ -95,13 +80,10 @@ export const AllMastered: Story = {
       mastered: 50,
       percentComplete: 100
     },
-    lastSyncTime: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+    lastSyncTime: new Date(Date.now() - 24 * 60 * 60 * 1000), 
   },
 };
 
-/**
- * No sync yet - never synced
- */
 export const NoSync: Story = {
   args: {
     progressStats: {
@@ -116,9 +98,6 @@ export const NoSync: Story = {
   },
 };
 
-/**
- * Small dataset - just a few concepts
- */
 export const SmallDataset: Story = {
   args: {
     progressStats: {
@@ -129,13 +108,10 @@ export const SmallDataset: Story = {
       mastered: 2,
       percentComplete: 50
     },
-    lastSyncTime: new Date(Date.now() - 10 * 60 * 1000), // 10 minutes ago
+    lastSyncTime: new Date(Date.now() - 10 * 60 * 1000), 
   },
 };
 
-/**
- * Large dataset - many concepts
- */
 export const LargeDataset: Story = {
   args: {
     progressStats: {
@@ -146,6 +122,6 @@ export const LargeDataset: Story = {
       mastered: 50,
       percentComplete: 45
     },
-    lastSyncTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+    lastSyncTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), 
   },
 };

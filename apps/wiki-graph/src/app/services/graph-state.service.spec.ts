@@ -124,7 +124,7 @@ describe('GraphStateService', () => {
   describe('loadGraph()', () => {
     it('sets isLoading to true while request is in flight', () => {
       wikiParserSpy.loadGraph.mockReturnValue(new Observable(() => {
-        /* pending */
+
       }));
       service.loadGraph();
       expect(service.isLoading()).toBe(true);
@@ -143,7 +143,7 @@ describe('GraphStateService', () => {
       wikiParserSpy.loadGraph
         .mockReturnValueOnce(throwError(() => new Error('network error')))
         .mockReturnValueOnce(new Observable(() => {
-          /* pending */
+
         }));
 
       service.loadGraph();
@@ -684,7 +684,6 @@ describe('GraphStateService', () => {
       const progress = new Map<string, ProgressState>([['angular', 'Understood']]);
       progressStateSpy.getAllProgress.mockReturnValue(progress);
 
-      // Fresh service instance so the computed's first read picks up this mock value.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
@@ -734,7 +733,6 @@ describe('GraphStateService', () => {
         ])
       );
 
-      // Fresh service instance so the computed's first read picks up this mock value.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
@@ -751,7 +749,7 @@ describe('GraphStateService', () => {
         inProgress: 1,
         understood: 1,
         mastered: 1,
-        percentComplete: 40, // (understood + mastered) / total = 2/5 = 40%
+        percentComplete: 40, 
       });
     });
 
@@ -774,7 +772,6 @@ describe('GraphStateService', () => {
       });
       const freshService = TestBed.inject(GraphStateService);
 
-      // 1/3 = 33.33...% -> rounds to 33
       expect(freshService.progressStats().percentComplete).toBe(33);
     });
   });

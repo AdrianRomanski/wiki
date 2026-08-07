@@ -2,20 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ProgressStateService } from './services/progress-state.service';
 import { StorageService } from './services/storage.service';
-// AssessmentService requires no startup initialization (mock, no file/storage
-// dependency), but is provided in root via `@Injectable({ providedIn: 'root' })`
-// alongside ProgressStateService and StorageService below.
 
-/**
- * Root application component.
- *
- * Owns startup initialization of progress tracking: requests access to the
- * workspace directory via StorageService and loads persisted progress via
- * ProgressStateService. Both services are `providedIn: 'root'`, making them
- * available application-wide as singletons.
- *
- * Requirements: 2.1, 2.2
- */
 @Component({
   imports: [RouterModule],
   selector: 'app-root',
@@ -23,33 +10,22 @@ import { StorageService } from './services/storage.service';
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  protected title = 'wiki-graph';
+  private title = 'wiki-graph';
 
   private readonly storageService = inject(StorageService);
   private readonly progressStateService = inject(ProgressStateService);
 
-  /** True while the initial workspace connection + progress load is running. */
   protected readonly initializingProgress = signal(false);
-  /** True once the workspace has been connected and progress loaded successfully. */
-  protected readonly progressReady = signal(false);
-  /** User-friendly message describing why progress tracking is unavailable, or null. */
+
+  private readonly progressReady = signal(false);
+
   protected readonly progressInitError = signal<string | null>(null);
 
   ngOnInit(): void {
-    // Attempt automatic initialization on startup. Browsers require a user
-    // gesture to show the directory picker, so this first attempt will
-    // typically fail with a permission/security error; the resulting banner
-    // lets the user retry via a button click, which satisfies that
-    // requirement.
+
     void this.initializeProgressTracking();
   }
 
-  /**
-   * Requests workspace directory access and loads progress from disk.
-   * Safe to call multiple times (e.g. via a "Grant Access" retry button).
-   *
-   * Requirements: 2.1, 2.2
-   */
   protected async initializeProgressTracking(): Promise<void> {
     this.initializingProgress.set(true);
     this.progressInitError.set(null);
@@ -67,11 +43,6 @@ export class App implements OnInit {
     }
   }
 
-  /**
-   * Translates raw StorageService/ProgressStateService error messages into
-   * user-friendly guidance, per the error handling scenarios in the design
-   * (missing directory, permission denied, unsupported browser).
-   */
   private toUserFriendlyMessage(message: string): string {
     if (message.includes('not supported')) {
       return 'Progress tracking requires a browser that supports the File System Access API (e.g. Chrome or Edge). Progress tracking is disabled.';
