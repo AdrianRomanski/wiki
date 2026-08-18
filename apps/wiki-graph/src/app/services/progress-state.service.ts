@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { StorageService } from './storage.service';
 import { ProgressState, ProgressEntry, ProgressIndex } from '../models/progress.models';
 import { SCHEMA_VERSION } from '../models/progress.schemas';
@@ -14,6 +14,7 @@ export interface ConflictNotification {
 
 @Injectable({ providedIn: 'root' })
 export class ProgressStateService {
+  private readonly storageService = inject(StorageService);
 
   private readonly progressMap$ = signal<Map<string, ProgressState>>(new Map());
   private readonly assessmentCounts$ = signal<Map<string, number>>(new Map());
@@ -32,8 +33,6 @@ export class ProgressStateService {
   private readonly knownConceptIds$ = signal<ReadonlySet<string> | null>(null);
 
   private readonly fileTimestamps = new Map<string, number>();
-
-  constructor(private readonly storageService: StorageService) {}
 
   getProgress(conceptId: string): ProgressState {
     return this.progressMap$().get(conceptId) ?? 'Not_Started';

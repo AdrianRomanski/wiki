@@ -169,7 +169,7 @@ describe('AssessmentService', () => {
 
     it('should throw error if all questions already answered', async () => {
 
-      for (const question of session.questions) {
+      for (let i = 0; i < session.questions.length; i++) {
         await firstValueFrom(
           service.submitResponse(session.sessionId, 'response')
         );
@@ -182,6 +182,11 @@ describe('AssessmentService', () => {
   });
 
   describe('network/AI service error handling (Requirements 5.3, 5.4)', () => {
+    type ServiceInternal = {
+      callAIAgent: (...args: unknown[]) => unknown;
+      evaluateResponses: (...args: unknown[]) => unknown;
+    };
+
     it('exposes a null lastError before any operation', () => {
       expect(service.lastError()).toBeNull();
     });
@@ -189,7 +194,7 @@ describe('AssessmentService', () => {
     it('sets a user-friendly lastError and logs when the AI agent call fails during initiateAssessment', async () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
-      vi.spyOn(service as any, 'callAIAgent').mockReturnValue(
+      vi.spyOn(service as unknown as ServiceInternal, 'callAIAgent').mockReturnValue(
         throwError(() => new Error('Network error'))
       );
 
@@ -215,7 +220,7 @@ describe('AssessmentService', () => {
         service.initiateAssessment('rxjs', 'RxJS')
       );
 
-      vi.spyOn(service as any, 'evaluateResponses').mockReturnValue({
+      vi.spyOn(service as unknown as ServiceInternal, 'evaluateResponses').mockReturnValue({
         sessionId: session.sessionId,
         evaluatedState: 'Invalid_State',
         confidence: 0.5,
@@ -250,7 +255,7 @@ describe('AssessmentService', () => {
 
     it('clears lastError when a new operation is attempted', async () => {
 
-      vi.spyOn(service as any, 'callAIAgent').mockReturnValueOnce(
+      vi.spyOn(service as unknown as ServiceInternal, 'callAIAgent').mockReturnValueOnce(
         throwError(() => new Error('Network error'))
       );
       await expect(
@@ -264,7 +269,7 @@ describe('AssessmentService', () => {
 
     it('clearError() resets lastError to null', async () => {
 
-      vi.spyOn(service as any, 'callAIAgent').mockReturnValueOnce(
+      vi.spyOn(service as unknown as ServiceInternal, 'callAIAgent').mockReturnValueOnce(
         throwError(() => new Error('Network error'))
       );
       await expect(

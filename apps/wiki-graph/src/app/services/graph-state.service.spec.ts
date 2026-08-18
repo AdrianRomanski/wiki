@@ -32,7 +32,10 @@ function makeGraphData(
 }
 
 function loadData(service: GraphStateService, data: GraphData): void {
-  (TestBed.inject(WikiParserService) as any).loadGraph.mockReturnValue(of(data));
+  const parser = TestBed.inject(WikiParserService) as unknown as {
+    loadGraph: ReturnType<typeof vi.fn>;
+  };
+  parser.loadGraph.mockReturnValue(of(data));
   service.loadGraph();
 }
 
@@ -124,7 +127,7 @@ describe('GraphStateService', () => {
   describe('loadGraph()', () => {
     it('sets isLoading to true while request is in flight', () => {
       wikiParserSpy.loadGraph.mockReturnValue(new Observable(() => {
-
+        // Keep in flight
       }));
       service.loadGraph();
       expect(service.isLoading()).toBe(true);
@@ -143,7 +146,7 @@ describe('GraphStateService', () => {
       wikiParserSpy.loadGraph
         .mockReturnValueOnce(throwError(() => new Error('network error')))
         .mockReturnValueOnce(new Observable(() => {
-
+          // Keep in flight
         }));
 
       service.loadGraph();

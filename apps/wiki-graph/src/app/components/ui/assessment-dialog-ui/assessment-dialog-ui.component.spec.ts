@@ -3,7 +3,7 @@ import { AssessmentDialogUiComponent } from './assessment-dialog-ui.component';
 import type { AssessmentSession, Question } from '../../../models/assessment.models';
 
 describe('AssessmentDialogUiComponent', () => {
-  let component: any;
+  let component: AssessmentDialogUiComponent;
   let fixture: ComponentFixture<AssessmentDialogUiComponent>;
 
   const mockQuestions: Question[] = [
@@ -277,9 +277,9 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should increment the current question index', () => {
-      expect((component as any).currentQuestionIndex()).toBe(0);
-      (component as any).nextQuestion();
-      expect((component as any).currentQuestionIndex()).toBe(1);
+      expect(component.currentQuestionIndex()).toBe(0);
+      component.nextQuestion();
+      expect(component.currentQuestionIndex()).toBe(1);
     });
   });
 
@@ -295,20 +295,20 @@ describe('AssessmentDialogUiComponent', () => {
         cancelEmitted = true;
       });
 
-      (component as any).cancel();
+      component.cancel();
       expect(cancelEmitted).toBe(true);
     });
 
     it('should reset question index to 0', () => {
-      (component as any).currentQuestionIndex.set(1);
-      (component as any).cancel();
-      expect((component as any).currentQuestionIndex()).toBe(0);
+      component.currentQuestionIndex.set(1);
+      component.cancel();
+      expect(component.currentQuestionIndex()).toBe(0);
     });
 
     it('should clear response text', () => {
-      (component as any).responseText.set('Some response text');
-      (component as any).cancel();
-      expect((component as any).responseText()).toBe('');
+      component.responseText.set('Some response text');
+      component.cancel();
+      expect(component.responseText()).toBe('');
     });
 
     it('should trigger cancel on close button click', () => {
@@ -365,7 +365,7 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should submit response on Ctrl+Enter key press in textarea', () => {
-      (component as any).responseText.set('Valid response');
+      component.responseText.set('Valid response');
       fixture.detectChanges();
 
       let emittedResponse: string | undefined;
@@ -382,7 +382,7 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should submit response on Cmd+Enter (metaKey) key press in textarea', () => {
-      (component as any).responseText.set('Valid response');
+      component.responseText.set('Valid response');
       fixture.detectChanges();
 
       let emittedResponse: string | undefined;
@@ -399,7 +399,7 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should not submit response on plain Enter key press in textarea (allows newline)', () => {
-      (component as any).responseText.set('Valid response');
+      component.responseText.set('Valid response');
       fixture.detectChanges();
 
       let emitCount = 0;
@@ -416,7 +416,7 @@ describe('AssessmentDialogUiComponent', () => {
     });
 
     it('should not submit on Ctrl+Enter when response is empty', () => {
-      (component as any).responseText.set('');
+      component.responseText.set('');
       fixture.detectChanges();
 
       let emitCount = 0;
@@ -521,7 +521,7 @@ describe('AssessmentDialogUiComponent', () => {
         retried = true;
       });
 
-      (component as any).retry();
+      component.retry();
 
       expect(retried).toBe(true);
     });
@@ -530,22 +530,22 @@ describe('AssessmentDialogUiComponent', () => {
   describe('Computed Properties', () => {
     it('should compute totalQuestions correctly', () => {
       fixture.componentRef.setInput('session', mockSession);
-      expect((component as any).totalQuestions()).toBe(2);
+      expect(component.totalQuestions()).toBe(2);
     });
 
     it('should return 0 for totalQuestions when session is null', () => {
       fixture.componentRef.setInput('session', null);
-      expect((component as any).totalQuestions()).toBe(0);
+      expect(component.totalQuestions()).toBe(0);
     });
 
     it('should compute isLastQuestion correctly', () => {
       fixture.componentRef.setInput('session', mockSession);
 
-      (component as any).currentQuestionIndex.set(0);
-      expect((component as any).isLastQuestion()).toBe(false);
+      component.currentQuestionIndex.set(0);
+      expect(component.isLastQuestion()).toBe(false);
 
-      (component as any).currentQuestionIndex.set(1);
-      expect((component as any).isLastQuestion()).toBe(true);
+      component.currentQuestionIndex.set(1);
+      expect(component.isLastQuestion()).toBe(true);
     });
   });
 });

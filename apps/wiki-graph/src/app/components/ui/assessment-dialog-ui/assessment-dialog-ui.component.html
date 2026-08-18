@@ -1,6 +1,6 @@
 @if (session() || errorMessage()) {
-  <div class="dialog-overlay" (click)="cancel()">
-    <div class="dialog-container" (click)="$event.stopPropagation()" role="dialog" 
+  <div class="dialog-overlay" (click)="onBackdropClick($event)" (keydown.escape)="cancel()" tabindex="-1">
+    <div class="dialog-container" role="dialog" 
          [attr.aria-labelledby]="'dialog-title'" [attr.aria-describedby]="'dialog-description'">
 
       <div class="dialog-header">
@@ -72,8 +72,7 @@
               placeholder="Type your answer here... (Ctrl+Enter to submit)"
               rows="8"
               [attr.aria-required]="true"
-              [attr.aria-invalid]="isSubmitDisabled()"
-              autofocus>
+              [attr.aria-invalid]="isSubmitDisabled()">
             </textarea>
             <div class="character-count" [class.minimum-warning]="responseText().length < 20">
               {{ responseText().length }} characters

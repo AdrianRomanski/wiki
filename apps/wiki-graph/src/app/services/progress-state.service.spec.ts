@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ProgressStateService } from './progress-state.service';
 import { StorageService } from './storage.service';
-import { ProgressEntry } from '../models/progress.models';
+import { ProgressEntry, ProgressState } from '../models/progress.models';
 
 describe('ProgressStateService', () => {
   let service: ProgressStateService;
@@ -24,7 +24,7 @@ describe('ProgressStateService', () => {
       initialize: vi.fn(),
       readJSONFile: vi.fn(),
       writeJSONFile: vi.fn()
-    } as any;
+    } as unknown as StorageService;
 
     TestBed.configureTestingModule({
       providers: [
@@ -127,8 +127,10 @@ describe('ProgressStateService', () => {
 
       const lastSyncTime = service.getLastSyncTime()();
       expect(lastSyncTime).not.toBeNull();
-      expect(lastSyncTime!.getTime()).toBeGreaterThanOrEqual(beforeTime.getTime());
-      expect(lastSyncTime!.getTime()).toBeLessThanOrEqual(afterTime.getTime());
+      if (lastSyncTime) {
+        expect(lastSyncTime.getTime()).toBeGreaterThanOrEqual(beforeTime.getTime());
+        expect(lastSyncTime.getTime()).toBeLessThanOrEqual(afterTime.getTime());
+      }
     });
 
     it('should set loading state during operation', async () => {
@@ -170,11 +172,9 @@ describe('ProgressStateService', () => {
         new Error('Permission denied')
       );
 
-      try {
-        await service.setProgress('typescript', 'TypeScript', 'Understood');
-      } catch {
-
-      }
+      await expect(
+        service.setProgress('typescript', 'TypeScript', 'Understood')
+      ).rejects.toThrow('Failed to save progress for TypeScript');
 
       expect(service.getProgress('typescript')).toBe('Not_Started');
     });
@@ -281,8 +281,10 @@ describe('ProgressStateService', () => {
 
       const lastSyncTime = service.getLastSyncTime()();
       expect(lastSyncTime).not.toBeNull();
-      expect(lastSyncTime!.getTime()).toBeGreaterThanOrEqual(beforeTime.getTime());
-      expect(lastSyncTime!.getTime()).toBeLessThanOrEqual(afterTime.getTime());
+      if (lastSyncTime) {
+        expect(lastSyncTime.getTime()).toBeGreaterThanOrEqual(beforeTime.getTime());
+        expect(lastSyncTime.getTime()).toBeLessThanOrEqual(afterTime.getTime());
+      }
     });
   });
 
@@ -438,7 +440,7 @@ describe('ProgressStateService', () => {
 
       expect(progressMap).toBeInstanceOf(Map);
 
-      const _typeCheck: ReadonlyMap<string, any> = progressMap;
+      const _typeCheck: ReadonlyMap<string, ProgressState> = progressMap;
       expect(_typeCheck).toBe(progressMap);
     });
   });

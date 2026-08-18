@@ -34,31 +34,31 @@ export class AssessmentDialogUiComponent {
 
   retried = output<void>();
 
-  protected currentQuestionIndex = signal(0);
+  currentQuestionIndex = signal(0);
 
-  protected responseText = signal('');
+  responseText = signal('');
 
-  protected currentQuestion = computed(() => {
+  currentQuestion = computed(() => {
     const session = this.session();
     const index = this.currentQuestionIndex();
     return session?.questions[index] || null;
   });
 
-  protected totalQuestions = computed(() => {
+  totalQuestions = computed(() => {
     return this.session()?.questions.length || 0;
   });
 
-  protected isLastQuestion = computed(() => {
+  isLastQuestion = computed(() => {
     return this.currentQuestionIndex() >= this.totalQuestions() - 1;
   });
 
-  protected progressPercentage = computed(() => {
+  progressPercentage = computed(() => {
     const total = this.totalQuestions();
     if (total === 0) return 0;
     return Math.round(((this.currentQuestionIndex() + 1) / total) * 100);
   });
 
-  protected submitResponse(): void {
+  submitResponse(): void {
     const response = this.responseText().trim();
 
     if (!response) {
@@ -74,18 +74,24 @@ export class AssessmentDialogUiComponent {
     }
   }
 
-  private nextQuestion(): void {
+  nextQuestion(): void {
     this.currentQuestionIndex.update((index) => index + 1);
   }
 
-  protected cancel(): void {
+  cancel(): void {
     this.cancelled.emit();
 
     this.currentQuestionIndex.set(0);
     this.responseText.set('');
   }
 
-  protected handleResponseKeydown(event: KeyboardEvent): void {
+  onBackdropClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.cancel();
+    }
+  }
+
+  handleResponseKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();
       this.submitResponse();
@@ -98,11 +104,11 @@ export class AssessmentDialogUiComponent {
     }
   }
 
-  protected isSubmitDisabled = computed(() => {
+  isSubmitDisabled = computed(() => {
     return this.responseText().trim().length === 0;
   });
 
-  protected retry(): void {
+  retry(): void {
     this.retried.emit();
   }
 }

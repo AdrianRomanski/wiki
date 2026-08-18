@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ProgressEntry, ProgressIndex } from '../models/progress.models';
-import { PROGRESS_ENTRY_SCHEMA, PROGRESS_INDEX_SCHEMA, SCHEMA_VERSION } from '../models/progress.schemas';
+import { SCHEMA_VERSION } from '../models/progress.schemas';
+
+interface DirectoryPickerOptions {
+  mode?: 'read' | 'readwrite';
+  startIn?: 'desktop' | 'documents' | 'downloads' | 'music' | 'pictures' | 'videos';
+}
+
+interface WindowWithFileSystemAccess {
+  showDirectoryPicker(options?: DirectoryPickerOptions): Promise<FileSystemDirectoryHandle>;
+}
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
@@ -17,8 +26,8 @@ export class StorageService {
     }
 
     try {
-
-      this.rootDirectoryHandle = await (window as any).showDirectoryPicker({
+      const pickerWindow = window as unknown as WindowWithFileSystemAccess;
+      this.rootDirectoryHandle = await pickerWindow.showDirectoryPicker({
         mode: 'readwrite',
         startIn: 'documents',
       });
@@ -158,7 +167,10 @@ export class StorageService {
 
       const conceptIds: string[] = [];
 
-      const iterator = (conceptsHandle as any).values();
+      const directoryWithValues = conceptsHandle as unknown as {
+        values(): AsyncIterableIterator<FileSystemHandle>;
+      };
+      const iterator = directoryWithValues.values();
 
       for await (const entry of iterator) {
         if (entry.kind === 'file' && entry.name.endsWith('.json')) {

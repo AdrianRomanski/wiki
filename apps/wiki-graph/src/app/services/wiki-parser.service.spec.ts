@@ -227,8 +227,8 @@ describe('WikiParserService', () => {
       .flush(makeMarkdown('Signals', 'concept', ['reactivity']));
 
     expect(result).toBeDefined();
-    expect(result!.nodes.size).toBe(2);
-    expect(result!.edges).toHaveLength(1);
+    expect(result?.nodes.size).toBe(2);
+    expect(result?.edges).toHaveLength(1);
   });
 
   it('throws descriptive error on 404 manifest', () => {

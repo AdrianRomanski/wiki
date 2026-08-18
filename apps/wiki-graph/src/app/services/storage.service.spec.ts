@@ -4,6 +4,8 @@ import { StorageService } from './storage.service';
 import { ProgressEntry, ProgressIndex } from '../models/progress.models';
 import { SCHEMA_VERSION } from '../models/progress.schemas';
 
+type WindowWithFs = Window & { showDirectoryPicker?: ReturnType<typeof vi.fn> };
+
 class MockFileSystemDirectoryHandle {
   private directories = new Map<string, MockFileSystemDirectoryHandle>();
   private files = new Map<string, MockFileSystemFileHandle>();
@@ -15,8 +17,7 @@ class MockFileSystemDirectoryHandle {
         dir = new MockFileSystemDirectoryHandle();
         this.directories.set(name, dir);
       } else {
-        const error = new Error('Directory not found') as any;
-        error.name = 'NotFoundError';
+        const error = Object.assign(new Error('Directory not found'), { name: 'NotFoundError' });
         throw error;
       }
     }
@@ -30,8 +31,7 @@ class MockFileSystemDirectoryHandle {
         file = new MockFileSystemFileHandle(name);
         this.files.set(name, file);
       } else {
-        const error = new Error('File not found') as any;
-        error.name = 'NotFoundError';
+        const error = Object.assign(new Error('File not found'), { name: 'NotFoundError' });
         throw error;
       }
     }
@@ -41,8 +41,7 @@ class MockFileSystemDirectoryHandle {
   async removeEntry(name: string): Promise<void> {
     const exists = this.files.has(name) || this.directories.has(name);
     if (!exists) {
-      const error = new Error('Entry not found') as any;
-      error.name = 'NotFoundError';
+      const error = Object.assign(new Error('Entry not found'), { name: 'NotFoundError' });
       throw error;
     }
     this.files.delete(name);
@@ -78,7 +77,9 @@ class MockFileSystemFileHandle {
       write: async (data: string) => {
         this.content = data;
       },
-      close: async () => {}
+      close: async () => {
+        // No-op
+      }
     };
   }
 
@@ -102,33 +103,36 @@ describe('StorageService', () => {
     service = TestBed.inject(StorageService);
     mockRootHandle = new MockFileSystemDirectoryHandle();
 
-    (window as any).showDirectoryPicker = vi.fn().mockResolvedValue(mockRootHandle);
+    const win = window as unknown as WindowWithFs;
+    win.showDirectoryPicker = vi.fn().mockResolvedValue(mockRootHandle);
   });
 
   describe('initialize', () => {
     it('should request directory access', async () => {
       await service.initialize();
-      expect((window as any).showDirectoryPicker).toHaveBeenCalledWith({
+      const win = window as unknown as WindowWithFs;
+      expect(win.showDirectoryPicker).toHaveBeenCalledWith({
         mode: 'readwrite',
         startIn: 'documents',
       });
     });
 
     it('should throw error if File System Access API is not supported', async () => {
-      const originalShowDirectoryPicker = (window as any).showDirectoryPicker;
-      delete (window as any).showDirectoryPicker;
+      const win = window as unknown as WindowWithFs;
+      const originalShowDirectoryPicker = win.showDirectoryPicker;
+      delete win.showDirectoryPicker;
 
       await expect(service.initialize()).rejects.toThrow(
         'File System Access API is not supported in this browser.'
       );
 
-      (window as any).showDirectoryPicker = originalShowDirectoryPicker;
+      win.showDirectoryPicker = originalShowDirectoryPicker;
     });
 
     it('should throw error if user denies directory access', async () => {
-      const abortError = new Error('User cancelled');
-      (abortError as any).name = 'AbortError';
-      (window as any).showDirectoryPicker = vi.fn().mockRejectedValue(abortError);
+      const abortError = Object.assign(new Error('User cancelled'), { name: 'AbortError' });
+      const win = window as unknown as WindowWithFs;
+      win.showDirectoryPicker = vi.fn().mockRejectedValue(abortError);
 
       await expect(service.initialize()).rejects.toThrow(
         'Directory access was cancelled by user.'
@@ -185,7 +189,7 @@ describe('StorageService', () => {
 
     it('should throw error if JSON is invalid', async () => {
       const kiroHandle = await mockRootHandle.getDirectoryHandle('.kiro', { create: true });
-      const fileHandle = await kiroHandle.getFileHandle('invalid.json', { create: true }) as any as MockFileSystemFileHandle;
+      const fileHandle = (await kiroHandle.getFileHandle('invalid.json', { create: true })) as unknown as MockFileSystemFileHandle;
       fileHandle.setContent('{ invalid json }');
 
       await expect(service.readJSONFile('.kiro/invalid.json')).rejects.toThrow();
@@ -225,7 +229,7 @@ describe('StorageService', () => {
       const invalidEntry = { ...validEntry, state: 'InvalidState' };
 
       await expect(
-        service.writeProgressFile('invalid', invalidEntry as any)
+        service.writeProgressFile('invalid', invalidEntry as unknown as ProgressEntry)
       ).rejects.toThrow('Invalid progress entry data for concept: invalid');
     });
 
@@ -354,7 +358,7 @@ describe('StorageService', () => {
       const wikiHandle = await mockRootHandle.getDirectoryHandle('wiki', { create: true });
       const progressHandle = await wikiHandle.getDirectoryHandle('progress', { create: true });
       const conceptsHandle = await progressHandle.getDirectoryHandle('concepts', { create: true });
-      const fileHandle = await conceptsHandle.getFileHandle('typescript.json', { create: true }) as any as MockFileSystemFileHandle;
+      const fileHandle = (await conceptsHandle.getFileHandle('typescript.json', { create: true })) as unknown as MockFileSystemFileHandle;
       fileHandle.setContent(
         '<<<<<<< HEAD\n{"state": "Understood"}\n=======\n{"state": "Mastered"}\n>>>>>>> branch\n'
       );
@@ -366,7 +370,7 @@ describe('StorageService', () => {
 
     it('should detect merge conflict markers via readJSONFile directly', async () => {
       const wikiHandle = await mockRootHandle.getDirectoryHandle('wiki', { create: true });
-      const fileHandle = await wikiHandle.getFileHandle('conflicted.json', { create: true }) as any as MockFileSystemFileHandle;
+      const fileHandle = (await wikiHandle.getFileHandle('conflicted.json', { create: true })) as unknown as MockFileSystemFileHandle;
       fileHandle.setContent('{"a": 1}\n=======\n{"a": 2}\n');
 
       await expect(service.readJSONFile('wiki/conflicted.json')).rejects.toThrow(
@@ -416,7 +420,7 @@ describe('StorageService', () => {
       expect(result).toBeNull();
 
       const conceptsHandle = await (await (await mockRootHandle.getDirectoryHandle('wiki')).getDirectoryHandle('progress')).getDirectoryHandle('concepts');
-      const quarantinedHandle = await conceptsHandle.getFileHandle('typescript.json.conflict') as any as MockFileSystemFileHandle;
+      const quarantinedHandle = (await conceptsHandle.getFileHandle('typescript.json.conflict')) as unknown as MockFileSystemFileHandle;
       expect(JSON.parse(quarantinedHandle.getContent())).toEqual(validEntry);
     });
 
