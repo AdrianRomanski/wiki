@@ -1,0 +1,30 @@
+<section class="character-dashboard-container">
+  <header class="dashboard-header">
+    <h2>🎮 Character Dashboard</h2>
+    <p class="subtitle">Life Gamification Platform & Knowledge Cortex Synchronizer</p>
+  </header>
+
+  <div class="dashboard-grid">
+    <div class="sheet-column">
+      <character-sheet [character]="characterState.character()"></character-sheet>
+    </div>
+
+    <div class="actions-column">
+      <div class="quick-actions-card">
+        <h3>⚡ Quick XP Actions</h3>
+        <p class="actions-desc">Simulate real-world contributions feeding into character progression:</p>
+        <div class="action-buttons">
+          <button class="btn btn-intelligence" (click)="onResearchCompleted()">
+            🧠 Complete Research (+50 INT XP)
+          </button>
+          <button class="btn btn-wisdom" (click)="onAdrCreated()">
+            🏛️ Publish ADR (+100 WIS XP)
+          </button>
+          <button class="btn btn-discipline" (click)="onDailyStreakFinished()">
+            ⚔️ Finish Daily Quest (+75 DIS XP)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

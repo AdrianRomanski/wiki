@@ -1,0 +1,137 @@
+.character-sheet-card {
+  background: rgba(18, 24, 38, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 24px;
+  color: #e2e8f0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 440px;
+}
+
+.character-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
+}
+
+.level-indicator {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.character-identity {
+  display: flex;
+  flex-direction: column;
+}
+
+.character-name {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.character-title {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.xp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.xp-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.xp-title {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.xp-values {
+  color: #818cf8;
+  font-family: monospace;
+}
+
+.progress-bar-track {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #3b82f6);
+  border-radius: 999px;
+  transition: width 0.4s ease-out;
+}
+
+.attributes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.attribute-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &.intelligence {
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+
+  &.wisdom {
+    border-color: rgba(234, 179, 8, 0.3);
+  }
+
+  &.discipline {
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+}
+
+.attr-icon {
+  font-size: 1.4rem;
+}
+
+.attr-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.attr-name {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.attr-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}

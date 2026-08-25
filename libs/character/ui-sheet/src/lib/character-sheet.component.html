@@ -1,0 +1,50 @@
+<div class="character-sheet-card">
+  <div class="character-header">
+    <div class="avatar-badge">
+      <span class="level-indicator">Lvl {{ character().level }}</span>
+    </div>
+    <div class="character-identity">
+      <h3 class="character-name">{{ character().name }}</h3>
+      <span class="character-title">{{ character().title }}</span>
+    </div>
+  </div>
+
+  <div class="xp-section">
+    <div class="xp-labels">
+      <span class="xp-title">Experience Points</span>
+      <span class="xp-values">{{ character().currentXp }} / {{ character().xpToNextLevel }} XP</span>
+    </div>
+    <div class="progress-bar-track">
+      <div
+        class="progress-bar-fill"
+        [style.width.%]="(character().currentXp / character().xpToNextLevel) * 100"
+      ></div>
+    </div>
+  </div>
+
+  <div class="attributes-grid">
+    <div class="attribute-box intelligence">
+      <span class="attr-icon">🧠</span>
+      <div class="attr-details">
+        <span class="attr-name">Intelligence</span>
+        <span class="attr-value">{{ character().attributes.intelligence }}</span>
+      </div>
+    </div>
+
+    <div class="attribute-box wisdom">
+      <span class="attr-icon">🏛️</span>
+      <div class="attr-details">
+        <span class="attr-name">Wisdom</span>
+        <span class="attr-value">{{ character().attributes.wisdom }}</span>
+      </div>
+    </div>
+
+    <div class="attribute-box discipline">
+      <span class="attr-icon">⚔️</span>
+      <div class="attr-details">
+        <span class="attr-name">Discipline</span>
+        <span class="attr-value">{{ character().attributes.discipline }}</span>
+      </div>
+    </div>
+  </div>
+</div>

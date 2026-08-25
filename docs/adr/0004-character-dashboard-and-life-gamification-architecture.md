@@ -35,7 +35,7 @@ To solve this, we are expanding the platform from a standalone knowledge base in
 - **Dual Engine Integration (Knowledge & Progression)**: Seamless synchronicity between the Wiki Graph assessment engine (mastery levels) and the Character Progression Engine (Experience Points, Skill Points, Attribute Allocation).
 - **AI Questmaster via MCP**: Utilizing Model Context Protocol (`apps/wiki-mcp-server`) to allow AI agents to evaluate code/wiki contributions, synthesize personalized quests, and award XP based on real-world achievements.
 - **Clean Bounded Contexts**: Strict separation between core domain contexts (`Domain-Character`, `Domain-Quests`, `Domain-SkillTree`, and `Domain-Wiki`) using Hexagonal Architecture.
-- **Local-First & Privacy First**: Character stats, habits, and cognitive progression reside locally with full ownership and offline availability.
+- **Wiki-Backed Persistence (`wiki/character.md`)**: Character Sheet state (Level, XP, Attributes, Titles) is stored as a Markdown document with YAML frontmatter directly in the `wiki/` knowledge repository (`wiki/character.md`), ensuring full git versioning, human readability, and AI inspectability instead of ephemeral browser local storage.
 
 ---
 
@@ -61,28 +61,30 @@ We decided on **Option 3: Dedicated Character Dashboard & Gamification Engine in
 
 ### 1. Conceptual Roles & Architectural Boundaries
 
-- **The Brain (`libs/wiki/*` | `scope:wiki`)**: The cognitive core of the character. Holds memories, technical concepts, framework entities, research sources, and architectural decisions. Knowledge retention directly drives cognitive character stats.
+- **The LifeForge Platform Application (`apps/life-forge-app` | `scope:life-forge`)**: The main umbrella application composing the Character Dashboard, Quest System, Skill Trees, and Life Gamification surfaces.
 - **The Character Domain (`libs/character/*` | `scope:character`)**: Dedicated domain managing Character Sheet state, Experience (XP), Character Levels, Attributes (Intelligence, Wisdom, Discipline), and Progression rules.
-- **The Character Dashboard (`apps/character-dashboard`)**: The primary execution and RPG presentation target. Renders the active Character Sheet, Skill Trees, Quest Log, Experience Bars, and Stat Radar Charts.
+- **The Brain (`libs/wiki/*` | `scope:wiki`)**: The cognitive core of the character. Holds memories, technical concepts, framework entities, research sources, and architectural decisions. Knowledge retention directly drives cognitive character stats.
 - **The Neural Bridge (`apps/wiki-mcp-server`)**: Standardized AI interface enabling subagents and LLMs to inspect the character's brain state, identify knowledge gaps, and assign tailored learning or coding quests.
 
 #### Layered Architecture & Module Boundaries (Enforced via ESLint)
 
-The Gamify domain follows a standard **Nx Layered Architecture** categorized by library type tags (`type:*`) combined with scope tags (`scope:wiki`, `scope:character`):
+The Gamify domain follows a standard **Nx Layered Architecture** categorized by layer tags (`layer:*`), type tags (`type:*`), and scope tags (`scope:wiki`, `scope:character`, `scope:life-forge`):
 
-1. **`type:feature`**: Smart container components, page routes, and complex user flow orchestrators.
-   - *Allowed Dependencies*: `type:feature`, `type:ui`, `type:data-access`, `type:util`.
-2. **`type:ui`**: Presentational & dumb UI components (strictly using Angular `input()` and `output()`, zero injected services).
-   - *Allowed Dependencies*: `type:ui`, `type:util`.
-3. **`type:data-access`**: Services, state management (Angular Signals / RxJS), API clients, and storage adapters.
-   - *Allowed Dependencies*: `type:data-access`, `type:util`.
-4. **`type:util`**: Pure helper functions, utilities, constants, and shared domain model interfaces.
-   - *Allowed Dependencies*: `type:util`.
+1. **`layer:feature` | `type:feature`**: Smart container components, page routes, and complex user flow orchestrators.
+   - *Allowed Dependencies*: `layer:feature`, `layer:ui`, `layer:data-access`, `layer:domain`.
+2. **`layer:ui` | `type:ui`**: Presentational & dumb UI components (strictly using Angular `input()` and `output()`, zero injected services).
+   - *Allowed Dependencies*: `layer:ui`, `layer:domain`, `type:ui`, `type:util`.
+3. **`layer:data-access` | `type:data-access`**: Services, state management (Angular Signals / RxJS), API clients, and storage adapters.
+   - *Allowed Dependencies*: `layer:data-access`, `layer:domain`, `type:data-access`, `type:util`.
+4. **`layer:domain` | `type:util`**: Pure domain models, helper functions, constants, and value objects.
+   - *Allowed Dependencies*: `layer:domain`, `type:util`.
 
 - **Scope Isolation Rules**:
-  - `scope:wiki`: Brain domain packages. May only depend on `scope:wiki` or `scope:shared`.
+  - `scope:life-forge`: Main application scope. Allowed to depend on `scope:life-forge`, `scope:character`, `scope:wiki`, and `scope:shared`.
   - `scope:character`: Character domain packages. May depend on `scope:character`, `scope:wiki` (to query the Character's Brain), and `scope:shared`.
+  - `scope:wiki`: Brain domain packages. May only depend on `scope:wiki` or `scope:shared`.
   - `scope:shared`: Common utility libraries accessible across all domains.
+
 
 
 ### 2. Architecture Overview

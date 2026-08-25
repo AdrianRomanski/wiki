@@ -75,7 +75,11 @@
       ],
       "@wiki/application-adr": ["./libs/wiki/application-adr/src/index.ts"],
       "@wiki/core": ["./libs/wiki/core/src/index.ts"],
-      "@wiki-graph/examples": ["./libs/wiki/examples/src/index.ts"]
+      "@wiki-graph/examples": ["./libs/wiki/examples/src/index.ts"],
+      "@wiki/character-domain-models": ["./libs/character/domain-models/src/index.ts"],
+      "@wiki/character-data-access": ["./libs/character/data-access/src/index.ts"],
+      "@wiki/character-ui-sheet": ["./libs/character/ui-sheet/src/index.ts"],
+      "@wiki/character-feature-dashboard": ["./libs/character/feature-dashboard/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

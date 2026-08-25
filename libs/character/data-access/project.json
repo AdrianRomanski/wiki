@@ -1,0 +1,21 @@
+{
+  "name": "character-data-access",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/character/data-access/src",
+  "prefix": "character",
+  "projectType": "library",
+  "tags": ["scope:character", "layer:data-access", "type:data-access"],
+  "implicitDependencies": ["character-domain-models"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/character/data-access/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

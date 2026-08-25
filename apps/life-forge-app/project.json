@@ -1,44 +1,51 @@
 {
-  "name": "wiki-graph",
+  "name": "life-forge-app",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/wiki-graph/src",
-  "tags": ["scope:wiki", "hexagonal:presentation"],
+  "sourceRoot": "apps/life-forge-app/src",
+  "tags": ["scope:life-forge", "layer:feature", "type:feature"],
+  "implicitDependencies": [
+    "character-domain-models",
+    "character-data-access",
+    "character-ui-sheet",
+    "character-feature-dashboard"
+  ],
   "targets": {
     "build": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/wiki-graph",
-        "browser": "apps/wiki-graph/src/main.ts",
-        "tsConfig": "apps/wiki-graph/tsconfig.app.json",
+        "outputPath": "dist/apps/life-forge-app",
+        "browser": "apps/life-forge-app/src/main.ts",
+        "tsConfig": "apps/life-forge-app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
-          {
-            "glob": "**/*",
-            "input": "apps/wiki-graph/public"
-          },
           {
             "glob": "**/*",
             "input": "wiki",
             "output": "wiki"
           }
         ],
-        "styles": ["apps/wiki-graph/src/styles.scss"]
+        "styles": ["apps/life-forge-app/src/styles.scss"]
       },
       "configurations": {
         "production": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": true
+            },
+            "fonts": {
+              "inline": false
+            }
+          },
           "budgets": [
             {
               "type": "initial",
               "maximumWarning": "500kb",
               "maximumError": "1mb"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "4kb",
-              "maximumError": "8kb"
             }
           ],
           "outputHashing": "all"
@@ -54,15 +61,12 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
-      "options": {
-        "port": 4300
-      },
       "configurations": {
         "production": {
-          "buildTarget": "wiki-graph:build:production"
+          "buildTarget": "life-forge-app:build:production"
         },
         "development": {
-          "buildTarget": "wiki-graph:build:development"
+          "buildTarget": "life-forge-app:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -70,17 +74,13 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
-    "test": {
-      "executor": "@angular/build:unit-test",
-      "options": {}
-    },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "wiki-graph:build",
-        "port": 4200,
-        "staticFilePath": "dist/apps/wiki-graph/browser",
+        "buildTarget": "life-forge-app:build",
+        "port": 4210,
+        "staticFilePath": "dist/apps/life-forge-app/browser",
         "spa": true
       }
     }

@@ -1,0 +1,14 @@
+{
+  "name": "character-feature-dashboard",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/character/feature-dashboard/src",
+  "prefix": "character",
+  "projectType": "library",
+  "tags": ["scope:character", "layer:feature", "type:feature"],
+  "implicitDependencies": ["character-domain-models", "character-data-access", "character-ui-sheet"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

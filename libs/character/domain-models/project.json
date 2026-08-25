@@ -1,0 +1,20 @@
+{
+  "name": "character-domain-models",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/character/domain-models/src",
+  "prefix": "character",
+  "projectType": "library",
+  "tags": ["scope:character", "layer:domain", "type:util"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/character/domain-models/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

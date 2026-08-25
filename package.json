@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "nx": "npx nx",
-    "start:graph": "npx nx run wiki-graph:serve --port=4300",
+    "start:graph": "npx nx serve wiki-graph",
+    "start:lifeforge": "npx nx serve life-forge-app",
     "build:mcp": "npx nx run wiki-mcp-server:build",
     "build:manifest": "npx nx run wiki-cli:generate-manifest",
     "build:wiki-index": "npx nx run wiki-cli:generate-index",

@@ -42,6 +42,83 @@ export default [
               ],
             },
             {
+              sourceTag: 'scope:wiki',
+              onlyDependOnLibsWithTags: ['scope:wiki', 'scope:shared'],
+            },
+            {
+              sourceTag: 'scope:character',
+              onlyDependOnLibsWithTags: ['scope:character', 'scope:wiki', 'scope:shared'],
+            },
+            {
+              sourceTag: 'scope:life-forge',
+              onlyDependOnLibsWithTags: [
+                'scope:life-forge',
+                'scope:character',
+                'scope:wiki',
+                'scope:shared',
+              ],
+            },
+            {
+              sourceTag: 'scope:shared',
+              onlyDependOnLibsWithTags: ['scope:shared'],
+            },
+            {
+              sourceTag: 'layer:feature',
+              onlyDependOnLibsWithTags: [
+                'layer:feature',
+                'layer:ui',
+                'layer:data-access',
+                'layer:domain',
+                'type:feature',
+                'type:ui',
+                'type:data-access',
+                'type:util',
+              ],
+            },
+            {
+              sourceTag: 'layer:ui',
+              onlyDependOnLibsWithTags: [
+                'layer:ui',
+                'layer:domain',
+                'type:ui',
+                'type:util',
+              ],
+            },
+            {
+              sourceTag: 'layer:data-access',
+              onlyDependOnLibsWithTags: [
+                'layer:data-access',
+                'layer:domain',
+                'type:data-access',
+                'type:util',
+              ],
+            },
+            {
+              sourceTag: 'layer:domain',
+              onlyDependOnLibsWithTags: ['layer:domain', 'type:util'],
+            },
+            {
+              sourceTag: 'type:feature',
+              onlyDependOnLibsWithTags: [
+                'type:feature',
+                'type:ui',
+                'type:data-access',
+                'type:util',
+              ],
+            },
+            {
+              sourceTag: 'type:ui',
+              onlyDependOnLibsWithTags: ['type:ui', 'type:util'],
+            },
+            {
+              sourceTag: 'type:data-access',
+              onlyDependOnLibsWithTags: ['type:data-access', 'type:util'],
+            },
+            {
+              sourceTag: 'type:util',
+              onlyDependOnLibsWithTags: ['type:util'],
+            },
+            {
               sourceTag: '*',
               onlyDependOnLibsWithTags: ['*'],
             },

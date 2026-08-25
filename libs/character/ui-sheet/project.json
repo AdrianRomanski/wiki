@@ -1,0 +1,14 @@
+{
+  "name": "character-ui-sheet",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/character/ui-sheet/src",
+  "prefix": "character",
+  "projectType": "library",
+  "tags": ["scope:character", "layer:ui", "type:ui"],
+  "implicitDependencies": ["character-domain-models"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
