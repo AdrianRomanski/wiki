@@ -9,6 +9,8 @@ This directory contains Architecture Decision Records (ADRs) capturing significa
 | [ADR-0001](0001-monorepo-structure-and-hexagonal-wiki-core.md) | Monorepo Structure & Hexagonal Architecture for Wiki Core | `Accepted` | 2026-08-25 | Core Architecture |
 | [ADR-0002](0002-interactive-knowledge-graph-and-learning-engine.md) | Interactive Knowledge Graph & Dual-Mode Learning Engine | `Accepted` | 2026-08-25 | Frontend & Visualization |
 | [ADR-0003](0003-model-context-protocol-mcp-server-integration.md) | Model Context Protocol (MCP) Server for AI Agent Integration | `Accepted` | 2026-08-25 | AI & Tooling |
+| [ADR-0004](0004-character-dashboard-and-life-gamification-architecture.md) | Character Dashboard & Life Gamification Platform (Wiki as Character Brain) | `Accepted` | 2026-08-25 | Core Architecture & Gamification |
+
 
 ---
 
