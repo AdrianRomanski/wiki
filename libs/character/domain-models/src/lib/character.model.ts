@@ -23,3 +23,19 @@ export interface XpReward {
   statCategory: StatCategory;
   sourceDescription: string;
 }
+
+export interface XpTransaction {
+  id: string;
+  userId: string;
+  amount: number;
+  statCategory: StatCategory;
+  sourceDescription: string;
+  timestamp: string;
+}
+
+export interface CharacterRepositoryPort {
+  loadCharacter(userId?: string): Promise<Character>;
+  saveCharacter(character: Character, userId?: string): Promise<void>;
+  logXpTransaction?(transaction: Omit<XpTransaction, 'id'>, userId?: string): Promise<void>;
+}
+

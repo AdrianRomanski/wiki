@@ -31,6 +31,12 @@
       },
       "configurations": {
         "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/life-forge-app/src/environments/environment.ts",
+              "with": "apps/life-forge-app/src/environments/environment.local.ts"
+            }
+          ],
           "optimization": {
             "scripts": true,
             "styles": {
@@ -83,6 +89,13 @@
         "staticFilePath": "dist/apps/life-forge-app/browser",
         "spa": true
       }
+    },
+    "emulate": {
+      "command": "npx -y firebase-tools@latest emulators:start --only auth,firestore,hosting"
+    },
+    "deploy": {
+      "dependsOn": ["build"],
+      "command": "npx -y firebase-tools@latest deploy --only hosting"
     }
   }
 }

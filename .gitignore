@@ -62,3 +62,9 @@ wiki/**
 !wiki/**/
 !wiki/README.md
 !wiki/**/.gitkeep
+
+# Local Environment Secrets (never push to git)
+apps/life-forge-app/src/environments/environment.local.ts
+
+# Firebase CLI Cache & Hosting deploy artifacts
+.firebase/

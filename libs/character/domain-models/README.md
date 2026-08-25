@@ -1,6 +1,6 @@
 # Character Domain Models (`libs/character/domain-models`)
 
-Pure domain layer package managing core RPG character entities, progression formulas, level milestone curves, and experience reward interfaces for the Life Gamification Platform.
+Pure domain layer package managing core RPG character entities, progression formulas, level milestone curves, experience reward interfaces, and repository port definitions for the Life Gamification Platform.
 
 ---
 
@@ -15,12 +15,11 @@ Pure domain layer package managing core RPG character entities, progression form
 ## 🔑 Key Models & Pure Functions
 
 ### 1. Domain Entities (`character.model.ts`)
-- `Character`: Represents the complete character state (`id`, `name`, `level`, `currentXp`, `xpToNextLevel`, `totalXpEarned`, `attributes`, `title`).
-- `CharacterAttributes`: Core character stats:
-  - `intelligence`: Wiki research, concept mastery, learning speed.
-  - `wisdom`: Architectural governance, ADR creation, design patterns.
-  - `discipline`: Habit consistency, quest execution, daily streaks.
-- `XpReward`: Experience point payout payload (`amount`, `statCategory`, `sourceDescription`).
+- `Character`: Core entity representing character state (`id`, `name`, `level`, `currentXp`, `xpToNextLevel`, `totalXpEarned`, `attributes`, `title`).
+- `CharacterAttributes`: Core stats (`intelligence`, `wisdom`, `discipline`).
+- `XpReward`: Experience payout payload (`amount`, `statCategory`, `sourceDescription`).
+- `XpTransaction`: Immutable XP audit trail record (`id`, `userId`, `amount`, `statCategory`, `sourceDescription`, `timestamp`).
+- `CharacterRepositoryPort`: Abstract contract defining persistence methods for domain adapters (`loadCharacter`, `saveCharacter`, `logXpTransaction`).
 
 ### 2. Progression Calculator (`progression-calculator.ts`)
 - `calculateXpForLevel(level)`: Quadratic XP threshold formula ($XP = 100 \times \text{level}^{1.5}$).

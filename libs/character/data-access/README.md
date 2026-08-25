@@ -1,6 +1,6 @@
 # Character Data Access (`libs/character/data-access`)
 
-Reactive state management and Wiki-backed Markdown storage adapter layer for the Character Domain (`scope:character`).
+Reactive state management and persistence adapters (Cloud Firestore & Wiki Markdown storage) for the Character Domain (`scope:character`).
 
 ---
 
@@ -15,14 +15,21 @@ Reactive state management and Wiki-backed Markdown storage adapter layer for the
 ## ⚙️ Core Services & Persistence Adapters
 
 ### 1. `CharacterStateService`
-Angular `@Injectable()` service utilizing Angular Signals (`signal()`, `asReadonly()`) to manage reactive character state throughout the application.
+Angular `@Injectable()` service utilizing Angular Signals (`signal()`) to manage reactive character state throughout the application.
 
-- `character`: Read-only signal exposed to container and smart components.
-- `awardXp(reward: XpReward)`: Triggers pure progression math, updates the reactive signal, and synchronizes changes to the persistence adapter.
+- `character`: Read-only signal exposed to presentational and container components.
+- `awardXp(reward: XpReward)`: Evaluates progression math, updates the reactive signal, logs XP audit transactions to Firestore, and syncs changes locally.
 - `resetCharacter(id, name)`: Resets character to default Level 1 state.
 
-### 2. `CharacterStorageAdapter` & Wiki Markdown Serialization
-- `wiki/character.md`: Character sheet state (Level, XP, Attributes, Titles) is stored as a human-readable Markdown file with YAML frontmatter inside the Wiki knowledge base.
+### 2. `FirestoreCharacterAdapter`
+Hexagonal repository adapter implementing `CharacterRepositoryPort` for Cloud Firestore:
+- `loadCharacter(userId)`: Fetches per-user character document (`users/{userId}/character/sheet`).
+- `saveCharacter(character, userId)`: Updates character attributes with server timestamps.
+- `logXpTransaction(transaction, userId)`: Writes immutable XP audit log documents (`users/{userId}/xp_transactions`).
+
+### 3. `CharacterStorageAdapter`
+Offline fallback storage adapter:
+- `wiki/character.md`: Character sheet state (Level, XP, Attributes, Titles) stored as Markdown with YAML frontmatter inside the Wiki knowledge base.
 - `parseCharacterFromMarkdown(markdown)`: Parses YAML frontmatter into a typed `Character` object.
 - `serializeCharacterToMarkdown(character)`: Serializes `Character` state into Markdown format.
 

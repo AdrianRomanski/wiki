@@ -1,43 +1,53 @@
 # LifeForge Application (`apps/life-forge-app`)
 
-The primary web application shell for the **Life Gamification Platform**, bringing together the Character Dashboard, RPG Progression Engine, Knowledge Wiki Brain, and AI Questmaster into a unified, responsive interface.
+Primary production web application shell for the **Life Gamification Platform**, integrating the RPG Character Dashboard, Skill Progression Engine, Knowledge Cortex, and Cloud Persistence into a unified Single Page Application (SPA).
 
 ---
 
 ## 🏛️ Architectural Role & Component Hierarchy
 
-`apps/life-forge-app` serves as the main application orchestrator target (`scope:life-forge`, `layer:feature`, `type:feature`), linking domain features across `scope:character` and `scope:wiki`. It runs on Angular with stable **Zoneless Change Detection** (`provideZonelessChangeDetection()`).
+`apps/life-forge-app` serves as the main application target (`scope:life-forge`, `layer:feature`, `type:feature`), orchestrating domain features across `scope:character` and `scope:wiki`. Built with Angular using **Zoneless Change Detection** (`provideZonelessChangeDetection()`) and Signals.
 
 ```text
-+-----------------------------------------------------------------------+
-|                      LifeForge Platform Shell                         |
-+-----------------------------------------------------------------------+
-| App Header Toolbar (Brand, Version, Navigation)                      |
-+-----------------------------------------------------------------------+
-| Main Application Content (`<character-dashboard>`)                    |
-|                                                                       |
-|  ┌─────────────────────────────────────────────────────────────────┐  |
-|  │ Character Dashboard Feature (`libs/character/feature-dashboard`) │  |
-|  │                                                                 │  |
-|  │  ├── Character Sheet Component (`<character-sheet>`)             │  |
-|  │  │    └── Level Badge, XP Progress Bar, Attributes (INT/WIS/DIS)│  |
-|  │  └── Quick Action Panel (Simulate Wiki Research, Create ADRs)   │  |
-|  └─────────────────────────────────────────────────────────────────┘  |
-+-----------------------------------------------------------------------+
+┌───────────────────────────────────────────────────────────────────────┐
+│                      LifeForge Platform Shell                         │
+├───────────────────────────────────────────────────────────────────────┤
+│ App Header Toolbar (Brand, Version, Navigation)                      │
+├───────────────────────────────────────────────────────────────────────┤
+│ Main Application Content (`<character-dashboard>`)                    │
+│                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │ Character Dashboard Feature (`libs/character/feature-dashboard`) │  │
+│  │                                                                 │  │
+│  │  ├── Character Sheet Component (`<character-sheet>`)             │  │
+│  │  │    └── Level Badge, XP Progress Bar, Attributes (INT/WIS/DIS)│  │
+│  │  └── Quick Action Panel (Simulate Wiki Research, Create ADRs)   │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+└───────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## ☁️ Cloud Infrastructure & Deployment
+
+- **Hosting Platform**: Firebase Hosting (Global CDN, SSL, Custom Domains)
+- **Database Engine**: Cloud Firestore (Real-time NoSQL document store)
+- **Authentication**: Firebase Auth (Anonymous & OAuth SSO)
+- **Live Target URL**: [https://life-forge-app-prod.web.app](https://life-forge-app-prod.web.app)
+- **Firebase Project Console**: [life-forge-app-prod](https://console.firebase.google.com/project/life-forge-app-prod/overview)
 
 ---
 
 ## ⚙️ Key Technical Specifications
 
-- **Framework**: Angular (Standalone Components, Signals, Zoneless Change Detection)
-- **State Hydration**: Direct synchronicity with Wiki knowledge repository (`wiki/character.md`)
-- **Tags & Boundaries**: `["scope:life-forge", "layer:feature", "type:feature"]`
-- **Module Boundary Rules**: Allowed dependencies: `scope:life-forge`, `scope:character`, `scope:wiki`, `scope:shared`
+- **Framework**: Angular 19+ (Standalone Components, Signals, Zoneless)
+- **State Hydration**: Dual-sync engine (`FirestoreCharacterAdapter` + `CharacterStorageAdapter` fallback)
+- **Nx Tags**: `["scope:life-forge", "layer:feature", "type:feature"]`
+- **Module Boundaries**: Allowed dependencies: `scope:life-forge`, `scope:character`, `scope:wiki`, `scope:shared`
 
 ---
 
-## 🚀 Commands & Development Workflow
+## 🚀 Development & Deployment Commands
 
 ```bash
 # Serve application locally (dev server at http://localhost:4200)
@@ -46,6 +56,9 @@ npx nx serve life-forge-app
 # Build production bundle
 npx nx run life-forge-app:build
 
-# Run ESLint module boundary validation
-npx nx run life-forge-app:lint
+# Deploy bundle and hosting to Firebase
+npx nx run life-forge-app:deploy
+
+# Run local emulators for Auth & Firestore
+npx nx run life-forge-app:emulate
 ```
