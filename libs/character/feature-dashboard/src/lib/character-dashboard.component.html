@@ -1,7 +1,7 @@
 <section class="character-dashboard-container">
   <header class="dashboard-header">
     <h2>🎮 Character Dashboard</h2>
-    <p class="subtitle">Life Gamification Platform & Knowledge Cortex Synchronizer</p>
+    <p class="subtitle">Life Gamification Platform & Action-Based Progression</p>
   </header>
 
   <div class="dashboard-grid">
@@ -10,20 +10,102 @@
     </div>
 
     <div class="actions-column">
-      <div class="quick-actions-card">
-        <h3>⚡ Quick XP Actions</h3>
-        <p class="actions-desc">Simulate real-world contributions feeding into character progression:</p>
-        <div class="action-buttons">
-          <button class="btn btn-intelligence" (click)="onResearchCompleted()">
-            🧠 Complete Research (+50 INT XP)
-          </button>
-          <button class="btn btn-wisdom" (click)="onAdrCreated()">
-            🏛️ Publish ADR (+100 WIS XP)
-          </button>
-          <button class="btn btn-discipline" (click)="onDailyStreakFinished()">
-            ⚔️ Finish Daily Quest (+75 DIS XP)
+      <!-- Action Quest Card -->
+      <div class="action-quest-card">
+        <div class="quest-card-header">
+          <span class="quest-badge">Daily Quest</span>
+          <h3>🌅 Early Morning Waking Quest</h3>
+        </div>
+        <p class="quest-desc">
+          XP can no longer be gained for nothing. Wake up early and click the application directly to claim your Discipline XP!
+        </p>
+
+        <!-- Live Status Banner -->
+        <div class="status-banner" [class]="'status-banner slot-' + currentEvaluation().slot">
+          <div class="time-display">
+            <span class="time-label">Current Time:</span>
+            <span class="time-value">{{ formattedCurrentTime() }}</span>
+          </div>
+          <div class="evaluation-info">
+            <span class="tier-tag">{{ currentEvaluation().tierName }}</span>
+            @if (currentEvaluation().xpAmount > 0) {
+              <span class="xp-potential">
+                +{{ currentEvaluation().xpAmount }} DIS XP Available
+              </span>
+            } @else {
+              <span class="xp-potential expired">
+                0 XP (No EXP at all)
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Time Slot Payout Matrix -->
+        <div class="slot-matrix">
+          @for (slot of timeSlots; track slot.slot) {
+            <div
+              class="matrix-item"
+              [class.active]="currentEvaluation().slot === slot.slot"
+            >
+              <span class="slot-time">{{ slot.label }}</span>
+              <span class="slot-xp">+{{ slot.xpReward }} XP</span>
+            </div>
+          }
+          <div
+            class="matrix-item expired-item"
+            [class.active]="currentEvaluation().slot === 'EXPIRED' || currentEvaluation().slot === 'TOO_EARLY'"
+          >
+            <span class="slot-time">Later (7:30+)</span>
+            <span class="slot-xp">0 XP</span>
+          </div>
+        </div>
+
+        <!-- Feedback message -->
+        @if (claimMessage()) {
+          <div class="claim-message-box">
+            {{ claimMessage() }}
+          </div>
+        }
+
+        <!-- Claim Action Button -->
+        <div class="quest-action-area">
+          <button
+            class="btn btn-claim-xp"
+            [disabled]="!currentEvaluation().canClaim || claimedToday()"
+            (click)="claimEarlyWakeUpXp()"
+          >
+            @if (!claimedToday() && currentEvaluation().canClaim) {
+              <span>
+                ⚔️ Claim +{{ currentEvaluation().xpAmount }} DIS XP
+              </span>
+            } @else if (claimedToday()) {
+              <span>
+                ✅ Quest Claimed Today
+              </span>
+            } @else {
+              <span>
+                🔒 Window Closed (0 XP)
+              </span>
+            }
           </button>
         </div>
+
+        <!-- Interactive Time Simulator for Testing -->
+        <div class="simulator-panel">
+          <span class="sim-title">⚙️ Test Time Slot Simulation:</span>
+          <div class="sim-buttons">
+            <button class="sim-btn" (click)="setSimulatedTime(5, 10)">05:00 (+100)</button>
+            <button class="sim-btn" (click)="setSimulatedTime(5, 40)">05:30 (+80)</button>
+            <button class="sim-btn" (click)="setSimulatedTime(6, 15)">06:00 (+60)</button>
+            <button class="sim-btn" (click)="setSimulatedTime(6, 45)">06:30 (+40)</button>
+            <button class="sim-btn" (click)="setSimulatedTime(7, 10)">07:00 (+20)</button>
+            <button class="sim-btn danger" (click)="setSimulatedTime(8, 0)">Later (0 XP)</button>
+            @if (simulatedHour() !== null) {
+              <button class="sim-btn reset" (click)="resetSimulation()">Live Time</button>
+            }
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

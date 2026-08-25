@@ -27,6 +27,16 @@ Pure domain layer package managing core RPG character entities, progression form
 - `processXpGain(character, reward)`: Pure function evaluating XP payouts, leveling up, stat allocations, and RPG title promotions.
 - `getCharacterTitle(level)`: Maps level thresholds to RPG titles (*Novice Scholar* $\rightarrow$ *Apprentice Researcher* $\rightarrow$ *Master Architect* $\rightarrow$ *Legendary Sage*).
 
+### 3. Early Morning Quest Model (`early-wakeup-quest.model.ts`)
+- `evaluateEarlyWakeupQuest(date)`: Pure evaluation function implementing ADR-0006 decaying morning XP windows:
+  - **05:00 AM** (05:00 - 05:29): **+100 DIS XP** (Prime Tier)
+  - **05:30 AM** (05:30 - 05:59): **+80 DIS XP** (High Tier)
+  - **06:00 AM** (06:00 - 06:29): **+60 DIS XP** (Moderate Tier)
+  - **06:30 AM** (06:30 - 06:59): **+40 DIS XP** (Standard Tier)
+  - **07:00 AM** (07:00 - 07:29): **+20 DIS XP** (Final Window Tier)
+  - **Later** (07:30 AM onwards): **0 XP** (Window Closed / Expired)
+- `EARLY_WAKEUP_SLOTS`: Record map containing slot metadata, labels, and XP reward multipliers.
+
 ---
 
 ## 🧪 Testing & Verification

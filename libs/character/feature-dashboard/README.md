@@ -17,10 +17,10 @@ Smart container feature package orchestrating the Character Dashboard view and b
 ## 💡 Capabilities & Integration Points
 
 - **Reactive Binding**: Connects `CharacterStateService.character()` signal directly to `<character-sheet>`.
-- **XP Payout Actions**:
-  - `onResearchCompleted()`: Payouts +50 INT XP for completing Wiki research sessions.
-  - `onAdrCreated()`: Payouts +75 WIS XP for creating Architecture Decision Records.
-  - `onHabitStreakCompleted()`: Payouts +40 DIS XP for maintaining daily discipline habits.
+- **Action-Based Quest Claiming (ADR-0006)**:
+  - `claimEarlyWakeUpXp()`: Evaluates local/simulated time and awards decaying Discipline (DIS) XP (05:00 AM $\rightarrow$ 100 XP, 05:30 AM $\rightarrow$ 80 XP, 06:00 AM $\rightarrow$ 60 XP, 06:30 AM $\rightarrow$ 40 XP, 07:00 AM $\rightarrow$ 20 XP, 07:30+ $\rightarrow$ 0 XP).
+  - `currentEvaluation`: `computed` signal dynamically evaluating active quest tier, payout potential, and claim eligibility.
+  - `setSimulatedTime()` / `resetSimulation()`: Testing controls for simulating morning slots interactively.
 
 ```html
 <character-dashboard></character-dashboard>

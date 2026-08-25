@@ -25,6 +25,11 @@ This is an Angular/NX monorepo used for library research, prototyping, and build
 - **Container Components**: Responsible for wrapping UI components, composing layouts, rendering component structures and lists.
 - **Smart Components**: Responsible for knowing where data comes from (injecting state/data services like `GraphStateService`) and binding reactive state to containers and UI components.
 
+### Mandatory Tooling & Integration Workflows
+- **Angular Development**: ALWAYS connect to the `angular-cli` MCP server (e.g. `get_best_practices`) before writing or modifying any Angular code.
+- **CSS / Styling**: ALWAYS connect to the `css` MCP server (e.g. `get_docs`, `analyze_css`) before writing or modifying SCSS/CSS styles.
+- **Documentation & READMEs**: ALWAYS create or update README files / documentation after generating or modifying code to maintain clean, comprehensive repository documentation.
+
 ### Research Workflows
 
 This workspace has two research workflows, each managed by the `research-buddy` skill:

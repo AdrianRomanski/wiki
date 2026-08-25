@@ -21,7 +21,7 @@ Primary production web application shell for the **Life Gamification Platform**,
 │  │                                                                 │  │
 │  │  ├── Character Sheet Component (`<character-sheet>`)             │  │
 │  │  │    └── Level Badge, XP Progress Bar, Attributes (INT/WIS/DIS)│  │
-│  │  └── Quick Action Panel (Simulate Wiki Research, Create ADRs)   │  │
+│  │  └── Action Quest Panel (Early Morning Waking Quest & Slots)    │  │
 │  └─────────────────────────────────────────────────────────────────┘  │
 └───────────────────────────────────────────────────────────────────────┘
 ```
