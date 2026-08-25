@@ -18,6 +18,7 @@ The `wiki/` directory serves as the structured Markdown knowledge vault for the 
 | [`./concepts/`](./concepts/) | Explanations of architectural patterns, design principles, or ideas | `hexagonal-architecture.md`, `adapters.md` |
 | [`./sources/`](./sources/) | Distilled summaries and key takeaways of raw research sources | `angular-aria-big-picture-2026-05-30.md` |
 | [`./guides/`](./guides/) | System guides, ingestion procedures, and workflow instructions | `adr-ingestion.md` |
+| [`./progress/`](./progress/) | Concept mastery progress records (`concepts/*.json`) and vault progress index | `concepts/typescript.json`, `index.json` |
 | [`./index.md`](./index.md) | Synchronized top-level wiki navigation index and vault statistics | `index.md` |
 | [`./activity-log.md`](./activity-log.md) | Chronological log of wiki additions, updates, and maintenance events | `activity-log.md` |
 

@@ -13,7 +13,8 @@ An interactive 2D learning graph visualizer and AI-driven knowledge assessment a
 |                         Wiki Graph Application                        |
 +-----------------------------------------------------------------------+
 | Smart Tier (WikiGraphSmartComponent)                                  |
-|  ├── Injects GraphStateService, AssessmentService, ProgressStateStore |
+|  ├── Injects GraphStateService, AssessmentService,                    |
+|  │          ProgressStateService, StorageService                      |
 |  └── Coordinates State Signals, Assessment Dialogs & Storage Sync    |
 +-----------------------------------------------------------------------+
 | Container Tier (GraphViewportContainerComponent)                      |
@@ -32,6 +33,7 @@ An interactive 2D learning graph visualizer and AI-driven knowledge assessment a
 - **Interactive Force-Directed Graph Visualization**
   - D3.js force simulation rendering concept nodes, dependencies, and structural relationships
   - Smooth pan/zoom controls, node highlight focus, and dynamic filters by domain status and tags
+  - Dual visualization modes: **Wiki Taxonomy** (entity/concept/source) and **Learning Graph** (mastery progress)
 
 - **AI-Driven Knowledge Assessment Sessions**
   - Presentational dialog workflow for step-by-step concept evaluations
@@ -42,7 +44,7 @@ An interactive 2D learning graph visualizer and AI-driven knowledge assessment a
   - Screen reader announcements for state updates via dedicated ARIA live regions
 
 - **Resilient Persistence & Storage Adapters**
-  - Persistent state backup supporting File System Access API with local storage fallbacks
+  - Persistent state backup supporting File System Access API directly to `wiki/progress/` with merge conflict detection and quarantine
 
 ---
 
@@ -50,12 +52,10 @@ An interactive 2D learning graph visualizer and AI-driven knowledge assessment a
 
 | Subsystem | Folder | Responsibility |
 | --- | --- | --- |
-| **Containers** | [`./src/app/components/containers/`](./src/app/components/containers/) | Layout composition and presentational wrappers |
-| **Smart Components** | [`./src/app/components/smart/`](./src/app/components/smart/) | Service injection, signal binding, and reactive state orchestration |
-| **UI Components** | [`./src/app/components/ui/`](./src/app/components/ui/) | Pure presentational components receiving `input()` and emitting `output()` |
-| **D3 Simulation Engine** | [`./src/app/d3/`](./src/app/d3/) | Force simulation physics, SVG DOM manipulation, and style encodings |
-| **Domain Models** | [`./src/app/models/`](./src/app/models/) | Domain entities, Zod validation schemas, and constants |
-| **Services & State** | [`./src/app/services/`](./src/app/services/) | Assessment workflow, graph state stores, and persistence adapters |
+| **Components Subsystem** | [`./src/app/components/`](./src/app/components/README.md) | Strict 3-tier architecture: UI presentational views, Container composition, and Smart state orchestrator |
+| **D3 Simulation Engine** | [`./src/app/d3/`](./src/app/d3/README.md) | Force simulation physics, dual visualization modes, SVG rendering, and style encodings |
+| **Domain & Progress Models** | [`./src/app/models/`](./src/app/models/README.md) | Domain models, Zod validation schemas, and visual color constants |
+| **Data, State & Persistence** | [`./src/app/services/`](./src/app/services/README.md) | Assessment workflow, graph & progress Signal stores, and File System Access persistence |
 
 ---
 

@@ -12,7 +12,7 @@ The core objective of this repository is to turn technical library research, arc
 
 ### Key Highlights
 - **Generic Knowledge Vault**: Fully customizable taxonomy for organizing entities, concepts, source summaries, and guides across any technical or business domain.
-- **Interactive Graph Visualizer (`wiki-graph`)**: Dynamic D3.js visualizer rendering real-time interactive graph networks of entities, concepts, and research sources.
+- **Interactive Graph Visualizer & Learning System (`wiki-graph`)**: Dynamic D3.js visualizer featuring dual rendering modes (Wiki Taxonomy & Learning Mastery Graph), interactive AI-driven knowledge assessments, and direct File System Access persistence.
 - **Prototype Playground (`libs/prototype-playground`)**: Isolated laboratory for prototyping Angular ARIA and UI patterns with full Storybook integration.
 - **Automated Wiki Ingestion (`wiki-cli`)**: Clean-architecture pipeline for generating manifests, indexes, validating tags, and maintaining bidirectional cross-references.
 - **AI-Native MCP Server (`wiki-mcp-server`)**: Model Context Protocol interface exposing wiki query, search, and knowledge operations directly to AI tools.
@@ -50,12 +50,12 @@ The workspace is organized into application executables, domain/infrastructure l
 
 | Workspace Area / Layer | Location | Purpose & Role |
 | --- | --- | --- |
-| **Graph Application** | [`./apps/wiki-graph/`](./apps/wiki-graph/) | Standalone Angular visualizer for exploring knowledge nodes, links, and cross-references using D3.js. |
+| **Graph & Learning App** | [`./apps/wiki-graph/`](./apps/wiki-graph/) | Standalone Angular visualizer for exploring knowledge nodes, tracking concept mastery, and conducting AI assessments. |
 | **CLI Tooling** | [`./apps/wiki-cli/`](./apps/wiki-cli/) | Command-line application exposing Nx targets for manifest generation, index management, tag validation, and scaffolding. |
 | **MCP Server** | [`./apps/wiki-mcp-server/`](./apps/wiki-mcp-server/) | Model Context Protocol server enabling AI assistants to query and interact with the knowledge graph. |
 | **Prototype Playground** | [`./libs/prototype-playground/`](./libs/prototype-playground/) | Reusable library containing research prototypes, ARIA accessibility experiments, and Storybook stories. |
 | **Wiki Domain System** | [`./libs/wiki/`](./libs/wiki/) | Layered Nx library architecture (Domain, Application, Infrastructure, Core Facade) handling parsing, indexing, and ADR ingestion. |
-| **Knowledge Base Vault** | [`./wiki/`](./wiki/) | Markdown knowledge vault containing entities, concepts, guides, and source summaries. |
+| **Knowledge Base Vault** | [`./wiki/`](./wiki/) | Markdown knowledge vault containing entities, concepts, guides, progress records, and source summaries. |
 
 ---
 
