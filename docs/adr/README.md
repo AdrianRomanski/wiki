@@ -12,6 +12,7 @@ This directory contains Architecture Decision Records (ADRs) capturing significa
 | [ADR-0004](0004-character-dashboard-and-life-gamification-architecture.md) | Character Dashboard & Life Gamification Platform (Wiki as Character Brain) | `Accepted` | 2026-08-25 | Core Architecture & Gamification |
 | [ADR-0005](0005-firebase-deployment-and-firestore-persistence.md) | Cloud Infrastructure, Firebase Deployment & Firestore Data Persistence Architecture | `Accepted` | 2026-08-25 | Cloud, Infrastructure & Persistence |
 | [ADR-0006](0006-action-based-xp-engine-and-early-wake-up-quests.md) | Action-Based XP Engine, Elimination of Quick XP, and Early Wake-Up Daily Quests | `Accepted` | 2026-08-25 | Gamification & Habit Dynamics |
+| [ADR-0007](0007-book-reading-daily-quest-and-reading-log.md) | Book Reading Daily Quest, Active Reading Shelf, and Monthly Reading Archive | `Accepted` | 2026-08-26 | Gamification & Reading Log |
 
 
 ---

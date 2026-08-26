@@ -5,12 +5,14 @@
   </header>
 
   <div class="dashboard-grid">
+    <!-- Left Column: Character Sheet -->
     <div class="sheet-column">
       <character-sheet [character]="characterState.character()"></character-sheet>
     </div>
 
+    <!-- Right Column: Quests & Habits -->
     <div class="actions-column">
-      <!-- Action Quest Card -->
+      <!-- 1. Early Morning Waking Quest Card -->
       <div class="action-quest-card">
         <div class="quest-card-header">
           <span class="quest-badge">Daily Quest</span>
@@ -105,8 +107,297 @@
             }
           </div>
         </div>
+      </div>
 
+      <!-- 2. Book Reading Daily Quest & Shelf Card -->
+      <div class="action-quest-card book-quest-card">
+        <div class="quest-card-header">
+          <div class="header-top-row">
+            <span class="quest-badge wisdom-badge">Daily Quest</span>
+            <div class="header-actions">
+              <button class="btn btn-sm btn-outline" (click)="openAddBookModal()">
+                ➕ Add New Book
+              </button>
+              <button
+                class="btn btn-sm btn-primary"
+                [disabled]="bookState.currentlyReadingBooks().length === 0"
+                (click)="openLogQuestModal()"
+              >
+                ⚔️ Log Reading Quest
+              </button>
+            </div>
+          </div>
+          <h3>📚 Daily Reading Quest & Active Shelf</h3>
+        </div>
+        <p class="quest-desc">
+          Select an active book and report where you finished reading to earn Wisdom & Discipline XP!
+        </p>
+
+        <!-- Currently Reading Books Shelf -->
+        <div class="shelf-section">
+          <div class="section-title-row">
+            <h4>📖 Currently Reading Books ({{ bookState.currentlyReadingBooks().length }})</h4>
+          </div>
+
+          @if (bookState.currentlyReadingBooks().length === 0) {
+            <div class="empty-shelf-notice">
+              <p>No books currently being read. Click <strong>"➕ Add New Book"</strong> to start reading!</p>
+            </div>
+          } @else {
+            <div class="book-list">
+              @for (book of bookState.currentlyReadingBooks(); track book.id) {
+                <div class="book-card">
+                  <div class="book-info">
+                    <div class="book-title-row">
+                      <span class="book-title">{{ book.title }}</span>
+                      <span class="status-pill status-reading">Reading</span>
+                    </div>
+                    <span class="book-author">by {{ book.author }}</span>
+                    @if (book.notes) {
+                      <p class="book-notes">{{ book.notes }}</p>
+                    }
+                  </div>
+
+                  <!-- Progress Bar -->
+                  <div class="progress-container">
+                    <div class="progress-labels">
+                      <span class="page-count">Page {{ book.currentPage }} of {{ book.totalPages }}</span>
+                      <span class="percent-label">
+                        {{ ((book.currentPage / book.totalPages) * 100) | number : '1.0-0' }}%
+                      </span>
+                    </div>
+                    <div class="progress-bar-bg">
+                      <div
+                        class="progress-bar-fill"
+                        [style.width.%]="(book.currentPage / book.totalPages) * 100"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div class="book-card-actions">
+                    <button class="btn btn-xs btn-claim-item" (click)="openLogQuestModal(book.id)">
+                      📖 Log Quest Progress
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Monthly Completed Archive Section -->
+        <div class="archive-section">
+          <div class="archive-header-row">
+            <h4>🏆 Completed Books Archive</h4>
+
+            <!-- Month & Year Filter Selector -->
+            <div class="month-filter-controls">
+              <select
+                class="month-select"
+                [ngModel]="selectedMonth()"
+                (ngModelChange)="selectedMonth.set(+$event)"
+              >
+                @for (m of monthOptions; track m.value) {
+                  <option [value]="m.value">{{ m.label }}</option>
+                }
+              </select>
+              <span class="year-label">{{ selectedYear() }}</span>
+            </div>
+          </div>
+
+          @if (completedBooksInSelectedMonth().length === 0) {
+            <div class="empty-archive-notice">
+              <p>No books completed in {{ monthOptions[selectedMonth() - 1].label }} {{ selectedYear() }}.</p>
+            </div>
+          } @else {
+            <div class="completed-list">
+              @for (book of completedBooksInSelectedMonth(); track book.id) {
+                <div class="completed-book-item">
+                  <div class="completed-icon">🏆</div>
+                  <div class="completed-details">
+                    <span class="comp-title">{{ book.title }}</span>
+                    <span class="comp-author">by {{ book.author }} ({{ book.totalPages }} pages)</span>
+                    <span class="comp-date">Finished: {{ book.completedAt | date : 'mediumDate' }}</span>
+                  </div>
+                  <span class="status-pill status-completed">Completed</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Add New Book Modal -->
+  @if (isAddBookModalOpen()) {
+    <div class="modal-backdrop" (click)="closeAddBookModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <header class="modal-header">
+          <h3>➕ Add New Book to Reading Shelf</h3>
+          <button class="close-btn" (click)="closeAddBookModal()">✕</button>
+        </header>
+
+        <form class="modal-body" (submit)="$event.preventDefault(); submitAddBook()">
+          <div class="form-group">
+            <label for="bookTitle">Book Title *</label>
+            <input
+              id="bookTitle"
+              type="text"
+              class="form-control"
+              placeholder="e.g. Designing Data-Intensive Applications"
+              [ngModel]="newBookTitle()"
+              (ngModelChange)="newBookTitle.set($event)"
+              name="bookTitle"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="bookAuthor">Author *</label>
+            <input
+              id="bookAuthor"
+              type="text"
+              class="form-control"
+              placeholder="e.g. Martin Kleppmann"
+              [ngModel]="newBookAuthor()"
+              (ngModelChange)="newBookAuthor.set($event)"
+              name="bookAuthor"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="totalPages">Total Pages *</label>
+              <input
+                id="totalPages"
+                type="number"
+                class="form-control"
+                placeholder="e.g. 560"
+                [ngModel]="newBookTotalPages()"
+                (ngModelChange)="newBookTotalPages.set($event !== null ? +$event : null)"
+                name="totalPages"
+                min="1"
+                required
+              />
+            </div>
+
+            <div class="form-group half">
+              <label for="initialPage">Current Finished Page</label>
+              <input
+                id="initialPage"
+                type="number"
+                class="form-control"
+                placeholder="0"
+                [ngModel]="newBookInitialPage()"
+                (ngModelChange)="newBookInitialPage.set($event !== null ? +$event : 0)"
+                name="initialPage"
+                min="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bookNotes">Notes / Learning Objectives (Optional)</label>
+            <textarea
+              id="bookNotes"
+              class="form-control"
+              rows="3"
+              placeholder="e.g. Focus on Chapter 5: Replication and Consensus"
+              [ngModel]="newBookNotes()"
+              (ngModelChange)="newBookNotes.set($event)"
+              name="bookNotes"
+            ></textarea>
+          </div>
+
+          <footer class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="closeAddBookModal()">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="!newBookTitle() || !newBookAuthor() || !newBookTotalPages()">
+              Add Book
+            </button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Log Daily Reading Quest Modal -->
+  @if (isLogQuestModalOpen()) {
+    <div class="modal-backdrop" (click)="closeLogQuestModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <header class="modal-header">
+          <h3>⚔️ Log Daily Reading Quest</h3>
+          <button class="close-btn" (click)="closeLogQuestModal()">✕</button>
+        </header>
+
+        <form class="modal-body" (submit)="$event.preventDefault(); submitLogQuest()">
+          <div class="form-group">
+            <label for="selectBook">Select Active Book *</label>
+            <select
+              id="selectBook"
+              class="form-control"
+              [ngModel]="selectedBookIdForQuest()"
+              (ngModelChange)="selectedBookIdForQuest.set($event)"
+              name="selectBook"
+            >
+              @for (book of bookState.currentlyReadingBooks(); track book.id) {
+                <option [value]="book.id">
+                  {{ book.title }} (Currently at page {{ book.currentPage }}/{{ book.totalPages }})
+                </option>
+              }
+            </select>
+          </div>
+
+          @if (activeBookForQuest(); as book) {
+            <div class="quest-summary-box">
+              <span class="box-title">{{ book.title }}</span>
+              <span class="box-subtitle">
+                Current progress: Page <strong>{{ book.currentPage }}</strong> / {{ book.totalPages }}
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="finishedPage">Where did you finish reading today? (Ending Page) *</label>
+              <input
+                id="finishedPage"
+                type="number"
+                class="form-control"
+                [ngModel]="questFinishedPage()"
+                (ngModelChange)="questFinishedPage.set($event !== null ? +$event : null)"
+                name="finishedPage"
+                [min]="book.currentPage + 1"
+                [max]="book.totalPages"
+                required
+              />
+              <span class="input-hint">
+                Must be between page {{ book.currentPage + 1 }} and {{ book.totalPages }}.
+              </span>
+            </div>
+          }
+
+          @if (readingQuestFeedback()) {
+            <div class="claim-message-box">
+              {{ readingQuestFeedback() }}
+            </div>
+          }
+
+          <footer class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="closeLogQuestModal()">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!questFinishedPage() || (activeBookForQuest() && questFinishedPage()! <= activeBookForQuest()!.currentPage)"
+            >
+              ⚔️ Claim +40 WIS & +10 DIS XP
+            </button>
+          </footer>
+        </form>
+      </div>
+    </div>
+  }
 </section>

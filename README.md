@@ -54,6 +54,7 @@ The workspace is organized into application executables, domain/infrastructure l
 | **CLI Tooling** | [`./apps/wiki-cli/`](./apps/wiki-cli/) | Command-line application exposing Nx targets for manifest generation, index management, tag validation, and scaffolding. |
 | **MCP Server** | [`./apps/wiki-mcp-server/`](./apps/wiki-mcp-server/) | Model Context Protocol server enabling AI assistants to query and interact with the knowledge graph. |
 | **Prototype Playground** | [`./libs/prototype-playground/`](./libs/prototype-playground/) | Reusable library containing research prototypes, ARIA accessibility experiments, and Storybook stories. |
+| **Character Gamification** | [`./libs/character/`](./libs/character/) | Life Gamification Platform (Character Sheet, Progression Calculator, Early Morning & Book Reading Daily Quests). |
 | **Wiki Domain System** | [`./libs/wiki/`](./libs/wiki/) | Layered Nx library architecture (Domain, Application, Infrastructure, Core Facade) handling parsing, indexing, and ADR ingestion. |
 | **Knowledge Base Vault** | [`./wiki/`](./wiki/) | Markdown knowledge vault containing entities, concepts, guides, progress records, and source summaries. |
 

@@ -10,17 +10,22 @@ Smart container feature package orchestrating the Character Dashboard view and b
 - **Prefix**: `character`
 - **Selector**: `<character-dashboard>`
 - **Allowed Dependencies**: `layer:feature`, `layer:ui`, `layer:data-access`, `layer:domain`.
-- **Component Rules**: Smart container component injecting `CharacterStateService` (`inject(CharacterStateService)`), managing user interactions, and rendering presentational components (`<character-sheet>`).
+- **Component Rules**: Smart container component injecting `CharacterStateService` and `BookStateService`, managing user interactions, and rendering presentational components (`<character-sheet>`).
 
 ---
 
 ## 💡 Capabilities & Integration Points
 
 - **Reactive Binding**: Connects `CharacterStateService.character()` signal directly to `<character-sheet>`.
-- **Action-Based Quest Claiming (ADR-0006)**:
+- **Early Morning Waking Quest (ADR-0006)**:
   - `claimEarlyWakeUpXp()`: Evaluates local/simulated time and awards decaying Discipline (DIS) XP (05:00 AM $\rightarrow$ 100 XP, 05:30 AM $\rightarrow$ 80 XP, 06:00 AM $\rightarrow$ 60 XP, 06:30 AM $\rightarrow$ 40 XP, 07:00 AM $\rightarrow$ 20 XP, 07:30+ $\rightarrow$ 0 XP).
   - `currentEvaluation`: `computed` signal dynamically evaluating active quest tier, payout potential, and claim eligibility.
   - `setSimulatedTime()` / `resetSimulation()`: Testing controls for simulating morning slots interactively.
+- **Book Reading Daily Quest & Active Shelf (ADR-0007)**:
+  - **Currently Reading Shelf**: Displays all active books (`status: 'reading'`) with title, author, progress bar, percentage read, and quick log actions.
+  - **Add New Book Modal**: Form dialog to add a new book to the user's shelf.
+  - **Log Daily Reading Quest Modal**: Interactive dialog allowing the user to select an active book, input ending page progress, and claim **+40 WIS & +10 DIS XP** (plus **+200 WIS XP** completion bonus when finishing a book).
+  - **Completed Books Archive**: Filterable view by Month and Year displaying books completed in the selected calendar month.
 
 ```html
 <character-dashboard></character-dashboard>

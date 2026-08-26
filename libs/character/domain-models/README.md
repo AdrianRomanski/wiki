@@ -37,6 +37,12 @@ Pure domain layer package managing core RPG character entities, progression form
   - **Later** (07:30 AM onwards): **0 XP** (Window Closed / Expired)
 - `EARLY_WAKEUP_SLOTS`: Record map containing slot metadata, labels, and XP reward multipliers.
 
+### 4. Book Reading Quest Model (`book-reading-quest.model.ts`)
+- `Book`: Domain entity representing books (`id`, `title`, `author`, `totalPages`, `currentPage`, `status: 'reading' | 'completed' | 'paused'`, `addedAt`, `startedAt`, `completedAt`, `lastReadAt`, `notes`).
+- `ReadingLogEntry`: Immutable record of a daily reading session (`id`, `bookId`, `bookTitle`, `date`, `startPage`, `endPage`, `pagesRead`, `xpAwarded`, `timestamp`).
+- `evaluateBookReadingQuest(book, endPage, date)`: Pure evaluation function enforcing verified page progress ($endPage > currentPage \land endPage \le totalPages$), awarding **+40 WIS XP** & **+10 DIS XP** for daily sessions, and **+200 WIS XP** completion bonus upon finishing a book.
+- `filterCompletedBooksByMonth(books, year, month)`: Pure filter function returning books completed in a target calendar month.
+
 ---
 
 ## 🧪 Testing & Verification
