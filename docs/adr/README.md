@@ -4,16 +4,16 @@ This directory contains Architecture Decision Records (ADRs) capturing significa
 
 ## 📋 ADR Index
 
-| ADR | Title | Status | Date | Area |
-|---|---|---|---|---|
-| [ADR-0001](0001-monorepo-structure-and-hexagonal-wiki-core.md) | Monorepo Structure & Hexagonal Architecture for Wiki Core | `Accepted` | 2026-08-25 | Core Architecture |
-| [ADR-0002](0002-interactive-knowledge-graph-and-learning-engine.md) | Interactive Knowledge Graph & Dual-Mode Learning Engine | `Accepted` | 2026-08-25 | Frontend & Visualization |
-| [ADR-0003](0003-model-context-protocol-mcp-server-integration.md) | Model Context Protocol (MCP) Server for AI Agent Integration | `Accepted` | 2026-08-25 | AI & Tooling |
-| [ADR-0004](0004-character-dashboard-and-life-gamification-architecture.md) | Character Dashboard & Life Gamification Platform (Wiki as Character Brain) | `Accepted` | 2026-08-25 | Core Architecture & Gamification |
-| [ADR-0005](0005-firebase-deployment-and-firestore-persistence.md) | Cloud Infrastructure, Firebase Deployment & Firestore Data Persistence Architecture | `Accepted` | 2026-08-25 | Cloud, Infrastructure & Persistence |
-| [ADR-0006](0006-action-based-xp-engine-and-early-wake-up-quests.md) | Action-Based XP Engine, Elimination of Quick XP, and Early Wake-Up Daily Quests | `Accepted` | 2026-08-25 | Gamification & Habit Dynamics |
-| [ADR-0007](0007-book-reading-daily-quest-and-reading-log.md) | Book Reading Daily Quest, Active Reading Shelf, and Monthly Reading Archive | `Accepted` | 2026-08-26 | Gamification & Reading Log |
-
+| ADR                                                                        | Title                                                                               | Status     | Date       | Area                                |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------- | ---------- | ----------------------------------- |
+| [ADR-0001](0001-monorepo-structure-and-hexagonal-wiki-core.md)             | Monorepo Structure & Hexagonal Architecture for Wiki Core                           | `Accepted` | 2026-08-25 | Core Architecture                   |
+| [ADR-0002](0002-interactive-knowledge-graph-and-learning-engine.md)        | Interactive Knowledge Graph & Dual-Mode Learning Engine                             | `Accepted` | 2026-08-25 | Frontend & Visualization            |
+| [ADR-0003](0003-model-context-protocol-mcp-server-integration.md)          | Model Context Protocol (MCP) Server for AI Agent Integration                        | `Accepted` | 2026-08-25 | AI & Tooling                        |
+| [ADR-0004](0004-character-dashboard-and-life-gamification-architecture.md) | Character Dashboard & Life Gamification Platform (Wiki as Character Brain)          | `Accepted` | 2026-08-25 | Core Architecture & Gamification    |
+| [ADR-0005](0005-firebase-deployment-and-firestore-persistence.md)          | Cloud Infrastructure, Firebase Deployment & Firestore Data Persistence Architecture | `Accepted` | 2026-08-25 | Cloud, Infrastructure & Persistence |
+| [ADR-0006](0006-action-based-xp-engine-and-early-wake-up-quests.md)        | Action-Based XP Engine, Elimination of Quick XP, and Early Wake-Up Daily Quests     | `Accepted` | 2026-08-25 | Gamification & Habit Dynamics       |
+| [ADR-0007](0007-book-reading-daily-quest-and-reading-log.md)               | Book Reading Daily Quest, Active Reading Shelf, and Monthly Reading Archive         | `Accepted` | 2026-08-26 | Gamification & Reading Log          |
+| [ADR-0008](0008-google-auth-allowlist-and-level-1-baseline-onboarding.md)  | Google Auth Allowlist and Level 1 Baseline Character Onboarding                     | `Accepted` | 2026-08-28 | Authentication & Access Control     |
 
 ---
 
@@ -23,7 +23,7 @@ All ADRs in this directory are written in Markdown with YAML frontmatter. This f
 
 ```markdown
 ---
-title: "ADR-XXXX: Title of Decision"
+title: 'ADR-XXXX: Title of Decision'
 type: adr
 status: proposed | accepted | deprecated | superseded
 date: YYYY-MM-DD
@@ -33,30 +33,39 @@ tags: [architecture, tag1, tag2]
 # ADR-XXXX: Title of Decision
 
 ## Status
+
 Accepted
 
 ## Context & Problem Statement
+
 What context led to this decision? What challenges are we addressing?
 
 ## Decision Drivers
+
 - Driver 1 (e.g. strict decoupling)
 - Driver 2 (e.g. testability without I/O mocks)
 
 ## Considered Options
+
 1. Option A
 2. Option B
 
 ## Decision Outcome
+
 Chosen option and detailed rationale.
 
 ## Consequences
+
 ### Positive
+
 - Benefit 1
 
 ### Negative & Trade-offs
+
 - Trade-off 1
 
 ## Graph Relationships & Cross References
+
 - Implements [[Concept Name]]
 - Relates to [[Entity Name]]
 - References [[Source Title]]
