@@ -21,6 +21,10 @@ Smart container feature package orchestrating the Character Dashboard view and b
   - `claimEarlyWakeUpXp()`: Evaluates local/simulated time and awards decaying Discipline (DIS) XP (05:00 AM $\rightarrow$ 100 XP, 05:30 AM $\rightarrow$ 80 XP, 06:00 AM $\rightarrow$ 60 XP, 06:30 AM $\rightarrow$ 40 XP, 07:00 AM $\rightarrow$ 20 XP, 07:30+ $\rightarrow$ 0 XP).
   - `currentEvaluation`: `computed` signal dynamically evaluating active quest tier, payout potential, and claim eligibility.
   - `setSimulatedTime()` / `resetSimulation()`: Testing controls for simulating morning slots interactively.
+- **Google Auth Allowlist & Level 1 Onboarding (ADR-0008)**:
+  - Embeds `<character-auth-card>` at the top of the dashboard.
+  - Connects `AuthStateService.user()` and `AuthStateService.authStatus()` signals to auth card presentation.
+  - `onLogin()` / `onLogout()`: Executes Google Sign-In with allowlist authorization check and Level 1 baseline profile onboarding.
 - **Book Reading Daily Quest & Active Shelf (ADR-0007)**:
   - **Currently Reading Shelf**: Displays all active books (`status: 'reading'`) with title, author, progress bar, percentage read, and quick log actions.
   - **Add New Book Modal**: Form dialog to add a new book to the user's shelf.

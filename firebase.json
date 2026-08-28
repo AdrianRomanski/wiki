@@ -1,4 +1,12 @@
 {
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Life Forge App",
+        "supportEmail": "support@lifeforge.app"
+      }
+    }
+  },
   "hosting": {
     "public": "dist/apps/life-forge-app/browser",
     "ignore": [

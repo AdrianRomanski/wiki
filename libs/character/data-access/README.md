@@ -32,7 +32,17 @@ Angular `@Injectable()` reactive state service for managing reading shelf state,
 - `logReadingSession(bookId, finishedPage)`: Executes `evaluateBookReadingQuest`, updates book state, saves log entry, and awards WIS & DIS XP via `CharacterStateService`.
 - `getCompletedBooksForMonth(year, month)`: Filters completed books for a given calendar month.
 
-### 3. `BookStorageAdapter`
+### 3. `AuthStateService` (ADR-0008)
+Angular `@Injectable()` service managing Google Auth allowlist authorization and Level 1 character onboarding:
+- `user`: Signal tracking authenticated `UserProfile` (`uid`, `email`, `level: 1`, `totalXp: 0`).
+- `authStatus`: Signal tracking auth state (`idle` | `authenticating` | `authenticated` | `unauthorized` | `unauthenticated`).
+- `allowlist`: Signal managing permitted email list.
+- `ALLOWLIST_EMAILS`: Angular `InjectionToken<string[]>` for dynamic allowlist injection.
+- `loginWithGoogle(mockEmail?)`: Executes Google OAuth login flow with allowlist security validation.
+- `logout()`: Clears active session.
+- `getBaselineLevel1Character()`: Generates a baseline Level 1 character profile.
+
+### 4. `BookStorageAdapter`
 LocalStorage persistence adapter for user's book catalog and reading session logs (`life_forge_books_v1` and `life_forge_reading_logs_v1`).
 
 ### 4. `FirestoreCharacterAdapter`

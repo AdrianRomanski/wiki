@@ -7,6 +7,13 @@
   "tags": ["scope:character", "layer:feature", "type:feature"],
   "implicitDependencies": ["character-domain-models", "character-data-access", "character-ui-sheet"],
   "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/character/feature-dashboard/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
     }

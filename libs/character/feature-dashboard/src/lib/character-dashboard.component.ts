@@ -1,25 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BookStateService, CharacterStateService } from '@wiki/character-data-access';
+import { AuthStateService, BookStateService, CharacterStateService } from '@wiki/character-data-access';
 import {
   Book,
   EARLY_WAKEUP_SLOTS,
   EarlyWakeupEvaluation,
   evaluateEarlyWakeupQuest,
 } from '@wiki/character-domain-models';
-import { CharacterSheetComponent } from '@wiki/character-ui-sheet';
+import { AuthCardComponent, CharacterSheetComponent } from '@wiki/character-ui-sheet';
 
 @Component({
   selector: 'character-dashboard',
-  imports: [CommonModule, FormsModule, CharacterSheetComponent],
+  imports: [CommonModule, FormsModule, CharacterSheetComponent, AuthCardComponent],
   templateUrl: './character-dashboard.component.html',
   styleUrls: ['./character-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CharacterDashboardComponent {
-  readonly characterState = inject(CharacterStateService);
-  readonly bookState = inject(BookStateService);
+  readonly authState = inject(AuthStateService, { optional: true }) || new AuthStateService();
+  readonly characterState = inject(CharacterStateService, { optional: true }) || new CharacterStateService();
+  readonly bookState = inject(BookStateService, { optional: true }) || new BookStateService();
 
   // Early Wake-up Quest state
   readonly timeSlots = Object.values(EARLY_WAKEUP_SLOTS);
@@ -99,6 +100,14 @@ export class CharacterDashboardComponent {
     const m = String(d.getMinutes()).padStart(2, '0');
     return `${h}:${m}`;
   });
+
+  onLogin(): void {
+    this.authState.loginWithGoogle();
+  }
+
+  onLogout(): void {
+    this.authState.logout();
+  }
 
   claimEarlyWakeUpXp(): void {
     if (this.claimedToday()) {

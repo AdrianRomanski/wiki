@@ -43,6 +43,11 @@ Pure domain layer package managing core RPG character entities, progression form
 - `evaluateBookReadingQuest(book, endPage, date)`: Pure evaluation function enforcing verified page progress ($endPage > currentPage \land endPage \le totalPages$), awarding **+40 WIS XP** & **+10 DIS XP** for daily sessions, and **+200 WIS XP** completion bonus upon finishing a book.
 - `filterCompletedBooksByMonth(books, year, month)`: Pure filter function returning books completed in a target calendar month.
 
+### 5. Authentication & Allowlist Guard Model (`auth.model.ts` - ADR-0008)
+- `UserProfile`: Domain interface capturing user identity details (`uid`, `email`, `displayName`, `photoURL`, `level: 1`, `totalXp: 0`, `createdAt`, `lastLoginAt`).
+- `evaluateEmailAllowlist(email, allowlist)`: Pure domain function validating whether an email address is in the permitted account set (case-normalized, trimmed).
+- `createBaselineLevel1Character(uid, email, displayName)`: Pure factory function creating a fresh character profile strictly initialized at **Level 1** (0 XP).
+
 ---
 
 ## 🧪 Testing & Verification
