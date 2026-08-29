@@ -8,7 +8,8 @@ import {
   EarlyWakeupEvaluation,
   evaluateEarlyWakeupQuest,
 } from '@wiki/character-domain-models';
-import { AuthCardComponent, CharacterSheetComponent } from '@wiki/character-ui-sheet';
+import { AuthCardComponent } from '@wiki/character-ui-auth';
+import { CharacterSheetComponent } from '@wiki/character-ui-sheet';
 
 @Component({
   selector: 'character-dashboard',
@@ -22,31 +23,26 @@ export class CharacterDashboardComponent {
   readonly characterState = inject(CharacterStateService, { optional: true }) || new CharacterStateService();
   readonly bookState = inject(BookStateService, { optional: true }) || new BookStateService();
 
-  // Early Wake-up Quest state
   readonly timeSlots = Object.values(EARLY_WAKEUP_SLOTS);
   readonly claimedToday = signal<boolean>(false);
   readonly claimMessage = signal<string | null>(null);
   readonly simulatedHour = signal<number | null>(null);
   readonly simulatedMinute = signal<number | null>(null);
 
-  // Book Reading Quest & Shelf state
   readonly isAddBookModalOpen = signal<boolean>(false);
   readonly isLogQuestModalOpen = signal<boolean>(false);
   readonly selectedBookIdForQuest = signal<string | null>(null);
 
-  // New book form inputs
   readonly newBookTitle = signal<string>('');
   readonly newBookAuthor = signal<string>('');
   readonly newBookTotalPages = signal<number | null>(null);
   readonly newBookInitialPage = signal<number>(0);
   readonly newBookNotes = signal<string>('');
 
-  // Daily quest log inputs
   readonly questFinishedPage = signal<number | null>(null);
   readonly readingQuestFeedback = signal<string | null>(null);
 
-  // Monthly archive filter inputs
-  readonly selectedMonth = signal<number>(new Date().getMonth() + 1); // 1-12
+  readonly selectedMonth = signal<number>(new Date().getMonth() + 1);
   readonly selectedYear = signal<number>(new Date().getFullYear());
 
   readonly monthOptions = [
@@ -151,8 +147,6 @@ export class CharacterDashboardComponent {
     this.simulatedMinute.set(null);
     this.claimMessage.set(null);
   }
-
-  // --- Book Reading Quest Actions ---
 
   openAddBookModal(): void {
     this.newBookTitle.set('');

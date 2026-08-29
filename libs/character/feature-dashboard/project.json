@@ -5,7 +5,7 @@
   "prefix": "character",
   "projectType": "library",
   "tags": ["scope:character", "layer:feature", "type:feature"],
-  "implicitDependencies": ["character-domain-models", "character-data-access", "character-ui-sheet"],
+  "implicitDependencies": ["character-domain-models", "character-data-access", "character-ui-sheet", "character-ui-auth"],
   "targets": {
     "test": {
       "executor": "nx:run-commands",

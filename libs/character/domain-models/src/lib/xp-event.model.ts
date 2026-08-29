@@ -17,8 +17,8 @@ export interface XpEventLog {
   sourceType: XpSourceType;
   sourceId?: string;
   description: string;
-  date: string;       // Format: "YYYY-MM-DD"
-  timestamp: string;  // Format: ISO 8601 timestamp
+  date: string;
+  timestamp: string;
 }
 
 export interface XpEventRepositoryPort {

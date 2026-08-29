@@ -16,6 +16,10 @@ export default defineConfig({
         __dirname,
         '../ui-sheet/src/index.ts'
       ),
+      '@wiki/character-ui-auth': path.resolve(
+        __dirname,
+        '../ui-auth/src/index.ts'
+      ),
     },
   },
   test: {

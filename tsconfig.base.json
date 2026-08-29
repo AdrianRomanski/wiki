@@ -79,6 +79,7 @@
       "@wiki/character-domain-models": ["./libs/character/domain-models/src/index.ts"],
       "@wiki/character-data-access": ["./libs/character/data-access/src/index.ts"],
       "@wiki/character-ui-sheet": ["./libs/character/ui-sheet/src/index.ts"],
+      "@wiki/character-ui-auth": ["./libs/character/ui-auth/src/index.ts"],
       "@wiki/character-feature-dashboard": ["./libs/character/feature-dashboard/src/index.ts"]
     }
   },

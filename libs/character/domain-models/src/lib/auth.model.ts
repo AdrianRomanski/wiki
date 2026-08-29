@@ -13,10 +13,6 @@ export interface UserProfile {
   lastLoginAt: string;
 }
 
-/**
- * Pure domain function validating whether an email address is authorized against an allowlist.
- * Handles whitespace trimming and case insensitivity.
- */
 export function evaluateEmailAllowlist(
   email: string | null | undefined,
   allowlist: string[]
@@ -30,9 +26,6 @@ export function evaluateEmailAllowlist(
   );
 }
 
-/**
- * Pure domain function creating a fresh Level 1 baseline character profile for a newly authenticated user.
- */
 export function createBaselineLevel1Character(
   uid: string,
   email: string,

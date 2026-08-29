@@ -34,7 +34,7 @@ describe('Progression Calculator', () => {
 
     expect(updated.level).toBe(2);
     expect(updated.currentXp).toBe(50);
-    expect(updated.attributes.intelligence).toBe(13); // +3 INT
+    expect(updated.attributes.intelligence).toBe(13);
     expect(updated.totalXpEarned).toBe(150);
   });
 

@@ -64,12 +64,10 @@ export class CharacterStateService {
         });
     }
 
-    // Reaction to Auth State changes (ADR-0008)
     if (this.authStateService) {
       effect(() => {
         const user = this.authStateService?.user();
         if (user) {
-          // Initialize or load Level 1 baseline for authenticated allowlisted user
           const loaded = this.storageAdapter.loadCharacter();
           if (!loaded || loaded.id !== user.uid) {
             const baseline = createBaselineLevel1Character(user.uid, user.email, user.displayName);

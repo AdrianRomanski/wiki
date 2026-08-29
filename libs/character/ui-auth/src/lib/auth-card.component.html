@@ -1,0 +1,46 @@
+<div class="auth-card" [class.authenticated]="authStatus() === 'authenticated'" [class.unauthorized]="authStatus() === 'unauthorized'">
+  @if (authStatus() === 'authenticated' && user(); as activeUser) {
+    <div class="auth-header">
+      <div class="user-info">
+        <div class="avatar-ring">
+          <span class="avatar-text">{{ activeUser.displayName[0] ? activeUser.displayName[0].toUpperCase() : 'U' }}</span>
+        </div>
+        <div class="user-details">
+          <div class="user-name">{{ activeUser.displayName }}</div>
+          <div class="user-email">{{ activeUser.email }}</div>
+        </div>
+      </div>
+
+      <div class="auth-badges">
+        <span class="badge level-badge">Level 1 Baseline</span>
+        <span class="badge status-badge">Permitted Account</span>
+        <button type="button" class="logout-btn" (click)="logoutRequested.emit()">Sign Out</button>
+      </div>
+    </div>
+  } @else if (authStatus() === 'unauthorized') {
+    <div class="unauthorized-banner" role="alert">
+      <div class="banner-icon">⛔</div>
+      <div class="banner-content">
+        <div class="banner-title">Access Denied</div>
+        <div class="banner-message">
+          This email is not on the permitted authorization list. Only authorized Google accounts can access character progression.
+        </div>
+      </div>
+      <button type="button" class="retry-btn" (click)="loginRequested.emit()">Try Permitted Account</button>
+    </div>
+  } @else {
+    <div class="login-prompt">
+      <div class="prompt-text">
+        <div class="prompt-title">Sign In Required</div>
+        <div class="prompt-subtitle">Authenticate with a permitted Google/Gmail account to access character progression.</div>
+      </div>
+      <button type="button" class="login-btn" [disabled]="authStatus() === 'authenticating'" (click)="loginRequested.emit()">
+        @if (authStatus() === 'authenticating') {
+          <span class="spinner"></span> Authenticating...
+        } @else {
+          <span class="google-icon">G</span> Sign in with Google
+        }
+      </button>
+    </div>
+  }
+</div>

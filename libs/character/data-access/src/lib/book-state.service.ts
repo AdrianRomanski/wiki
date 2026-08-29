@@ -92,14 +92,12 @@ export class BookStateService {
     const evaluation = evaluateBookReadingQuest(targetBook, finishedPage);
 
     if (evaluation.canClaim && evaluation.updatedBook) {
-      // 1. Update book list
       const updatedBooks = this.books().map((b) =>
-        b.id === bookId ? evaluation.updatedBook! : b
+        b.id === bookId && evaluation.updatedBook ? evaluation.updatedBook : b
       );
       this.books.set(updatedBooks);
       this.storageAdapter.saveBooks(updatedBooks);
 
-      // 2. Create reading log entry
       const logEntry: ReadingLogEntry = {
         id: `log-${Date.now()}`,
         bookId: targetBook.id,
@@ -115,7 +113,6 @@ export class BookStateService {
       this.readingLogs.set(updatedLogs);
       this.storageAdapter.saveReadingLogs(updatedLogs);
 
-      // 3. Award XP rewards to character
       for (const reward of evaluation.rewards) {
         this.characterState.awardXp(reward, 'BOOK_READING_QUEST', targetBook.id);
       }

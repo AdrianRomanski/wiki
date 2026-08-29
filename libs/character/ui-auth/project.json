@@ -1,0 +1,21 @@
+{
+  "name": "character-ui-auth",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/character/ui-auth/src",
+  "prefix": "character",
+  "projectType": "library",
+  "tags": ["scope:character", "layer:ui", "type:ui"],
+  "implicitDependencies": ["character-domain-models"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx vitest run --config libs/character/ui-auth/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

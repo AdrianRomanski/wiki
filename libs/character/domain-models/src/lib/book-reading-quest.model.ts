@@ -136,7 +136,7 @@ export function evaluateBookReadingQuest(
 export function filterCompletedBooksByMonth(
   books: Book[],
   year: number,
-  month: number // 1-indexed (1 = Jan, 8 = Aug, 12 = Dec)
+  month: number
 ): Book[] {
   return books.filter((b) => {
     if (b.status !== 'completed' || !b.completedAt) {

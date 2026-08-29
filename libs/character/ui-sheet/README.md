@@ -4,7 +4,7 @@ Dumb, presentational Angular component library rendering the RPG Character Sheet
 
 ---
 
-## 🏛️ Architectural Layer & Component Rules
+## Architectural Layer & Component Rules
 
 - **Scope & Tags**: `["scope:character", "layer:ui", "type:ui"]`
 - **Prefix**: `character`
@@ -14,21 +14,19 @@ Dumb, presentational Angular component library rendering the RPG Character Sheet
 
 ---
 
-## 🎨 UI Features & Visual Layout
+## UI Features & Visual Layout
 
 - **RPG Level Badge**: Glowing avatar container displaying character level and title.
 - **Animated XP Bar**: Visual progress fill with percentage counter and remaining XP readout.
 - **Attribute Grid**: Stat cards showcasing **Intelligence (INT)**, **Wisdom (WIS)**, and **Discipline (DIS)** with HSL color coding and micro-animations.
-- **Auth Card (`AuthCardComponent` - ADR-0008)**: Presentational authentication card rendering Google OAuth sign-in triggers, Level 1 permitted account badges, and Access Denied banners for unauthorized accounts.
 
 ```html
 <character-sheet [character]="characterData"></character-sheet>
-<character-auth-card [user]="user" [authStatus]="status" (loginRequested)="onLogin()" (logoutRequested)="onLogout()"></character-auth-card>
 ```
 
 ---
 
-## 🧪 Testing & Verification
+## Testing & Verification
 
 ```bash
 # Run ESLint check

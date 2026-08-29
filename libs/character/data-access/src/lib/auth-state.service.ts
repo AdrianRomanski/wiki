@@ -5,20 +5,16 @@ import {
   evaluateEmailAllowlist,
   UserProfile,
 } from '@wiki/character-domain-models';
-import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getApp, getApps } from 'firebase/app';
 import {
   getAuth,
   GoogleAuthProvider,
+  onAuthStateChanged,
   signInWithPopup,
   signOut,
-  onAuthStateChanged,
   User as FirebaseUser,
 } from 'firebase/auth';
 
-/**
- * Injection token for configuring permitted email addresses for Google Auth allowlist authorization.
- * Defaults to environment configuration.
- */
 export const ALLOWLIST_EMAILS = new InjectionToken<string[]>('ALLOWLIST_EMAILS', {
   providedIn: 'root',
   factory: () => [],
@@ -38,11 +34,10 @@ export class AuthStateService {
       if (injectedAllowlist && Array.isArray(injectedAllowlist)) {
         this.allowlist.set(injectedAllowlist);
       }
-    } catch {
-      // Fallback for unit testing environments without active Angular Injection context
+    } catch (_err) {
+      void _err;
     }
 
-    // Subscribe to Firebase Auth state changes if Firebase app is initialized
     if (typeof window !== 'undefined' && getApps().length > 0) {
       try {
         const auth = getAuth(getApp());
@@ -57,21 +52,13 @@ export class AuthStateService {
     }
   }
 
-  /**
-   * Set or update the active allowlist dynamically.
-   */
   setAllowlist(emails: string[]): void {
     this.allowlist.set(emails);
   }
 
-  /**
-   * Authenticate via real Google OAuth with allowlist evaluation.
-   * If mockEmail is provided, bypasses pop-up (useful for automated testing/CLI).
-   */
   async loginWithGoogle(mockEmail?: string): Promise<boolean> {
     this.authStatus.set('authenticating');
 
-    // 1. Mock parameter path (for unit tests / CLI simulation)
     if (mockEmail) {
       return this.evaluateAndSetUser(
         `user-${mockEmail.replace(/[^a-zA-Z0-9]/g, '-')}`,
@@ -80,7 +67,6 @@ export class AuthStateService {
       );
     }
 
-    // 2. Real Firebase Google OAuth Sign-In
     if (typeof window !== 'undefined' && getApps().length > 0) {
       try {
         const auth = getAuth(getApp());
@@ -95,7 +81,7 @@ export class AuthStateService {
         }
 
         return await this.handleFirebaseUser(fbUser);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Google OAuth Popup Sign-In Error:', err);
         this.user.set(null);
         this.authStatus.set('unauthenticated');
@@ -103,7 +89,6 @@ export class AuthStateService {
       }
     }
 
-    // 3. Fallback path if Firebase App is not initialized
     const fallbackEmail = this.allowlist()[0] || 'admin@local.dev';
     return this.evaluateAndSetUser(
       `user-${fallbackEmail.replace(/[^a-zA-Z0-9]/g, '-')}`,
@@ -170,9 +155,6 @@ export class AuthStateService {
     return true;
   }
 
-  /**
-   * Logout current authenticated user session.
-   */
   async logout(): Promise<void> {
     if (typeof window !== 'undefined' && getApps().length > 0) {
       try {
@@ -186,9 +168,6 @@ export class AuthStateService {
     this.authStatus.set('unauthenticated');
   }
 
-  /**
-   * Generates a baseline Level 1 character for the authenticated user.
-   */
   getBaselineLevel1Character() {
     const activeUser = this.user();
     if (!activeUser) {

@@ -42,13 +42,11 @@ export function applyXpReward(character: Character, reward: XpReward): Character
   currentXp += reward.amount;
   totalXpEarned += reward.amount;
 
-  // Stat point growth
   const statGain = Math.max(1, Math.floor(reward.amount / 50));
   newAttributes[reward.statCategory] += statGain;
 
   let xpNeeded = calculateXpForLevel(level);
 
-  // Level up loop
   while (currentXp >= xpNeeded) {
     currentXp -= xpNeeded;
     level += 1;

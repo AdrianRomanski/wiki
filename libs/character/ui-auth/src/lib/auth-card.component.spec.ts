@@ -2,7 +2,7 @@ import { createEnvironmentInjector, EnvironmentInjector, runInInjectionContext }
 import { describe, expect, it } from 'vitest';
 import { AuthCardComponent } from './auth-card.component';
 
-describe('AuthCardComponent (ADR-0008)', () => {
+describe('AuthCardComponent', () => {
   it('should instantiate component within injection context', () => {
     const injector = createEnvironmentInjector([], null as unknown as EnvironmentInjector);
     runInInjectionContext(injector, () => {
