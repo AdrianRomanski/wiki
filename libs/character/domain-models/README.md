@@ -48,6 +48,13 @@ Pure domain layer package managing core RPG character entities, progression form
 - `evaluateEmailAllowlist(email, allowlist)`: Pure domain function validating whether an email address is in the permitted account set (case-normalized, trimmed).
 - `createBaselineLevel1Character(uid, email, displayName)`: Pure factory function creating a fresh character profile strictly initialized at **Level 1** (0 XP).
 
+### 6. Time-Series XP Event Logging Model (`xp-event.model.ts` - ADR-0009)
+- `StatType`: Categorical stat identifier (`'STR' | 'INT' | 'WIS' | 'DIS' | 'VIT'`).
+- `XpSourceType`: Action source taxonomy (`'EARLY_WAKE_UP_QUEST' | 'BOOK_READING_QUEST' | 'HABIT_COMPLETION' | 'KNOWLEDGE_WIKI_STREAK' | 'CUSTOM_ACTION'`).
+- `XpEventLog`: Immutable time-series XP event document entity (`id`, `userId`, `xpAwarded`, `statType`, `sourceType`, `sourceId`, `description`, `date`, `timestamp`).
+- `XpEventRepositoryPort`: Decoupled port contract defining methods for time-series storage adapters (`logXpEvent`, `getXpEventsByDateRange`, `getXpEvents`).
+- `statCategoryToStatType(category)` & `statTypeToStatCategory(stat)`: Pure mapping utilities translating between attribute categories and time-series stat types.
+
 ---
 
 ## 🧪 Testing & Verification

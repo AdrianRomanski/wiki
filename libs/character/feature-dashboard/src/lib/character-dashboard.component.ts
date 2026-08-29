@@ -76,6 +76,9 @@ export class CharacterDashboardComponent {
     );
   });
 
+  readonly recentXpEvents = computed(() => this.characterState.xpEvents().slice(0, 10));
+  readonly totalXpEventsCount = computed(() => this.characterState.xpEvents().length);
+
   readonly currentEvaluation = computed<EarlyWakeupEvaluation>(() => {
     const hour = this.simulatedHour();
     const minute = this.simulatedMinute();
@@ -121,11 +124,15 @@ export class CharacterDashboardComponent {
       return;
     }
 
-    this.characterState.awardXp({
-      amount: evalResult.xpAmount,
-      statCategory: 'discipline',
-      sourceDescription: `Early Morning Waking Quest (${evalResult.slot} AM slot)`,
-    });
+    this.characterState.awardXp(
+      {
+        amount: evalResult.xpAmount,
+        statCategory: 'discipline',
+        sourceDescription: `Early Morning Waking Quest (${evalResult.slot} AM slot)`,
+      },
+      'EARLY_WAKE_UP_QUEST',
+      evalResult.slot
+    );
 
     this.claimedToday.set(true);
     this.claimMessage.set(

@@ -4,21 +4,27 @@ import {
   Character,
   createBaselineLevel1Character,
   createInitialCharacter,
+  statCategoryToStatType,
+  XpEventLog,
   XpReward,
+  XpSourceType,
 } from '@wiki/character-domain-models';
 import { AuthStateService } from './auth-state.service';
 import { CharacterStorageAdapter } from './character-storage.adapter';
 import { FirestoreCharacterAdapter } from './firestore-character.adapter';
+import { XpEventStorageAdapter } from './xp-event-storage.adapter';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CharacterStateService {
   private readonly storageAdapter = new CharacterStorageAdapter();
+  private readonly xpEventStorageAdapter = new XpEventStorageAdapter();
   private readonly firestoreAdapter?: FirestoreCharacterAdapter;
   private readonly authStateService?: AuthStateService;
 
   readonly character = signal<Character>(this.storageAdapter.loadCharacter());
+  readonly xpEvents = signal<XpEventLog[]>(this.xpEventStorageAdapter.loadXpEvents());
 
   constructor() {
     try {
@@ -45,6 +51,17 @@ export class CharacterStateService {
         .catch((err) => {
           console.warn('Firestore sync optional load note:', err);
         });
+
+      this.firestoreAdapter
+        .getXpEvents()
+        .then((cloudEvents) => {
+          if (cloudEvents && cloudEvents.length > 0) {
+            this.xpEvents.set(cloudEvents);
+          }
+        })
+        .catch((err) => {
+          console.warn('Firestore XP events load note:', err);
+        });
     }
 
     // Reaction to Auth State changes (ADR-0008)
@@ -64,12 +81,28 @@ export class CharacterStateService {
     }
   }
 
-  awardXp(reward: XpReward): Character {
+  awardXp(reward: XpReward, sourceType: XpSourceType = 'CUSTOM_ACTION', sourceId?: string): Character {
     const current = this.character();
     const updated = applyXpReward(current, reward);
     this.character.set(updated);
 
     this.storageAdapter.saveCharacter(updated);
+
+    const now = new Date();
+    const eventData: Omit<XpEventLog, 'id'> = {
+      userId: updated.id,
+      xpAwarded: reward.amount,
+      statType: statCategoryToStatType(reward.statCategory),
+      sourceType,
+      sourceId,
+      description: reward.sourceDescription,
+      date: now.toISOString().split('T')[0],
+      timestamp: now.toISOString(),
+    };
+
+    const savedLocal = this.xpEventStorageAdapter.saveXpEvent(eventData);
+    this.xpEvents.update((events) => [savedLocal, ...events]);
+
     if (this.firestoreAdapter) {
       this.firestoreAdapter.saveCharacter(updated);
       this.firestoreAdapter.logXpTransaction({
@@ -77,11 +110,24 @@ export class CharacterStateService {
         statCategory: reward.statCategory,
         sourceDescription: reward.sourceDescription,
         userId: updated.id,
-        timestamp: new Date().toISOString(),
+        timestamp: now.toISOString(),
+      });
+      this.firestoreAdapter.logXpEvent(eventData).catch((err) => {
+        console.error('Failed to log XP event to Firestore:', err);
       });
     }
 
     return updated;
+  }
+
+  async loadXpEventsForDateRange(startDate: string, endDate: string): Promise<XpEventLog[]> {
+    if (this.firestoreAdapter) {
+      const cloudEvents = await this.firestoreAdapter.getXpEventsByDateRange(startDate, endDate);
+      if (cloudEvents && cloudEvents.length > 0) {
+        return cloudEvents;
+      }
+    }
+    return this.xpEventStorageAdapter.getXpEventsByDateRange(startDate, endDate);
   }
 
   resetCharacter(id?: string, name?: string): Character {
@@ -94,3 +140,4 @@ export class CharacterStateService {
     return fresh;
   }
 }
+

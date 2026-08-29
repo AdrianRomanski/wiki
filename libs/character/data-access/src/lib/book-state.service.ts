@@ -117,7 +117,7 @@ export class BookStateService {
 
       // 3. Award XP rewards to character
       for (const reward of evaluation.rewards) {
-        this.characterState.awardXp(reward);
+        this.characterState.awardXp(reward, 'BOOK_READING_QUEST', targetBook.id);
       }
     }
 

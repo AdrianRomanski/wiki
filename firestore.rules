@@ -25,6 +25,18 @@ service cloud.firestore {
         allow update, delete: if false;
       }
 
+      match /xp_events/{eventId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) 
+          && request.resource.data.xpAwarded is number
+          && request.resource.data.xpAwarded > 0
+          && request.resource.data.statType is string
+          && request.resource.data.sourceType is string
+          && request.resource.data.date is string
+          && request.resource.data.timestamp is string;
+        allow update, delete: if false;
+      }
+
       match /quests/{questId} {
         allow read, write: if isOwner(userId);
       }

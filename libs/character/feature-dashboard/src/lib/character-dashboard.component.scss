@@ -718,3 +718,140 @@
     transform: scale(1);
   }
 }
+
+.xp-events-section {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  backdrop-filter: blur(10px);
+
+  .events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin: 0;
+    }
+
+    .events-count-badge {
+      background: rgba(99, 102, 241, 0.2);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+  }
+
+  .empty-events-note {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-style: italic;
+    text-align: center;
+    padding: 12px;
+    margin: 0;
+  }
+
+  .xp-events-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .xp-event-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+
+      &:hover {
+        transform: translateX(2px);
+        border-color: rgba(129, 140, 248, 0.3);
+      }
+
+      .stat-tag {
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 3px 6px;
+        border-radius: 4px;
+        min-width: 36px;
+        text-align: center;
+
+        &.stat-int {
+          background: rgba(59, 130, 246, 0.2);
+          color: #60a5fa;
+          border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+        &.stat-wis {
+          background: rgba(168, 85, 247, 0.2);
+          color: #c084fc;
+          border: 1px solid rgba(168, 85, 247, 0.4);
+        }
+        &.stat-dis {
+          background: rgba(245, 158, 11, 0.2);
+          color: #fbbf24;
+          border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+        &.stat-str {
+          background: rgba(239, 68, 68, 0.2);
+          color: #f87171;
+          border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+        &.stat-vit {
+          background: rgba(34, 197, 94, 0.2);
+          color: #4ade80;
+          border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+      }
+
+      .event-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .event-desc {
+          font-size: 0.85rem;
+          color: #e2e8f0;
+          font-weight: 600;
+        }
+
+        .event-meta {
+          display: flex;
+          gap: 10px;
+          font-size: 0.75rem;
+          color: #94a3b8;
+
+          .event-source {
+            color: #818cf8;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .xp-amount-tag {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.1);
+        padding: 4px 8px;
+        border-radius: 6px;
+      }
+    }
+  }
+}
+

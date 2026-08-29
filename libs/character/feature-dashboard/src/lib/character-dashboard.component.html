@@ -284,6 +284,34 @@
               </ul>
             }
           </div>
+
+          <!-- ADR-0009: Time-Series XP Event Log Feed -->
+          <div class="xp-events-section">
+            <div class="events-header">
+              <h4 class="section-title">📊 Time-Series XP Event Audit Log</h4>
+              <span class="events-count-badge">{{ totalXpEventsCount() }} Total Events</span>
+            </div>
+
+            @if (recentXpEvents().length === 0) {
+              <p class="empty-events-note">No XP events logged yet. Complete quests to record time-series activity data!</p>
+            } @else {
+              <ul class="xp-events-list">
+                @for (evt of recentXpEvents(); track evt.id) {
+                  <li class="xp-event-item">
+                    <span class="stat-tag" [class]="'stat-' + evt.statType.toLowerCase()">{{ evt.statType }}</span>
+                    <div class="event-details">
+                      <span class="event-desc">{{ evt.description }}</span>
+                      <div class="event-meta">
+                        <span class="event-source">{{ evt.sourceType }}</span>
+                        <span class="event-time">{{ evt.date }} • {{ evt.timestamp | date: 'shortTime' }}</span>
+                      </div>
+                    </div>
+                    <span class="xp-amount-tag">+{{ evt.xpAwarded }} XP</span>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
         </div>
       </div>
     </div>

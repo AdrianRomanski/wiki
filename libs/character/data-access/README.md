@@ -45,13 +45,22 @@ Angular `@Injectable()` service managing Google Auth allowlist authorization and
 ### 4. `BookStorageAdapter`
 LocalStorage persistence adapter for user's book catalog and reading session logs (`life_forge_books_v1` and `life_forge_reading_logs_v1`).
 
-### 4. `FirestoreCharacterAdapter`
-Hexagonal repository adapter implementing `CharacterRepositoryPort` for Cloud Firestore:
+### 5. `XpEventStorageAdapter` (ADR-0009)
+LocalStorage & in-memory fallback persistence adapter for time-series `XpEventLog` entries (`lifeforge_xp_events`):
+- `saveXpEvent(event)`: Saves immutable time-series log with generated ID.
+- `loadXpEvents()`: Loads stored XP event logs.
+- `getXpEventsByDateRange(startDate, endDate)`: Filters logs by `YYYY-MM-DD` date range.
+
+### 6. `FirestoreCharacterAdapter` (ADR-0009)
+Hexagonal repository adapter implementing `CharacterRepositoryPort` and `XpEventRepositoryPort` for Cloud Firestore:
 - `loadCharacter(userId)`: Fetches per-user character document (`users/{userId}/character/sheet`).
 - `saveCharacter(character, userId)`: Updates character attributes with server timestamps.
 - `logXpTransaction(transaction, userId)`: Writes immutable XP audit log documents (`users/{userId}/xp_transactions`).
+- `logXpEvent(event, userId)`: Writes immutable time-series XP event documents (`users/{userId}/xp_events/{eventId}`).
+- `getXpEventsByDateRange(startDate, endDate, userId)`: Executes range query on `users/{userId}/xp_events` filtered by `date` range and ordered by `timestamp`.
+- `getXpEvents(userId)`: Fetches all XP events ordered by `timestamp` descending.
 
-### 5. `CharacterStorageAdapter`
+### 7. `CharacterStorageAdapter`
 Offline fallback storage adapter:
 - `wiki/character.md`: Character sheet state (Level, XP, Attributes, Titles) stored as Markdown with YAML frontmatter inside the Wiki knowledge base.
 - `parseCharacterFromMarkdown(markdown)`: Parses YAML frontmatter into a typed `Character` object.

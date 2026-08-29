@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Character, CharacterRepositoryPort, createInitialCharacter, XpTransaction } from '@wiki/character-domain-models';
+import { 
+  Character, 
+  CharacterRepositoryPort, 
+  createInitialCharacter, 
+  XpEventLog, 
+  XpEventRepositoryPort, 
+  XpTransaction 
+} from '@wiki/character-domain-models';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { 
   getFirestore, 
@@ -8,6 +15,10 @@ import {
   setDoc, 
   collection, 
   addDoc, 
+  query,
+  where,
+  orderBy,
+  getDocs,
   serverTimestamp,
   connectFirestoreEmulator,
   Firestore
@@ -27,7 +38,7 @@ export interface FirebaseEnvironmentConfig {
 @Injectable({
   providedIn: 'root'
 })
-export class FirestoreCharacterAdapter implements CharacterRepositoryPort {
+export class FirestoreCharacterAdapter implements CharacterRepositoryPort, XpEventRepositoryPort {
   private db?: Firestore;
   private auth?: Auth;
   private isInitialized = false;
@@ -117,4 +128,62 @@ export class FirestoreCharacterAdapter implements CharacterRepositoryPort {
       console.error('Error logging XP transaction to Firestore:', err);
     }
   }
+
+  async logXpEvent(event: Omit<XpEventLog, 'id'>, userId?: string): Promise<XpEventLog> {
+    const uid = userId || await this.ensureAuth();
+    if (!this.db) throw new Error('Firestore DB not initialized');
+
+    const xpEventsCol = collection(this.db, `users/${uid}/xp_events`);
+    const docRef = await addDoc(xpEventsCol, {
+      ...event,
+      userId: uid,
+    });
+
+    return {
+      ...event,
+      id: docRef.id,
+      userId: uid,
+    };
+  }
+
+  async getXpEventsByDateRange(startDate: string, endDate: string, userId?: string): Promise<XpEventLog[]> {
+    try {
+      const uid = userId || await this.ensureAuth();
+      if (!this.db) return [];
+      const xpEventsCol = collection(this.db, `users/${uid}/xp_events`);
+      const q = query(
+        xpEventsCol,
+        where('date', '>=', startDate),
+        where('date', '<=', endDate),
+        orderBy('date', 'asc'),
+        orderBy('timestamp', 'asc')
+      );
+      const snap = await getDocs(q);
+      return snap.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...(docSnap.data() as Omit<XpEventLog, 'id'>),
+      }));
+    } catch (err) {
+      console.warn('Failed to query xp_events by date range from Firestore:', err);
+      return [];
+    }
+  }
+
+  async getXpEvents(userId?: string): Promise<XpEventLog[]> {
+    try {
+      const uid = userId || await this.ensureAuth();
+      if (!this.db) return [];
+      const xpEventsCol = collection(this.db, `users/${uid}/xp_events`);
+      const q = query(xpEventsCol, orderBy('timestamp', 'desc'));
+      const snap = await getDocs(q);
+      return snap.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...(docSnap.data() as Omit<XpEventLog, 'id'>),
+      }));
+    } catch (err) {
+      console.warn('Failed to query xp_events from Firestore:', err);
+      return [];
+    }
+  }
 }
+
