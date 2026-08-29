@@ -14,6 +14,8 @@ This directory contains Architecture Decision Records (ADRs) capturing significa
 | [ADR-0006](0006-action-based-xp-engine-and-early-wake-up-quests.md)        | Action-Based XP Engine, Elimination of Quick XP, and Early Wake-Up Daily Quests     | `Accepted` | 2026-08-25 | Gamification & Habit Dynamics       |
 | [ADR-0007](0007-book-reading-daily-quest-and-reading-log.md)               | Book Reading Daily Quest, Active Reading Shelf, and Monthly Reading Archive         | `Accepted` | 2026-08-26 | Gamification & Reading Log          |
 | [ADR-0008](0008-google-auth-allowlist-and-level-1-baseline-onboarding.md)  | Google Auth Allowlist and Level 1 Baseline Character Onboarding                     | `Accepted` | 2026-08-28 | Authentication & Access Control     |
+| [ADR-0009](0009-firestore-time-series-xp-event-logging-for-data-visualization.md) | Firestore Time-Series XP Event Logging for Data Visualization                       | `Accepted` | 2026-08-28 | Analytics & Time-Series             |
+| [ADR-0010](0010-daily-course-progression-and-agent-ingestion.md)           | Daily Course Progression, Authenticated Web Scraping Ingestion, and Action-Based Learning Architecture | `Accepted` | 2026-08-29 | Gamification & Course Ingestion     |
 
 ---
 
