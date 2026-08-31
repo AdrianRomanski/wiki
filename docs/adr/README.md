@@ -16,6 +16,7 @@ This directory contains Architecture Decision Records (ADRs) capturing significa
 | [ADR-0008](0008-google-auth-allowlist-and-level-1-baseline-onboarding.md)  | Google Auth Allowlist and Level 1 Baseline Character Onboarding                     | `Accepted` | 2026-08-28 | Authentication & Access Control     |
 | [ADR-0009](0009-firestore-time-series-xp-event-logging-for-data-visualization.md) | Firestore Time-Series XP Event Logging for Data Visualization                       | `Accepted` | 2026-08-28 | Analytics & Time-Series             |
 | [ADR-0010](0010-daily-course-progression-and-agent-ingestion.md)           | Daily Course Progression, Authenticated Web Scraping Ingestion, and Action-Based Learning Architecture | `Accepted` | 2026-08-29 | Gamification & Course Ingestion     |
+| [ADR-0011](0011-firebase-only-course-data-persistence-and-repository-sanitization.md) | Firebase-Only Course Data Persistence, Transcripts & Exercise Storage, and Repository Sanitization | `Accepted` | 2026-08-31 | Cloud, Data Persistence & Security |
 
 ---
 
