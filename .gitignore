@@ -68,3 +68,4 @@ apps/life-forge-app/src/environments/environment.local.ts
 
 # Firebase CLI Cache & Hosting deploy artifacts
 .firebase/
+.nx/polygraph

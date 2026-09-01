@@ -1,19 +1,41 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthStateService, BookStateService, CharacterStateService } from '@wiki/character-data-access';
+import {
+  AuthStateService,
+  BookStateService,
+  CharacterStateService,
+  CourseStateService,
+} from '@wiki/character-data-access';
 import {
   Book,
+  Course,
+  CourseItem,
+  CourseModule,
   EARLY_WAKEUP_SLOTS,
   EarlyWakeupEvaluation,
   evaluateEarlyWakeupQuest,
 } from '@wiki/character-domain-models';
 import { AuthCardComponent } from '@wiki/character-ui-auth';
 import { CharacterSheetComponent } from '@wiki/character-ui-sheet';
+import { CourseCurriculumAccordionComponent } from './components/course-curriculum-accordion.component';
+import { CourseImportModalComponent } from './components/course-import-modal.component';
+import { CourseItemCheckinModalComponent } from './components/course-item-checkin-modal.component';
+import { CourseQuestCardComponent } from './components/course-quest-card.component';
 
 @Component({
   selector: 'character-dashboard',
-  imports: [CommonModule, FormsModule, CharacterSheetComponent, AuthCardComponent],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    CharacterSheetComponent,
+    AuthCardComponent,
+    CourseQuestCardComponent,
+    CourseCurriculumAccordionComponent,
+    CourseItemCheckinModalComponent,
+    CourseImportModalComponent,
+  ],
   templateUrl: './character-dashboard.component.html',
   styleUrls: ['./character-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +44,7 @@ export class CharacterDashboardComponent {
   readonly authState = inject(AuthStateService, { optional: true }) || new AuthStateService();
   readonly characterState = inject(CharacterStateService, { optional: true }) || new CharacterStateService();
   readonly bookState = inject(BookStateService, { optional: true }) || new BookStateService();
+  readonly courseState = inject(CourseStateService, { optional: true }) || new CourseStateService();
 
   readonly timeSlots = Object.values(EARLY_WAKEUP_SLOTS);
   readonly claimedToday = signal<boolean>(false);
@@ -41,6 +64,13 @@ export class CharacterDashboardComponent {
 
   readonly questFinishedPage = signal<number | null>(null);
   readonly readingQuestFeedback = signal<string | null>(null);
+
+  // Course progression modal signals
+  readonly isCourseCheckinModalOpen = signal<boolean>(false);
+  readonly selectedCheckinItem = signal<CourseItem | null>(null);
+  readonly selectedCheckinModule = signal<CourseModule | null>(null);
+  readonly isCourseImportModalOpen = signal<boolean>(false);
+  readonly courseFeedbackMessage = signal<string | null>(null);
 
   readonly selectedMonth = signal<number>(new Date().getMonth() + 1);
   readonly selectedYear = signal<number>(new Date().getFullYear());
@@ -223,5 +253,57 @@ export class CharacterDashboardComponent {
         this.closeLogQuestModal();
       }, 1800);
     }
+  }
+
+  // Course progression handlers
+  openCourseCheckin(event: { courseId: string; item: CourseItem; module: CourseModule }): void {
+    this.selectedCheckinItem.set(event.item);
+    this.selectedCheckinModule.set(event.module);
+    this.isCourseCheckinModalOpen.set(true);
+  }
+
+  closeCourseCheckinModal(): void {
+    this.isCourseCheckinModalOpen.set(false);
+    this.selectedCheckinItem.set(null);
+    this.selectedCheckinModule.set(null);
+  }
+
+  submitCourseItemCheckin(event: { itemId: string; notes: string }): void {
+    const activeCourse = this.courseState.activeCourse();
+    if (!activeCourse) return;
+
+    const evaluation = this.courseState.completeItem(
+      activeCourse.id,
+      event.itemId,
+      event.notes
+    );
+
+    this.courseFeedbackMessage.set(evaluation.message);
+    this.closeCourseCheckinModal();
+
+    setTimeout(() => {
+      this.courseFeedbackMessage.set(null);
+    }, 4000);
+  }
+
+  selectCourse(courseId: string): void {
+    this.courseState.selectCourse(courseId);
+  }
+
+  openCourseImportModal(): void {
+    this.isCourseImportModalOpen.set(true);
+  }
+
+  closeCourseImportModal(): void {
+    this.isCourseImportModalOpen.set(false);
+  }
+
+  importScrapedCourse(course: Course): void {
+    this.courseState.addOrImportCourse(course);
+    this.closeCourseImportModal();
+    this.courseFeedbackMessage.set(`🎉 Successfully ingested course "${course.title}"!`);
+    setTimeout(() => {
+      this.courseFeedbackMessage.set(null);
+    }, 4000);
   }
 }

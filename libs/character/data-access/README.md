@@ -60,11 +60,22 @@ Hexagonal repository adapter implementing `CharacterRepositoryPort` and `XpEvent
 - `getXpEventsByDateRange(startDate, endDate, userId)`: Executes range query on `users/{userId}/xp_events` filtered by `date` range and ordered by `timestamp`.
 - `getXpEvents(userId)`: Fetches all XP events ordered by `timestamp` descending.
 
-### 7. `CharacterStorageAdapter`
-Offline fallback storage adapter:
-- `wiki/character.md`: Character sheet state (Level, XP, Attributes, Titles) stored as Markdown with YAML frontmatter inside the Wiki knowledge base.
-- `parseCharacterFromMarkdown(markdown)`: Parses YAML frontmatter into a typed `Character` object.
-- `serializeCharacterToMarkdown(character)`: Serializes `Character` state into Markdown format.
+### 8. `CourseStateService` (ADR-0010)
+Angular `@Injectable()` reactive state service managing course catalog, user progress, and action-based learning XP awards:
+- `courses`: Signal holding loaded course curricula.
+- `userProgressMap`: Signal tracking progress map per course ID.
+- `activeCourse`: Computed signal returning currently selected course.
+- `activeCourseProgress`: Computed signal for current course progress.
+- `nextUpItem`: Computed signal identifying the next uncompleted video lecture or practical coding lab.
+- `activeCourseStats`: Computed signal for percentage, completednpx nx configure-ai-agents videos, completed exercises.
+- `dailyQuestEvaluation` & `isDailyQuestDoneToday`: Computed signals tracking daily study quest status.
+- `selectCourse(courseId)`: Switches active course.
+- `addOrImportCourse(courseData)`: Imports or adds structured course JSON curricula.
+- `completeItem(courseId, itemId, notes)`: Evaluates item completion, awards INT, WIS, and DIS XP, logs `COURSE_PROGRESSION` time-series XP events via `CharacterStateService`, and syncs progress.
+- `resetCourseProgress(courseId)`: Resets tracking for a specific course.
+
+### 9. `CourseStorageAdapter` (ADR-0010)
+LocalStorage persistence adapter for courses catalog and user course progress (`life_forge_courses_v1` and `life_forge_course_progress_v1`), seeded with a production-grade course (*Advanced Angular 19+ & Zoneless State Architecture*).
 
 ---
 

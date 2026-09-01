@@ -4,454 +4,373 @@
     <p class="subtitle">Life Gamification Platform & Action-Based Progression</p>
   </header>
 
-  <character-auth-card
-    [user]="authState.user()"
-    [authStatus]="authState.authStatus()"
-    (loginRequested)="onLogin()"
-    (logoutRequested)="onLogout()"
-  ></character-auth-card>
+  <character-auth-card [user]="authState.user()" [authStatus]="authState.authStatus()" (loginRequested)="onLogin()"
+    (logoutRequested)="onLogout()"></character-auth-card>
 
   @if (authState.authStatus() === 'authenticated') {
-    <div class="dashboard-grid">
-      <div class="sheet-column">
-        <character-sheet [character]="characterState.character()"></character-sheet>
+  <div class="dashboard-grid">
+    <div class="sheet-column">
+      <character-sheet [character]="characterState.character()"></character-sheet>
+    </div>
+
+    <div class="actions-column">
+      @if (courseFeedbackMessage(); as feedback) {
+      <div class="global-feedback-banner">
+        {{ feedback }}
       </div>
+      }
 
-      <div class="actions-column">
-        <div class="action-quest-card">
-          <div class="quest-card-header">
-            <span class="quest-badge">Daily Quest</span>
-            <h3>🌅 Early Morning Waking Quest</h3>
+      <character-course-quest-card [course]="courseState.activeCourse()" [progress]="courseState.activeCourseProgress()"
+        [nextItem]="courseState.nextUpItem()" [isDailyQuestDone]="courseState.isDailyQuestDoneToday()"
+        [availableCourses]="courseState.courses()" (openCheckinRequested)="openCourseCheckin($event)"
+        (selectCourseRequested)="selectCourse($event)"
+        (openImportCourseRequested)="openCourseImportModal()"></character-course-quest-card>
+
+      @if (courseState.activeCourse(); as course) {
+      <character-course-curriculum-accordion [course]="course" [progress]="courseState.activeCourseProgress()"
+        (itemClicked)="openCourseCheckin({ courseId: course.id, item: $event.item, module: $event.module })"></character-course-curriculum-accordion>
+      }
+
+      <div class="action-quest-card">
+        <div class="quest-card-header">
+          <span class="quest-badge">Daily Quest</span>
+          <h3>🌅 Early Morning Waking Quest</h3>
+        </div>
+        <p class="quest-desc">
+          XP can no longer be gained for nothing. Wake up early and click the application directly to claim your
+          Discipline XP!
+        </p>
+
+        <div class="status-banner" [class]="'status-banner slot-' + currentEvaluation().slot">
+          <div class="time-display">
+            <span class="time-label">Current Time:</span>
+            <span class="time-value">{{ formattedCurrentTime() }}</span>
           </div>
-          <p class="quest-desc">
-            XP can no longer be gained for nothing. Wake up early and click the application directly to claim your Discipline XP!
-          </p>
-
-          <div class="status-banner" [class]="'status-banner slot-' + currentEvaluation().slot">
-            <div class="time-display">
-              <span class="time-label">Current Time:</span>
-              <span class="time-value">{{ formattedCurrentTime() }}</span>
-            </div>
-            <div class="evaluation-info">
-              <span class="tier-tag">{{ currentEvaluation().tierName }}</span>
-              @if (currentEvaluation().xpAmount > 0) {
-                <span class="xp-potential">
-                  +{{ currentEvaluation().xpAmount }} DIS XP Available
-                </span>
-              } @else {
-                <span class="xp-potential expired">
-                  0 XP (No EXP at all)
-                </span>
-              }
-            </div>
-          </div>
-
-          <div class="slot-matrix">
-            @for (slot of timeSlots; track slot.slot) {
-              <div
-                class="matrix-item"
-                [class.active]="currentEvaluation().slot === slot.slot"
-              >
-                <span class="slot-time">{{ slot.label }}</span>
-                <span class="slot-xp">+{{ slot.xpReward }} XP</span>
-              </div>
-            }
-            <div
-              class="matrix-item expired-item"
-              [class.active]="currentEvaluation().slot === 'EXPIRED' || currentEvaluation().slot === 'TOO_EARLY'"
-            >
-              <span class="slot-time">Later (7:30+)</span>
-              <span class="slot-xp">0 XP</span>
-            </div>
-          </div>
-
-          <div class="claim-action-area">
-            <button
-              type="button"
-              class="claim-btn"
-              [disabled]="claimedToday() || !currentEvaluation().canClaim || currentEvaluation().xpAmount <= 0"
-              (click)="claimEarlyWakeUpXp()"
-            >
-              @if (claimedToday()) {
-                ✔ Claimed for Today
-              } @else if (currentEvaluation().xpAmount > 0) {
-                ⚡ Claim +{{ currentEvaluation().xpAmount }} DIS XP Now
-              } @else {
-                ⏰ Waking Window Expired (0 XP)
-              }
-            </button>
-
-            @if (claimMessage(); as msg) {
-              <div
-                class="claim-feedback"
-                [class.success]="msg.includes('🎉')"
-                [class.error]="msg.includes('❌') || msg.includes('⚠️')"
-              >
-                {{ msg }}
-              </div>
-            }
-          </div>
-
-          <div class="simulation-controls">
-            <div class="simulation-header">
-              <h4>🧪 Interactive Time Simulator</h4>
-              <span class="sim-badge">Demo Controls</span>
-            </div>
-            <div class="sim-buttons">
-              <button
-                type="button"
-                class="sim-btn"
-                [class.active]="simulatedHour() === 5 && simulatedMinute() === 10"
-                (click)="setSimulatedTime(5, 10)"
-              >
-                05:10 AM (+100 XP)
-              </button>
-              <button
-                type="button"
-                class="sim-btn"
-                [class.active]="simulatedHour() === 5 && simulatedMinute() === 45"
-                (click)="setSimulatedTime(5, 45)"
-              >
-                05:45 AM (+80 XP)
-              </button>
-              <button
-                type="button"
-                class="sim-btn"
-                [class.active]="simulatedHour() === 6 && simulatedMinute() === 15"
-                (click)="setSimulatedTime(6, 15)"
-              >
-                06:15 AM (+60 XP)
-              </button>
-              <button
-                type="button"
-                class="sim-btn"
-                [class.active]="simulatedHour() === 6 && simulatedMinute() === 45"
-                (click)="setSimulatedTime(6, 45)"
-              >
-                06:45 AM (+40 XP)
-              </button>
-              <button
-                type="button"
-                class="sim-btn"
-                [class.active]="simulatedHour() === 7 && simulatedMinute() === 15"
-                (click)="setSimulatedTime(7, 15)"
-              >
-                07:15 AM (+20 XP)
-              </button>
-              <button
-                type="button"
-                class="sim-btn expired-btn"
-                [class.active]="simulatedHour() === 8 && simulatedMinute() === 30"
-                (click)="setSimulatedTime(8, 30)"
-              >
-                08:30 AM (0 XP)
-              </button>
-            </div>
-
-            @if (simulatedHour() !== null) {
-              <div class="sim-footer">
-                <button type="button" class="reset-sim-btn" (click)="resetSimulation()">
-                  🔄 Reset to Real Local Time
-                </button>
-              </div>
+          <div class="evaluation-info">
+            <span class="tier-tag">{{ currentEvaluation().tierName }}</span>
+            @if (currentEvaluation().xpAmount > 0) {
+            <span class="xp-potential">
+              +{{ currentEvaluation().xpAmount }} DIS XP Available
+            </span>
+            } @else {
+            <span class="xp-potential expired">
+              0 XP (No EXP at all)
+            </span>
             }
           </div>
         </div>
 
-        <div class="action-quest-card reading-quest-card">
-          <div class="quest-card-header">
-            <span class="quest-badge reading-badge">Daily Quest & Shelf</span>
-            <h3>📚 Active Reading Shelf & Daily Page Quest</h3>
+        <div class="slot-matrix">
+          @for (slot of timeSlots; track slot.slot) {
+          <div class="matrix-item" [class.active]="currentEvaluation().slot === slot.slot">
+            <span class="slot-time">{{ slot.label }}</span>
+            <span class="slot-xp">+{{ slot.xpReward }} XP</span>
           </div>
-          <p class="quest-desc">
-            Earn <strong>+40 WIS & +10 DIS XP</strong> daily by reading your active books and logging verified page progress. Finish a book for an extra <strong>+200 WIS XP</strong> completion bonus!
-          </p>
+          }
+          <div class="matrix-item expired-item"
+            [class.active]="currentEvaluation().slot === 'EXPIRED' || currentEvaluation().slot === 'TOO_EARLY'">
+            <span class="slot-time">Later (7:30+)</span>
+            <span class="slot-xp">0 XP</span>
+          </div>
+        </div>
 
-          <div class="shelf-toolbar">
-            <button type="button" class="btn btn-primary" (click)="openAddBookModal()">
-              ➕ Add New Book to Shelf
+        <div class="claim-action-area">
+          <button type="button" class="claim-btn"
+            [disabled]="claimedToday() || !currentEvaluation().canClaim || currentEvaluation().xpAmount <= 0"
+            (click)="claimEarlyWakeUpXp()">
+            @if (claimedToday()) {
+            ✔ Claimed for Today
+            } @else if (currentEvaluation().xpAmount > 0) {
+            ⚡ Claim +{{ currentEvaluation().xpAmount }} DIS XP Now
+            } @else {
+            ⏰ Waking Window Expired (0 XP)
+            }
+          </button>
+
+          @if (claimMessage(); as msg) {
+          <div class="claim-feedback" [class.success]="msg.includes('🎉')"
+            [class.error]="msg.includes('❌') || msg.includes('⚠️')">
+            {{ msg }}
+          </div>
+          }
+        </div>
+
+        <div class="simulation-controls">
+          <div class="simulation-header">
+            <h4>🧪 Interactive Time Simulator</h4>
+            <span class="sim-badge">Demo Controls</span>
+          </div>
+          <div class="sim-buttons">
+            <button type="button" class="sim-btn" [class.active]="simulatedHour() === 5 && simulatedMinute() === 10"
+              (click)="setSimulatedTime(5, 10)">
+              05:10 AM (+100 XP)
             </button>
-            <button
-              type="button"
-              class="btn btn-success"
-              [disabled]="bookState.currentlyReadingBooks().length === 0"
-              (click)="openLogQuestModal()"
-            >
-              📖 Log Daily Reading Quest
+            <button type="button" class="sim-btn" [class.active]="simulatedHour() === 5 && simulatedMinute() === 45"
+              (click)="setSimulatedTime(5, 45)">
+              05:45 AM (+80 XP)
+            </button>
+            <button type="button" class="sim-btn" [class.active]="simulatedHour() === 6 && simulatedMinute() === 15"
+              (click)="setSimulatedTime(6, 15)">
+              06:15 AM (+60 XP)
+            </button>
+            <button type="button" class="sim-btn" [class.active]="simulatedHour() === 6 && simulatedMinute() === 45"
+              (click)="setSimulatedTime(6, 45)">
+              06:45 AM (+40 XP)
+            </button>
+            <button type="button" class="sim-btn" [class.active]="simulatedHour() === 7 && simulatedMinute() === 15"
+              (click)="setSimulatedTime(7, 15)">
+              07:15 AM (+20 XP)
+            </button>
+            <button type="button" class="sim-btn expired-btn"
+              [class.active]="simulatedHour() === 8 && simulatedMinute() === 30" (click)="setSimulatedTime(8, 30)">
+              08:30 AM (0 XP)
             </button>
           </div>
 
-          <div class="shelf-section">
-            <h4 class="section-title">
-              Active Bookshelf ({{ bookState.currentlyReadingBooks().length }})
-            </h4>
+          @if (simulatedHour() !== null) {
+          <div class="sim-footer">
+            <button type="button" class="reset-sim-btn" (click)="resetSimulation()">
+              🔄 Reset to Real Local Time
+            </button>
+          </div>
+          }
+        </div>
+      </div>
 
-            @if (bookState.currentlyReadingBooks().length === 0) {
-              <div class="empty-shelf">
-                <p>Your active reading shelf is empty.</p>
-                <button type="button" class="btn btn-outline" (click)="openAddBookModal()">
-                  Add Your First Book
+      <div class="action-quest-card reading-quest-card">
+        <div class="quest-card-header">
+          <span class="quest-badge reading-badge">Daily Quest & Shelf</span>
+          <h3>📚 Active Reading Shelf & Daily Page Quest</h3>
+        </div>
+        <p class="quest-desc">
+          Earn <strong>+40 WIS & +10 DIS XP</strong> daily by reading your active books and logging verified page
+          progress. Finish a book for an extra <strong>+200 WIS XP</strong> completion bonus!
+        </p>
+
+        <div class="shelf-toolbar">
+          <button type="button" class="btn btn-primary" (click)="openAddBookModal()">
+            ➕ Add New Book to Shelf
+          </button>
+          <button type="button" class="btn btn-success" [disabled]="bookState.currentlyReadingBooks().length === 0"
+            (click)="openLogQuestModal()">
+            📖 Log Daily Reading Quest
+          </button>
+        </div>
+
+        <div class="shelf-section">
+          <h4 class="section-title">
+            Active Bookshelf ({{ bookState.currentlyReadingBooks().length }})
+          </h4>
+
+          @if (bookState.currentlyReadingBooks().length === 0) {
+          <div class="empty-shelf">
+            <p>Your active reading shelf is empty.</p>
+            <button type="button" class="btn btn-outline" (click)="openAddBookModal()">
+              Add Your First Book
+            </button>
+          </div>
+          } @else {
+          <div class="books-grid">
+            @for (book of bookState.currentlyReadingBooks(); track book.id) {
+            <div class="book-card">
+              <div class="book-header">
+                <h5 class="book-title">{{ book.title }}</h5>
+                <span class="book-author">by {{ book.author }}</span>
+              </div>
+              <div class="book-progress">
+                <div class="progress-info">
+                  <span>Page {{ book.currentPage }} of {{ book.totalPages }}</span>
+                  <span>{{ ((book.currentPage / book.totalPages) * 100).toFixed(0) }}%</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" [style.width.%]="(book.currentPage / book.totalPages) * 100"></div>
+                </div>
+              </div>
+              <div class="book-footer">
+                <button type="button" class="btn-sm btn-accent" (click)="openLogQuestModal(book.id)">
+                  📖 Read & Log Progress
                 </button>
               </div>
-            } @else {
-              <div class="books-grid">
-                @for (book of bookState.currentlyReadingBooks(); track book.id) {
-                  <div class="book-card">
-                    <div class="book-header">
-                      <h5 class="book-title">{{ book.title }}</h5>
-                      <span class="book-author">by {{ book.author }}</span>
-                    </div>
-                    <div class="book-progress">
-                      <div class="progress-info">
-                        <span>Page {{ book.currentPage }} of {{ book.totalPages }}</span>
-                        <span>{{ ((book.currentPage / book.totalPages) * 100).toFixed(0) }}%</span>
-                      </div>
-                      <div class="progress-bar-track">
-                        <div
-                          class="progress-bar-fill"
-                          [style.width.%]="(book.currentPage / book.totalPages) * 100"
-                        ></div>
-                      </div>
-                    </div>
-                    <div class="book-footer">
-                      <button
-                        type="button"
-                        class="btn-sm btn-accent"
-                        (click)="openLogQuestModal(book.id)"
-                      >
-                        📖 Read & Log Progress
-                      </button>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </div>
-
-          <div class="archive-section">
-            <div class="archive-header">
-              <h4 class="section-title">🏆 Monthly Completed Books Archive</h4>
-              <div class="archive-filters">
-                <select
-                  class="filter-select"
-                  [ngModel]="selectedMonth()"
-                  (ngModelChange)="selectedMonth.set(+$event)"
-                >
-                  @for (m of monthOptions; track m.value) {
-                    <option [value]="m.value">{{ m.label }}</option>
-                  }
-                </select>
-                <select
-                  class="filter-select"
-                  [ngModel]="selectedYear()"
-                  (ngModelChange)="selectedYear.set(+$event)"
-                >
-                  <option [value]="2026">2026</option>
-                  <option [value]="2025">2025</option>
-                </select>
-              </div>
             </div>
-
-            @if (completedBooksInSelectedMonth().length === 0) {
-              <p class="empty-archive-note">
-                No books completed in {{ monthOptions[selectedMonth() - 1].label }} {{ selectedYear() }}.
-              </p>
-            } @else {
-              <ul class="completed-books-list">
-                @for (book of completedBooksInSelectedMonth(); track book.id) {
-                  <li class="completed-book-item">
-                    <span class="book-icon">✅</span>
-                    <div class="completed-info">
-                      <strong>{{ book.title }}</strong> by {{ book.author }} ({{ book.totalPages }} pages)
-                      <span class="completed-date">Finished on {{ book.completedAt | date: 'mediumDate' }}</span>
-                    </div>
-                    <span class="xp-bonus-badge">+200 WIS XP Bonus</span>
-                  </li>
-                }
-              </ul>
             }
           </div>
+          }
+        </div>
 
-          <div class="xp-events-section">
-            <div class="events-header">
-              <h4 class="section-title">📊 Time-Series XP Event Audit Log</h4>
-              <span class="events-count-badge">{{ totalXpEventsCount() }} Total Events</span>
+        <div class="archive-section">
+          <div class="archive-header">
+            <h4 class="section-title">🏆 Monthly Completed Books Archive</h4>
+            <div class="archive-filters">
+              <select class="filter-select" [ngModel]="selectedMonth()" (ngModelChange)="selectedMonth.set(+$event)">
+                @for (m of monthOptions; track m.value) {
+                <option [value]="m.value">{{ m.label }}</option>
+                }
+              </select>
+              <select class="filter-select" [ngModel]="selectedYear()" (ngModelChange)="selectedYear.set(+$event)">
+                <option [value]="2026">2026</option>
+                <option [value]="2025">2025</option>
+              </select>
             </div>
-
-            @if (recentXpEvents().length === 0) {
-              <p class="empty-events-note">No XP events logged yet. Complete quests to record time-series activity data!</p>
-            } @else {
-              <ul class="xp-events-list">
-                @for (evt of recentXpEvents(); track evt.id) {
-                  <li class="xp-event-item">
-                    <span class="stat-tag" [class]="'stat-' + evt.statType.toLowerCase()">{{ evt.statType }}</span>
-                    <div class="event-details">
-                      <span class="event-desc">{{ evt.description }}</span>
-                      <div class="event-meta">
-                        <span class="event-source">{{ evt.sourceType }}</span>
-                        <span class="event-time">{{ evt.date }} • {{ evt.timestamp | date: 'shortTime' }}</span>
-                      </div>
-                    </div>
-                    <span class="xp-amount-tag">+{{ evt.xpAwarded }} XP</span>
-                  </li>
-                }
-              </ul>
-            }
           </div>
+
+          @if (completedBooksInSelectedMonth().length === 0) {
+          <p class="empty-archive-note">
+            No books completed in {{ monthOptions[selectedMonth() - 1].label }} {{ selectedYear() }}.
+          </p>
+          } @else {
+          <ul class="completed-books-list">
+            @for (book of completedBooksInSelectedMonth(); track book.id) {
+            <li class="completed-book-item">
+              <span class="book-icon">✅</span>
+              <div class="completed-info">
+                <strong>{{ book.title }}</strong> by {{ book.author }} ({{ book.totalPages }} pages)
+                <span class="completed-date">Finished on {{ book.completedAt | date: 'mediumDate' }}</span>
+              </div>
+              <span class="xp-bonus-badge">+200 WIS XP Bonus</span>
+            </li>
+            }
+          </ul>
+          }
+        </div>
+
+        <!-- Time-Series XP Event Audit Log -->
+        <div class="xp-events-section">
+          <div class="events-header">
+            <h4 class="section-title">📊 Time-Series XP Event Audit Log</h4>
+            <span class="events-count-badge">{{ totalXpEventsCount() }} Total Events</span>
+          </div>
+
+          @if (recentXpEvents().length === 0) {
+          <p class="empty-events-note">No XP events logged yet. Complete quests to record time-series activity data!</p>
+          } @else {
+          <ul class="xp-events-list">
+            @for (evt of recentXpEvents(); track evt.id) {
+            <li class="xp-event-item">
+              <span class="stat-tag" [class]="'stat-' + evt.statType.toLowerCase()">{{ evt.statType }}</span>
+              <div class="event-details">
+                <span class="event-desc">{{ evt.description }}</span>
+                <div class="event-meta">
+                  <span class="event-source">{{ evt.sourceType }}</span>
+                  <span class="event-time">{{ evt.date }} • {{ evt.timestamp | date: 'shortTime' }}</span>
+                </div>
+              </div>
+              <span class="xp-amount-tag">+{{ evt.xpAwarded }} XP</span>
+            </li>
+            }
+          </ul>
+          }
         </div>
       </div>
     </div>
+  </div>
   }
 
   @if (isAddBookModalOpen()) {
-    <div class="modal-backdrop" (click)="closeAddBookModal()">
-      <div class="modal-card" (click)="$event.stopPropagation()">
-        <header class="modal-header">
-          <h3>➕ Add New Book to Active Shelf</h3>
-          <button type="button" class="close-btn" (click)="closeAddBookModal()">✖</button>
-        </header>
+  <div class="modal-backdrop" (click)="closeAddBookModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h3>➕ Add New Book to Active Shelf</h3>
+        <button type="button" class="close-btn" (click)="closeAddBookModal()">✖</button>
+      </header>
 
-        <form (submit)="$event.preventDefault(); submitAddBook()">
-          <div class="form-group">
-            <label for="bookTitle">Book Title *</label>
-            <input
-              id="bookTitle"
-              type="text"
-              class="form-control"
-              placeholder="e.g. Domain-Driven Design"
-              [ngModel]="newBookTitle()"
-              (ngModelChange)="newBookTitle.set($event)"
-              required
-            />
+      <form (submit)="$event.preventDefault(); submitAddBook()">
+        <div class="form-group">
+          <label for="bookTitle">Book Title *</label>
+          <input id="bookTitle" type="text" class="form-control" placeholder="e.g. Domain-Driven Design"
+            [ngModel]="newBookTitle()" (ngModelChange)="newBookTitle.set($event)" required />
+        </div>
+
+        <div class="form-group">
+          <label for="bookAuthor">Author *</label>
+          <input id="bookAuthor" type="text" class="form-control" placeholder="e.g. Eric Evans"
+            [ngModel]="newBookAuthor()" (ngModelChange)="newBookAuthor.set($event)" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col">
+            <label for="totalPages">Total Pages *</label>
+            <input id="totalPages" type="number" class="form-control" placeholder="500" min="1"
+              [ngModel]="newBookTotalPages()" (ngModelChange)="newBookTotalPages.set(+$event)" required />
           </div>
-
-          <div class="form-group">
-            <label for="bookAuthor">Author *</label>
-            <input
-              id="bookAuthor"
-              type="text"
-              class="form-control"
-              placeholder="e.g. Eric Evans"
-              [ngModel]="newBookAuthor()"
-              (ngModelChange)="newBookAuthor.set($event)"
-              required
-            />
+          <div class="form-group col">
+            <label for="initialPage">Current Starting Page</label>
+            <input id="initialPage" type="number" class="form-control" placeholder="0" min="0"
+              [ngModel]="newBookInitialPage()" (ngModelChange)="newBookInitialPage.set(+$event)" />
           </div>
+        </div>
 
-          <div class="form-row">
-            <div class="form-group col">
-              <label for="totalPages">Total Pages *</label>
-              <input
-                id="totalPages"
-                type="number"
-                class="form-control"
-                placeholder="500"
-                min="1"
-                [ngModel]="newBookTotalPages()"
-                (ngModelChange)="newBookTotalPages.set(+$event)"
-                required
-              />
-            </div>
-            <div class="form-group col">
-              <label for="initialPage">Current Starting Page</label>
-              <input
-                id="initialPage"
-                type="number"
-                class="form-control"
-                placeholder="0"
-                min="0"
-                [ngModel]="newBookInitialPage()"
-                (ngModelChange)="newBookInitialPage.set(+$event)"
-              />
-            </div>
-          </div>
+        <div class="form-group">
+          <label for="bookNotes">Reading Goal / Notes</label>
+          <textarea id="bookNotes" class="form-control" rows="2" placeholder="Key concepts to learn from this book..."
+            [ngModel]="newBookNotes()" (ngModelChange)="newBookNotes.set($event)"></textarea>
+        </div>
 
-          <div class="form-group">
-            <label for="bookNotes">Reading Goal / Notes</label>
-            <textarea
-              id="bookNotes"
-              class="form-control"
-              rows="2"
-              placeholder="Key concepts to learn from this book..."
-              [ngModel]="newBookNotes()"
-              (ngModelChange)="newBookNotes.set($event)"
-            ></textarea>
-          </div>
-
-          <footer class="modal-footer">
-            <button type="button" class="btn btn-outline" (click)="closeAddBookModal()">
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="!newBookTitle() || !newBookAuthor() || !newBookTotalPages()"
-            >
-              Add Book
-            </button>
-          </footer>
-        </form>
-      </div>
+        <footer class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="closeAddBookModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary"
+            [disabled]="!newBookTitle() || !newBookAuthor() || !newBookTotalPages()">
+            Add Book
+          </button>
+        </footer>
+      </form>
     </div>
+  </div>
   }
 
   @if (isLogQuestModalOpen()) {
-    <div class="modal-backdrop" (click)="closeLogQuestModal()">
-      <div class="modal-card" (click)="$event.stopPropagation()">
-        <header class="modal-header">
-          <h3>📖 Log Daily Reading Session Quest</h3>
-          <button type="button" class="close-btn" (click)="closeLogQuestModal()">✖</button>
-        </header>
+  <div class="modal-backdrop" (click)="closeLogQuestModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h3>📖 Log Daily Reading Session Quest</h3>
+        <button type="button" class="close-btn" (click)="closeLogQuestModal()">✖</button>
+      </header>
 
-        <form (submit)="$event.preventDefault(); submitLogQuest()">
-          @if (activeBookForQuest(); as book) {
-            <div class="active-book-summary">
-              <h4>{{ book.title }}</h4>
-              <p>by {{ book.author }} — Current Page: <strong>{{ book.currentPage }}</strong> / {{ book.totalPages }}</p>
-            </div>
+      <form (submit)="$event.preventDefault(); submitLogQuest()">
+        @if (activeBookForQuest(); as book) {
+        <div class="active-book-summary">
+          <h4>{{ book.title }}</h4>
+          <p>by {{ book.author }} — Current Page: <strong>{{ book.currentPage }}</strong> / {{ book.totalPages }}</p>
+        </div>
 
-            <div class="form-group">
-              <label for="finishedPage">Where did you stop reading today? (Finished Page Number) *</label>
-              <input
-                id="finishedPage"
-                type="number"
-                class="form-control"
-                [min]="book.currentPage + 1"
-                [max]="book.totalPages"
-                [ngModel]="questFinishedPage()"
-                (ngModelChange)="questFinishedPage.set(+$event)"
-                required
-              />
-              <span class="field-hint">
-                Must be greater than current page {{ book.currentPage }} and at most {{ book.totalPages }}.
-              </span>
-            </div>
+        <div class="form-group">
+          <label for="finishedPage">Where did you stop reading today? (Finished Page Number) *</label>
+          <input id="finishedPage" type="number" class="form-control" [min]="book.currentPage + 1"
+            [max]="book.totalPages" [ngModel]="questFinishedPage()" (ngModelChange)="questFinishedPage.set(+$event)"
+            required />
+          <span class="field-hint">
+            Must be greater than current page {{ book.currentPage }} and at most {{ book.totalPages }}.
+          </span>
+        </div>
 
-            @if (readingQuestFeedback(); as feedback) {
-              <div
-                class="claim-feedback"
-                [class.success]="feedback.includes('🎉')"
-                [class.error]="feedback.includes('❌')"
-              >
-                {{ feedback }}
-              </div>
-            }
-          }
+        @if (readingQuestFeedback(); as feedback) {
+        <div class="claim-feedback" [class.success]="feedback.includes('🎉')" [class.error]="feedback.includes('❌')">
+          {{ feedback }}
+        </div>
+        }
+        }
 
-          <footer class="modal-footer">
-            <button type="button" class="btn btn-outline" (click)="closeLogQuestModal()">
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="!questFinishedPage() || (activeBookForQuest() && questFinishedPage()! <= activeBookForQuest()!.currentPage)"
-            >
-              ⚔️ Claim +40 WIS & +10 DIS XP
-            </button>
-          </footer>
-        </form>
-      </div>
+        <footer class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="closeLogQuestModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary"
+            [disabled]="!questFinishedPage() || (activeBookForQuest() && questFinishedPage()! <= activeBookForQuest()!.currentPage)">
+            ⚔️ Claim +40 WIS & +10 DIS XP
+          </button>
+        </footer>
+      </form>
     </div>
+  </div>
   }
+
+  <character-course-item-checkin-modal [isOpen]="isCourseCheckinModalOpen()" [item]="selectedCheckinItem()"
+    [module]="selectedCheckinModule()" [course]="courseState.activeCourse()"
+    [isCompleted]="selectedCheckinItem() ? courseState.activeCourseProgress().completedItemIds.includes(selectedCheckinItem()!.id) : false"
+    (closed)="closeCourseCheckinModal()"
+    (submitted)="submitCourseItemCheckin($event)"></character-course-item-checkin-modal>
+
+  <character-course-import-modal [isOpen]="isCourseImportModalOpen()" (closed)="closeCourseImportModal()"
+    (imported)="importScrapedCourse($event)"></character-course-import-modal>
 </section>

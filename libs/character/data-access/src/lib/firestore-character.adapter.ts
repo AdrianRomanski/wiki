@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { 
   Character, 
   CharacterRepositoryPort, 
+  Course,
   createInitialCharacter, 
   XpEventLog, 
   XpEventRepositoryPort, 
@@ -183,6 +184,36 @@ export class FirestoreCharacterAdapter implements CharacterRepositoryPort, XpEve
     } catch (err) {
       console.warn('Failed to query xp_events from Firestore:', err);
       return [];
+    }
+  }
+
+  async loadCourses(userId?: string): Promise<Course[]> {
+    try {
+      const uid = userId || await this.ensureAuth();
+      if (!this.db) return [];
+      const coursesCol = collection(this.db, `users/${uid}/courses`);
+      const snap = await getDocs(coursesCol);
+      return snap.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...(docSnap.data() as Omit<Course, 'id'>),
+      }));
+    } catch (err) {
+      console.warn('Failed to load courses from Firestore:', err);
+      return [];
+    }
+  }
+
+  async saveCourse(course: Course, userId?: string): Promise<void> {
+    try {
+      const uid = userId || await this.ensureAuth();
+      if (!this.db) throw new Error('Firestore DB not initialized');
+      const docRef = doc(this.db, `users/${uid}/courses`, course.id);
+      await setDoc(docRef, {
+        ...course,
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+    } catch (err) {
+      console.error('Error saving course to Firestore:', err);
     }
   }
 }

@@ -31,6 +31,12 @@ Smart container feature package orchestrating the Character Dashboard view and b
   - **Log Daily Reading Quest Modal**: Interactive dialog allowing the user to select an active book, input ending page progress, and claim **+40 WIS & +10 DIS XP** (plus **+200 WIS XP** completion bonus when finishing a book).
   - **Completed Books Archive**: Filterable view by Month and Year displaying books completed in the selected calendar month.
 
+- **Course Progression & Daily Study Quest (ADR-0010)**:
+  - `<character-course-quest-card>`: Displays active course progress, next-up item badge with video lecture (🎥) vs practical lab (💻) separation, daily study quest indicator (+20 XP), and direct action triggers.
+  - `<character-course-curriculum-accordion>`: Module-by-module breakdown showing completion status, duration, modality badges, and study reflection excerpts.
+  - `<character-course-item-checkin-modal>`: Inspection and check-in modal to log lesson takeaways, view exercise instructions/starter repos, and claim action-based XP (+25 INT/+5 WIS or +35 INT/+15 DIS).
+  - `<character-course-import-modal>`: Dialog for pasting/ingesting agent-scraped curriculum JSON into the platform.
+
 ```html
 <character-dashboard></character-dashboard>
 ```
@@ -40,6 +46,9 @@ Smart container feature package orchestrating the Character Dashboard view and b
 ## Testing & Verification
 
 ```bash
+# Run Vitest unit tests
+npx nx test character-feature-dashboard
+
 # Run ESLint check
 npx nx lint character-feature-dashboard
 ```

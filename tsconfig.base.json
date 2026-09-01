@@ -13,6 +13,7 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
     "paths": {
       "@wiki-graph/prototype-playground": [
         "./libs/prototype-playground/src/index.ts"

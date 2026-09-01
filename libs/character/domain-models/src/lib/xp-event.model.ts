@@ -5,6 +5,7 @@ export type StatType = 'STR' | 'INT' | 'WIS' | 'DIS' | 'VIT';
 export type XpSourceType =
   | 'EARLY_WAKE_UP_QUEST'
   | 'BOOK_READING_QUEST'
+  | 'COURSE_PROGRESSION'
   | 'HABIT_COMPLETION'
   | 'KNOWLEDGE_WIKI_STREAK'
   | 'CUSTOM_ACTION';

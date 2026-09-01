@@ -5,6 +5,8 @@ export * from './lib/book-storage.adapter';
 export * from './lib/book-state.service';
 export * from './lib/auth-state.service';
 export * from './lib/xp-event-storage.adapter';
+export * from './lib/course-storage.adapter';
+export * from './lib/course-state.service';
 
 
 

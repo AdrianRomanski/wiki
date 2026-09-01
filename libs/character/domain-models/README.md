@@ -55,6 +55,15 @@ Pure domain layer package managing core RPG character entities, progression form
 - `XpEventRepositoryPort`: Decoupled port contract defining methods for time-series storage adapters (`logXpEvent`, `getXpEventsByDateRange`, `getXpEvents`).
 - `statCategoryToStatType(category)` & `statTypeToStatCategory(stat)`: Pure mapping utilities translating between attribute categories and time-series stat types.
 
+### 7. Course Progression & Action-Based Learning Model (`course.model.ts` - ADR-0010)
+- `Course`: Domain entity representing structured curricula (`id`, `title`, `instructor`, `platform`, `sourceUrl`, `totalVideos`, `totalExercises`, `estimatedHours`, `modules`, `createdAt`, `updatedAt`).
+- `CourseModule`: Curriculum grouping entity (`id`, `courseId`, `title`, `order`, `description`, `items`).
+- `CourseItem`: Discrete unit entity (`id`, `moduleId`, `title`, `type: 'video' | 'exercise'`, `order`, `durationMinutes`, `sourceUrl`, `transcriptText`, `exercisePrompt`, `starterRepoUrl`, `solutionUrl`, `statRewards`).
+- `UserCourseProgress`: Tracking state (`userId`, `courseId`, `status: 'not_started' | 'in_progress' | 'completed' | 'archived'`, `completedItemIds`, `itemProgress`, `totalXpEarned`, `currentModuleId`, `currentItemId`).
+- `evaluateCourseItemCompletion(course, userProgress, itemId, notes, now)`: Evaluates XP payouts based on modality separation (**+25 INT / +5 WIS** for video lectures, **+35 INT / +15 DIS** for coding labs), milestone triggers (**+70 INT / +30 DIS** for module mastery), full course graduation (**+300 INT / +100 WIS / +100 DIS**), and daily study quest bonus (**+10 DIS / +10 INT**).
+- `evaluateCourseDailyQuest(userProgress, todayDate)`: Checks whether at least one course item was completed today.
+- `calculateCourseProgressStats(course, progress)`: Computes percentage, videos vs exercises completed count.
+
 ---
 
 ## 🧪 Testing & Verification
@@ -66,3 +75,4 @@ npx nx test character-domain-models
 # Run ESLint check
 npx nx lint character-domain-models
 ```
+
