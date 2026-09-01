@@ -31,12 +31,6 @@
       },
       "configurations": {
         "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/life-forge-app/src/environments/environment.ts",
-              "with": "apps/life-forge-app/src/environments/environment.local.ts"
-            }
-          ],
           "optimization": {
             "scripts": true,
             "styles": {
