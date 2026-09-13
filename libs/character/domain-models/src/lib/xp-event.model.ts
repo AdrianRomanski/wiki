@@ -22,6 +22,8 @@ export interface XpEventLog {
   timestamp: string;
 }
 
+export type XpEvent = XpEventLog;
+
 export interface XpEventRepositoryPort {
   logXpEvent(event: Omit<XpEventLog, 'id'>, userId?: string): Promise<XpEventLog>;
   getXpEventsByDateRange(startDate: string, endDate: string, userId?: string): Promise<XpEventLog[]>;

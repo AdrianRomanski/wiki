@@ -109,4 +109,99 @@ describe('CharacterDashboardComponent (ADR-0008 & ADR-0010)', () => {
       expect(component.courseState.activeCourse()?.title).toBe('Rust System Programming');
     });
   });
+
+  describe('ADR-0013: ADHD-Friendly 1-Click Habits & Progressive Disclosure', () => {
+    it('should complete study quest in 1-click with zero modal dialogs', () => {
+      const injector = createEnvironmentInjector([], null as unknown as EnvironmentInjector);
+      runInInjectionContext(injector, () => {
+        const component = new CharacterDashboardComponent();
+
+        component.importScrapedCourse({
+          id: 'course-algo-101',
+          title: 'Algorithms & Data Structures',
+          platform: 'Frontend Masters',
+          sourceUrl: 'https://frontendmasters.com/algo',
+          totalVideos: 1,
+          totalExercises: 0,
+          estimatedHours: 1,
+          createdAt: '2026-08-30T00:00:00.000Z',
+          updatedAt: '2026-08-30T00:00:00.000Z',
+          modules: [
+            {
+              id: 'm1',
+              courseId: 'course-algo-101',
+              title: 'Graph Traversal',
+              order: 1,
+              items: [
+                {
+                  id: 'item-bfs-1',
+                  moduleId: 'm1',
+                  title: 'Breadth-First Search',
+                  type: 'video',
+                  order: 1,
+                },
+              ],
+            },
+          ],
+        });
+
+        component.onCompleteNextLesson({
+          courseId: 'course-algo-101',
+          itemId: 'item-bfs-1',
+          notes: 'Queue-based BFS implementation',
+        });
+
+        expect(component.isCourseCheckinModalOpen()).toBe(false);
+        expect(component.globalFeedbackMessage()).toBeTruthy();
+        expect(component.courseState.activeCourseProgress().completedItemIds).toContain('item-bfs-1');
+        expect(component.courseState.isDailyQuestDoneToday()).toBe(true);
+      });
+    });
+
+    it('should complete reading quest in 1-click with inline page delta tracking', () => {
+      const injector = createEnvironmentInjector([], null as unknown as EnvironmentInjector);
+      runInInjectionContext(injector, () => {
+        const component = new CharacterDashboardComponent();
+
+        component.onAddBook({
+          title: 'Site Reliability Engineering',
+          author: 'Google SRE Team',
+          totalPages: 450,
+          initialPage: 50,
+        });
+
+        const activeBook = component.activeBookForQuest();
+        expect(activeBook?.title).toBe('Site Reliability Engineering');
+        expect(activeBook?.currentPage).toBe(50);
+
+        component.onCompleteReadingQuest({
+          bookId: activeBook!.id,
+          pagesReadThisDay: 15,
+          notes: 'Error budgets and SLOs',
+        });
+
+        expect(component.isLogQuestModalOpen()).toBe(false);
+        expect(component.globalFeedbackMessage()).toBeTruthy();
+
+        const updatedBook = component.bookState.books().find((b) => b.id === activeBook!.id);
+        expect(updatedBook?.currentPage).toBe(65);
+        expect(updatedBook?.notes).toBe('Error budgets and SLOs');
+      });
+    });
+
+    it('should claim early morning waking quest directly in 1-click', () => {
+      const injector = createEnvironmentInjector([], null as unknown as EnvironmentInjector);
+      runInInjectionContext(injector, () => {
+        const component = new CharacterDashboardComponent();
+
+        component.setSimulatedTime(5, 15);
+        expect(component.currentEvaluation().canClaim).toBe(true);
+        expect(component.currentEvaluation().xpAmount).toBe(100);
+
+        component.claimEarlyWakeUpXp();
+        expect(component.claimedToday()).toBe(true);
+        expect(component.claimMessage()).toContain('Earned +100 DIS XP');
+      });
+    });
+  });
 });

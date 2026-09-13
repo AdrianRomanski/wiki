@@ -1,6 +1,7 @@
 import {
   Book,
   evaluateBookReadingQuest,
+  evaluateReadingQuestPayload,
   filterCompletedBooksByMonth,
 } from './book-reading-quest.model';
 
@@ -105,5 +106,48 @@ describe('BookReadingQuest Domain Model', () => {
     const julBooks = filterCompletedBooksByMonth(books, 2026, 7);
     expect(julBooks).toHaveLength(1);
     expect(julBooks[0].id).toBe('b2');
+  });
+
+  describe('ADR-0013: evaluateReadingQuestPayload', () => {
+    it('should evaluate default 1-click payload (15 pages) without manual endPage calculation', () => {
+      const result = evaluateReadingQuestPayload(sampleBook, {
+        bookId: sampleBook.id,
+      });
+
+      expect(result.canClaim).toBe(true);
+      expect(result.pagesRead).toBe(15);
+      expect(result.updatedBook?.currentPage).toBe(65);
+      expect(result.rewards[0].amount).toBe(40);
+    });
+
+    it('should evaluate custom pagesReadThisDay inline (e.g. 25 pages)', () => {
+      const result = evaluateReadingQuestPayload(sampleBook, {
+        bookId: sampleBook.id,
+        pagesReadThisDay: 25,
+        notes: 'Great insights on decoupling',
+      });
+
+      expect(result.canClaim).toBe(true);
+      expect(result.pagesRead).toBe(25);
+      expect(result.updatedBook?.currentPage).toBe(75);
+      expect(result.updatedBook?.notes).toBe('Great insights on decoupling');
+    });
+
+    it('should clamp pagesReadThisDay to totalPages on completion', () => {
+      const almostDoneBook: Book = {
+        ...sampleBook,
+        currentPage: 290,
+      };
+
+      const result = evaluateReadingQuestPayload(almostDoneBook, {
+        bookId: almostDoneBook.id,
+        pagesReadThisDay: 20,
+      });
+
+      expect(result.canClaim).toBe(true);
+      expect(result.pagesRead).toBe(10);
+      expect(result.updatedBook?.currentPage).toBe(300);
+      expect(result.isBookCompleted).toBe(true);
+    });
   });
 });

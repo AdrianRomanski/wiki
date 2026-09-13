@@ -51,6 +51,19 @@
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
     animation: modalFadeIn 0.3s ease-out;
   }
+
+  .focus-quests-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .drawers-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 4px;
+  }
 }
 
 .action-quest-card {

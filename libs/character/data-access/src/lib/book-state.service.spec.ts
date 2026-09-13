@@ -49,4 +49,35 @@ describe('BookStateService', () => {
     expect(updatedWisXp).toBeGreaterThan(initialWisXp);
     expect(updatedDisXp).toBeGreaterThan(initialDisXp);
   });
+
+  it('ADR-0013: should complete reading quest using pagesReadThisDay inline payload in 1-click', () => {
+    const characterState = new CharacterStateService();
+    const service = new BookStateService(characterState);
+
+    const addedBook = service.addBook({
+      title: 'Designing Data-Intensive Applications',
+      author: 'Martin Kleppmann',
+      totalPages: 600,
+      initialPage: 100,
+    });
+
+    const evaluation = service.completeReadingQuest({
+      bookId: addedBook.id,
+      pagesReadThisDay: 20,
+      notes: 'LSM-Trees vs B-Trees trade-offs',
+    });
+
+    expect(evaluation.canClaim).toBe(true);
+    expect(evaluation.pagesRead).toBe(20);
+    expect(evaluation.updatedBook?.currentPage).toBe(120);
+    expect(evaluation.updatedBook?.notes).toBe('LSM-Trees vs B-Trees trade-offs');
+
+    const updatedBookInList = service.books().find((b) => b.id === addedBook.id);
+    expect(updatedBookInList?.currentPage).toBe(120);
+
+    const lastLog = service.readingLogs()[0];
+    expect(lastLog.pagesRead).toBe(20);
+    expect(lastLog.startPage).toBe(100);
+    expect(lastLog.endPage).toBe(120);
+  });
 });

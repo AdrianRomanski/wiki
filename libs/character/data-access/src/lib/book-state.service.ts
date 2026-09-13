@@ -4,8 +4,10 @@ import {
   BookReadingQuestEvaluation,
   BookStatus,
   evaluateBookReadingQuest,
+  evaluateReadingQuestPayload,
   filterCompletedBooksByMonth,
   ReadingLogEntry,
+  ReadingQuestCompletionPayload,
 } from '@wiki/character-domain-models';
 import { BookStorageAdapter } from './book-storage.adapter';
 import { CharacterStateService } from './character-state.service';
@@ -74,11 +76,10 @@ export class BookStateService {
     return newBook;
   }
 
-  logReadingSession(
-    bookId: string,
-    finishedPage: number
+  completeReadingQuest(
+    payload: ReadingQuestCompletionPayload
   ): BookReadingQuestEvaluation {
-    const targetBook = this.books().find((b) => b.id === bookId);
+    const targetBook = this.books().find((b) => b.id === payload.bookId);
     if (!targetBook) {
       return {
         canClaim: false,
@@ -89,11 +90,11 @@ export class BookStateService {
       };
     }
 
-    const evaluation = evaluateBookReadingQuest(targetBook, finishedPage);
+    const evaluation = evaluateReadingQuestPayload(targetBook, payload);
 
     if (evaluation.canClaim && evaluation.updatedBook) {
       const updatedBooks = this.books().map((b) =>
-        b.id === bookId && evaluation.updatedBook ? evaluation.updatedBook : b
+        b.id === payload.bookId && evaluation.updatedBook ? evaluation.updatedBook : b
       );
       this.books.set(updatedBooks);
       this.storageAdapter.saveBooks(updatedBooks);
@@ -104,7 +105,7 @@ export class BookStateService {
         bookTitle: targetBook.title,
         date: new Date().toISOString().split('T')[0],
         startPage: targetBook.currentPage,
-        endPage: finishedPage,
+        endPage: evaluation.updatedBook.currentPage,
         pagesRead: evaluation.pagesRead,
         xpAwarded: evaluation.rewards.reduce((acc, r) => acc + r.amount, 0),
         timestamp: new Date().toISOString(),
@@ -119,6 +120,13 @@ export class BookStateService {
     }
 
     return evaluation;
+  }
+
+  logReadingSession(
+    bookId: string,
+    finishedPage: number
+  ): BookReadingQuestEvaluation {
+    return this.completeReadingQuest({ bookId, finishedPage });
   }
 
   updateBookStatus(bookId: string, status: BookStatus): void {

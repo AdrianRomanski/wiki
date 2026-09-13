@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   AuthStateService,
@@ -15,13 +21,18 @@ import {
   EARLY_WAKEUP_SLOTS,
   EarlyWakeupEvaluation,
   evaluateEarlyWakeupQuest,
+  ReadingQuestCompletionPayload,
 } from '@wiki/character-domain-models';
 import { AuthCardComponent } from '@wiki/character-ui-auth';
 import { CharacterSheetComponent } from '@wiki/character-ui-sheet';
-import { CourseCurriculumAccordionComponent } from './components/course-curriculum-accordion.component';
+import { CourseCurriculumDrawerComponent } from './components/course-curriculum-drawer/course-curriculum-drawer.component';
 import { CourseImportModalComponent } from './components/course-import-modal.component';
 import { CourseItemCheckinModalComponent } from './components/course-item-checkin-modal.component';
-import { CourseQuestCardComponent } from './components/course-quest-card.component';
+import { ReadingShelfDrawerComponent } from './components/reading-shelf-drawer/reading-shelf-drawer.component';
+import { DailyReadingQuestCardComponent } from './components/streamlined-quest-list/daily-reading-quest-card.component';
+import { DailyStudyQuestCardComponent } from './components/streamlined-quest-list/daily-study-quest-card.component';
+import { DailyWakeupQuestCardComponent } from './components/streamlined-quest-list/daily-wakeup-quest-card.component';
+import { XpAnalyticsDrawerComponent } from './components/xp-analytics-drawer/xp-analytics-drawer.component';
 
 @Component({
   selector: 'character-dashboard',
@@ -31,8 +42,12 @@ import { CourseQuestCardComponent } from './components/course-quest-card.compone
     FormsModule,
     CharacterSheetComponent,
     AuthCardComponent,
-    CourseQuestCardComponent,
-    CourseCurriculumAccordionComponent,
+    DailyStudyQuestCardComponent,
+    DailyReadingQuestCardComponent,
+    DailyWakeupQuestCardComponent,
+    CourseCurriculumDrawerComponent,
+    ReadingShelfDrawerComponent,
+    XpAnalyticsDrawerComponent,
     CourseItemCheckinModalComponent,
     CourseImportModalComponent,
   ],
@@ -52,25 +67,24 @@ export class CharacterDashboardComponent {
   readonly simulatedHour = signal<number | null>(null);
   readonly simulatedMinute = signal<number | null>(null);
 
+  readonly selectedBookIdForQuest = signal<string | null>(null);
+  readonly globalFeedbackMessage = signal<string | null>(null);
+
   readonly isAddBookModalOpen = signal<boolean>(false);
   readonly isLogQuestModalOpen = signal<boolean>(false);
-  readonly selectedBookIdForQuest = signal<string | null>(null);
-
   readonly newBookTitle = signal<string>('');
   readonly newBookAuthor = signal<string>('');
   readonly newBookTotalPages = signal<number | null>(null);
   readonly newBookInitialPage = signal<number>(0);
   readonly newBookNotes = signal<string>('');
-
   readonly questFinishedPage = signal<number | null>(null);
   readonly readingQuestFeedback = signal<string | null>(null);
 
-  // Course progression modal signals
   readonly isCourseCheckinModalOpen = signal<boolean>(false);
   readonly selectedCheckinItem = signal<CourseItem | null>(null);
   readonly selectedCheckinModule = signal<CourseModule | null>(null);
   readonly isCourseImportModalOpen = signal<boolean>(false);
-  readonly courseFeedbackMessage = signal<string | null>(null);
+  readonly courseFeedbackMessage = computed(() => this.globalFeedbackMessage());
 
   readonly selectedMonth = signal<number>(new Date().getMonth() + 1);
   readonly selectedYear = signal<number>(new Date().getFullYear());
@@ -138,6 +152,27 @@ export class CharacterDashboardComponent {
     this.authState.logout();
   }
 
+  onCompleteNextLesson(event: { courseId: string; itemId: string; notes?: string }): void {
+    const evaluation = this.courseState.completeItem(
+      event.courseId,
+      event.itemId,
+      event.notes
+    );
+
+    this.globalFeedbackMessage.set(evaluation.message);
+    setTimeout(() => {
+      this.globalFeedbackMessage.set(null);
+    }, 4500);
+  }
+
+  onCompleteReadingQuest(payload: ReadingQuestCompletionPayload): void {
+    const evaluation = this.bookState.completeReadingQuest(payload);
+    this.globalFeedbackMessage.set(evaluation.message);
+    setTimeout(() => {
+      this.globalFeedbackMessage.set(null);
+    }, 4500);
+  }
+
   claimEarlyWakeUpXp(): void {
     if (this.claimedToday()) {
       this.claimMessage.set("⚠️ You have already claimed today's early wake-up quest.");
@@ -178,84 +213,46 @@ export class CharacterDashboardComponent {
     this.claimMessage.set(null);
   }
 
-  openAddBookModal(): void {
-    this.newBookTitle.set('');
-    this.newBookAuthor.set('');
-    this.newBookTotalPages.set(null);
-    this.newBookInitialPage.set(0);
-    this.newBookNotes.set('');
-    this.isAddBookModalOpen.set(true);
+  onAddBook(data: {
+    title: string;
+    author: string;
+    totalPages: number;
+    initialPage?: number;
+    notes?: string;
+  }): void {
+    const newBook = this.bookState.addBook(data);
+    this.selectedBookIdForQuest.set(newBook.id);
+    this.globalFeedbackMessage.set(`📚 Added "${newBook.title}" to your active bookshelf!`);
+    setTimeout(() => {
+      this.globalFeedbackMessage.set(null);
+    }, 3500);
   }
 
-  closeAddBookModal(): void {
-    this.isAddBookModalOpen.set(false);
+  selectBookForQuest(bookId: string): void {
+    this.selectedBookIdForQuest.set(bookId);
   }
 
-  submitAddBook(): void {
-    const title = this.newBookTitle().trim();
-    const author = this.newBookAuthor().trim();
-    const totalPages = this.newBookTotalPages();
-
-    if (!title || !author || !totalPages || totalPages <= 0) {
-      return;
-    }
-
-    this.bookState.addBook({
-      title,
-      author,
-      totalPages,
-      initialPage: this.newBookInitialPage() || 0,
-      notes: this.newBookNotes().trim(),
-    });
-
-    this.closeAddBookModal();
+  selectCourse(courseId: string): void {
+    this.courseState.selectCourse(courseId);
   }
 
-  openLogQuestModal(bookId?: string): void {
-    if (bookId) {
-      this.selectedBookIdForQuest.set(bookId);
-    } else {
-      const activeBooks = this.bookState.currentlyReadingBooks();
-      if (activeBooks.length > 0) {
-        this.selectedBookIdForQuest.set(activeBooks[0].id);
-      }
-    }
-
-    const currentBook = this.activeBookForQuest();
-    if (currentBook) {
-      this.questFinishedPage.set(currentBook.currentPage + 10);
-    } else {
-      this.questFinishedPage.set(null);
-    }
-    this.readingQuestFeedback.set(null);
-    this.isLogQuestModalOpen.set(true);
+  openCourseImportModal(): void {
+    this.isCourseImportModalOpen.set(true);
   }
 
-  closeLogQuestModal(): void {
-    this.isLogQuestModalOpen.set(false);
-    this.readingQuestFeedback.set(null);
+  closeCourseImportModal(): void {
+    this.isCourseImportModalOpen.set(false);
   }
 
-  submitLogQuest(): void {
-    const book = this.activeBookForQuest();
-    const finishedPage = this.questFinishedPage();
-
-    if (!book || !finishedPage) {
-      this.readingQuestFeedback.set('❌ Please select a book and enter a valid ending page.');
-      return;
-    }
-
-    const evaluation = this.bookState.logReadingSession(book.id, finishedPage);
-    this.readingQuestFeedback.set(evaluation.message);
-
-    if (evaluation.canClaim) {
-      setTimeout(() => {
-        this.closeLogQuestModal();
-      }, 1800);
-    }
+  importScrapedCourse(course: Course): void {
+    this.courseState.addOrImportCourse(course);
+    this.closeCourseImportModal();
+    this.globalFeedbackMessage.set(`🎉 Successfully ingested course "${course.title}"!`);
+    setTimeout(() => {
+      this.globalFeedbackMessage.set(null);
+    }, 4000);
   }
 
-  // Course progression handlers
   openCourseCheckin(event: { courseId: string; item: CourseItem; module: CourseModule }): void {
     this.selectedCheckinItem.set(event.item);
     this.selectedCheckinModule.set(event.module);
@@ -278,32 +275,60 @@ export class CharacterDashboardComponent {
       event.notes
     );
 
-    this.courseFeedbackMessage.set(evaluation.message);
+    this.globalFeedbackMessage.set(evaluation.message);
     this.closeCourseCheckinModal();
 
     setTimeout(() => {
-      this.courseFeedbackMessage.set(null);
+      this.globalFeedbackMessage.set(null);
     }, 4000);
   }
 
-  selectCourse(courseId: string): void {
-    this.courseState.selectCourse(courseId);
+  openAddBookModal(): void {
+    this.isAddBookModalOpen.set(true);
   }
 
-  openCourseImportModal(): void {
-    this.isCourseImportModalOpen.set(true);
+  closeAddBookModal(): void {
+    this.isAddBookModalOpen.set(false);
   }
 
-  closeCourseImportModal(): void {
-    this.isCourseImportModalOpen.set(false);
+  submitAddBook(): void {
+    const title = this.newBookTitle().trim();
+    const author = this.newBookAuthor().trim();
+    const totalPages = this.newBookTotalPages();
+
+    if (!title || !author || !totalPages || totalPages <= 0) return;
+
+    this.onAddBook({
+      title,
+      author,
+      totalPages,
+      initialPage: this.newBookInitialPage() || 0,
+      notes: this.newBookNotes().trim(),
+    });
+
+    this.closeAddBookModal();
   }
 
-  importScrapedCourse(course: Course): void {
-    this.courseState.addOrImportCourse(course);
-    this.closeCourseImportModal();
-    this.courseFeedbackMessage.set(`🎉 Successfully ingested course "${course.title}"!`);
-    setTimeout(() => {
-      this.courseFeedbackMessage.set(null);
-    }, 4000);
+  openLogQuestModal(bookId?: string): void {
+    if (bookId) {
+      this.selectedBookIdForQuest.set(bookId);
+    }
+    this.isLogQuestModalOpen.set(true);
+  }
+
+  closeLogQuestModal(): void {
+    this.isLogQuestModalOpen.set(false);
+  }
+
+  submitLogQuest(): void {
+    const book = this.activeBookForQuest();
+    const finishedPage = this.questFinishedPage();
+    if (!book || !finishedPage) return;
+
+    this.onCompleteReadingQuest({
+      bookId: book.id,
+      finishedPage,
+    });
+    this.closeLogQuestModal();
   }
 }

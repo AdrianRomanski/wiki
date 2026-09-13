@@ -7,6 +7,8 @@ export interface EarlyWakeupQuestSlot {
   tierName: string;
 }
 
+export type WakeupSlotConfig = EarlyWakeupQuestSlot;
+
 export interface EarlyWakeupEvaluation {
   slot: EarlyWakeupTimeSlot;
   xpAmount: number;

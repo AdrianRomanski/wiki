@@ -40,6 +40,30 @@ export interface BookReadingQuestEvaluation {
 export const DAILY_READING_BASE_XP = 40;
 export const DAILY_READING_DISCIPLINE_XP = 10;
 export const BOOK_COMPLETION_BONUS_XP = 200;
+export const DEFAULT_READING_PAGES_PER_DAY = 15;
+
+export interface ReadingQuestCompletionPayload {
+  bookId: string;
+  pagesReadThisDay?: number;
+  finishedPage?: number;
+  notes?: string;
+}
+
+export interface QuestEnrichmentPayload {
+  notes?: string;
+  keyTakeaways?: string[];
+  timeSpentMinutes?: number;
+}
+
+export interface QuestCompletionResult {
+  questId: string;
+  questType: 'study' | 'reading' | 'early-wakeup';
+  completedAt: string;
+  xpAwarded: number;
+  statType: 'INT' | 'WIS' | 'DIS';
+  nextItemTitle?: string;
+  newCurrentPage?: number;
+}
 
 export function evaluateBookReadingQuest(
   book: Book,
@@ -149,3 +173,37 @@ export function filterCompletedBooksByMonth(
     );
   });
 }
+
+export function evaluateReadingQuestPayload(
+  book: Book,
+  payload: ReadingQuestCompletionPayload,
+  now: Date = new Date()
+): BookReadingQuestEvaluation {
+  if (!book) {
+    return {
+      canClaim: false,
+      message: 'No book selected for reading quest.',
+      pagesRead: 0,
+      isBookCompleted: false,
+      rewards: [],
+    };
+  }
+
+  const endPage =
+    payload.finishedPage !== undefined
+      ? payload.finishedPage
+      : Math.min(
+          book.totalPages,
+          book.currentPage + (payload.pagesReadThisDay ?? DEFAULT_READING_PAGES_PER_DAY)
+        );
+
+  const evalResult = evaluateBookReadingQuest(book, endPage, now);
+  if (evalResult.canClaim && evalResult.updatedBook && payload.notes?.trim()) {
+    evalResult.updatedBook = {
+      ...evalResult.updatedBook,
+      notes: payload.notes.trim(),
+    };
+  }
+  return evalResult;
+}
+
