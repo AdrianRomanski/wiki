@@ -1,7 +1,7 @@
 ---
 title: "ADR-0003: Model Context Protocol (MCP) Server for AI Agent Integration"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-25
 tags: [architecture, mcp, model-context-protocol, ai-agents, stdio, tooling]
 ---
@@ -9,7 +9,7 @@ tags: [architecture, mcp, model-context-protocol, ai-agents, stdio, tooling]
 # ADR-0003: Model Context Protocol (MCP) Server for AI Agent Integration
 
 ## Status
-**Accepted**
+**Implemented**
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "ADR-0010: Daily Course Progression, Authenticated Web Scraping Ingestion, and Action-Based Learning Architecture"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-29
 tags: [architecture, gamification, courses, web-scraping, browser-automation, daily-quests, intelligence-xp, wisdom-xp, discipline-xp, firestore, clean-architecture]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, gamification, courses, web-scraping, browser-automation, da
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

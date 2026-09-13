@@ -1,7 +1,7 @@
 ---
 title: "ADR-0008: Google Auth Allowlist, Local Environment Secrets, and Level 1 Baseline Onboarding"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-28
 tags: [architecture, authentication, google-auth, allowlist, onboarding, progression, privacy, clean-architecture]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, authentication, google-auth, allowlist, onboarding, progres
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

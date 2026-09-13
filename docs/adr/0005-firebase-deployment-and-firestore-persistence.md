@@ -1,7 +1,7 @@
 ---
 title: "ADR-0005: Cloud Infrastructure, Firebase Deployment & Firestore Data Persistence Architecture"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-25
 tags: [architecture, cloud, firebase, firestore, open-source, persistence, authentication, hexagonal-architecture]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, cloud, firebase, firestore, open-source, persistence, authe
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

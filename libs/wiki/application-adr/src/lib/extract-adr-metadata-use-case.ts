@@ -1,5 +1,5 @@
 import { FrontmatterPort } from '@wiki/application-ports';
-import { ADRMetadata, ComparisonMatrix } from './interfaces';
+import { ADRMetadata, ADRStatus, ComparisonMatrix } from './interfaces';
 
 export class ADRParseError extends Error {
   constructor(message: string, public cause?: Error) {
@@ -32,10 +32,11 @@ export class ExtractADRMetadataUseCase {
         dateString = String(frontmatter.date);
       }
 
-      const status = (frontmatter as unknown as Record<string, unknown>)['status'];
-      if (!status || !['Accepted', 'Rejected', 'Superseded'].includes(status as string)) {
+      const rawStatus = (frontmatter as unknown as Record<string, unknown>)['status'];
+      const normalizedStatus = this.normalizeStatus(rawStatus);
+      if (!normalizedStatus) {
         throw new ADRParseError(
-          'Required field "status" is missing or invalid (must be Accepted, Rejected, or Superseded)'
+          'Required field "status" is missing or invalid (must be Discussion, Accepted, Rejected, Ready for Implementation, Implemented, or Superseded)'
         );
       }
 
@@ -104,7 +105,7 @@ export class ExtractADRMetadataUseCase {
       const metadata: ADRMetadata = {
         title: frontmatter.title,
         date: dateString,
-        status: status as 'Accepted' | 'Rejected' | 'Superseded',
+        status: normalizedStatus,
         sessionId,
         context: contextSection || context,
         decisionDrivers,
@@ -326,5 +327,19 @@ export class ExtractADRMetadataUseCase {
     }
 
     return matrices;
+  }
+
+  private normalizeStatus(raw: unknown): ADRStatus | null {
+    if (!raw || typeof raw !== 'string') return null;
+    const lower = raw.trim().toLowerCase();
+    if (lower === 'discussion') return 'Discussion';
+    if (lower === 'accepted') return 'Accepted';
+    if (lower === 'rejected') return 'Rejected';
+    if (lower === 'ready for implementation' || lower === 'ready-for-implementation') {
+      return 'Ready for Implementation';
+    }
+    if (lower === 'implemented') return 'Implemented';
+    if (lower === 'superseded') return 'Superseded';
+    return null;
   }
 }

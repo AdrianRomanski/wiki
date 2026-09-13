@@ -1,7 +1,7 @@
 ---
 title: "ADR-0011: Firebase-Only Course Data Persistence, Transcripts & Exercise Storage, and Repository Sanitization"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-31
 tags: [architecture, firebase, firestore, cloud-storage, data-persistence, courses, transcripts, exercises, repository-sanitization, security, clean-architecture]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, firebase, firestore, cloud-storage, data-persistence, cours
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

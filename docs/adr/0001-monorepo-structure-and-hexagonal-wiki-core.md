@@ -1,7 +1,7 @@
 ---
 title: "ADR-0001: Monorepo Structure & Hexagonal Architecture for Wiki Core"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-25
 tags: [architecture, hexagonal, ports-and-adapters, nx-monorepo, clean-architecture, wiki-core]
 ---
@@ -9,7 +9,7 @@ tags: [architecture, hexagonal, ports-and-adapters, nx-monorepo, clean-architect
 # ADR-0001: Monorepo Structure & Hexagonal Architecture for Wiki Core
 
 ## Status
-**Accepted**
+**Implemented**
 
 ---
 

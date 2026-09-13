@@ -1,7 +1,15 @@
+export type ADRStatus =
+  | 'Discussion'
+  | 'Accepted'
+  | 'Rejected'
+  | 'Ready for Implementation'
+  | 'Implemented'
+  | 'Superseded';
+
 export interface ADRMetadata {
   title: string;
   date: string;
-  status: 'Accepted' | 'Rejected' | 'Superseded';
+  status: ADRStatus;
   sessionId: string;
   context: string;
   decisionDrivers: string[];

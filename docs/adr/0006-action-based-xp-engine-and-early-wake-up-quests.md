@@ -1,7 +1,7 @@
 ---
 title: "ADR-0006: Action-Based XP Engine, Elimination of Quick XP, and Early Wake-Up Daily Quests"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-25
 tags: [architecture, gamification, xp-engine, daily-quests, waking-up, habits, clean-architecture]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, gamification, xp-engine, daily-quests, waking-up, habits, c
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

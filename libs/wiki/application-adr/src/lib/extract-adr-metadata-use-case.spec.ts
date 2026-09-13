@@ -10,7 +10,7 @@ import {
 import { WikiPageFrontmatter } from '@wiki/domain-models';
 
 class MockFrontmatterPort implements FrontmatterPort {
-  parseFrontmatter = vi.fn();
+  parseFrontmatter = vi.fn<(markdownContent: string) => ParsedFrontmatter>();
   generateFrontmatter() {
     return '';
   }
@@ -28,6 +28,14 @@ class MockFrontmatterPort implements FrontmatterPort {
   }
   updateTimestamp(frontmatter: WikiPageFrontmatter): WikiPageFrontmatter {
     return frontmatter;
+  }
+  mockParsedResult(result: {
+    frontmatter: Record<string, unknown>;
+    content: string;
+  }): void {
+    this.parseFrontmatter.mockReturnValue(
+      result as unknown as ParsedFrontmatter
+    );
   }
 }
 
@@ -49,7 +57,7 @@ describe('ExtractADRMetadataUseCase', () => {
 3. Custom solution
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Test',
           date: '2024-01-15',
@@ -57,7 +65,7 @@ describe('ExtractADRMetadataUseCase', () => {
           context: 'Test',
         },
         content,
-      } as ParsedFrontmatter);
+      });
 
       const metadata = await useCase.execute('---\ntitle: Test\n---\n' + content);
 
@@ -76,7 +84,7 @@ describe('ExtractADRMetadataUseCase', () => {
 3) Library Three
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Test',
           date: '2024-01-15',
@@ -84,7 +92,7 @@ describe('ExtractADRMetadataUseCase', () => {
           context: 'Test',
         },
         content,
-      } as ParsedFrontmatter);
+      });
 
       const metadata = await useCase.execute('---\ntitle: Test\n---\n' + content);
 
@@ -99,7 +107,7 @@ describe('ExtractADRMetadataUseCase', () => {
 - Library C
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Test',
           date: '2024-01-15',
@@ -107,7 +115,7 @@ describe('ExtractADRMetadataUseCase', () => {
           context: 'Test',
         },
         content,
-      } as ParsedFrontmatter);
+      });
 
       const metadata = await useCase.execute('---\ntitle: Test\n---\n' + content);
 
@@ -120,7 +128,7 @@ describe('ExtractADRMetadataUseCase', () => {
 No libraries here
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Test',
           date: '2024-01-15',
@@ -128,7 +136,7 @@ No libraries here
           context: 'Test',
         },
         content,
-      } as ParsedFrontmatter);
+      });
 
       const metadata = await useCase.execute('---\ntitle: Test\n---\n' + content);
 
@@ -216,7 +224,7 @@ We need a robust focus trap solution.
 It provides the best balance.
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Choose Focus Trap Library',
           date: '2024-01-15',
@@ -224,7 +232,7 @@ It provides the best balance.
           context: 'Research Session focus-trap-2024-01-15',
         },
         content: adrContent.split('---')[2],
-      } as ParsedFrontmatter);
+      });
 
       const metadata = await useCase.execute(adrContent);
 
@@ -244,14 +252,41 @@ title: Test
 Some content
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Test',
         },
         content: 'Some content',
-      } as ParsedFrontmatter);
+      });
 
       await expect(useCase.execute(adrContent)).rejects.toThrow(ADRParseError);
+    });
+
+    it('should parse and normalize all 5 lifecycle statuses and superseded', async () => {
+      const statuses = [
+        { input: 'discussion', expected: 'Discussion' },
+        { input: 'Accepted', expected: 'Accepted' },
+        { input: 'rejected', expected: 'Rejected' },
+        { input: 'ready for implementation', expected: 'Ready for Implementation' },
+        { input: 'ready-for-implementation', expected: 'Ready for Implementation' },
+        { input: 'implemented', expected: 'Implemented' },
+        { input: 'Superseded', expected: 'Superseded' },
+      ];
+
+      for (const { input, expected } of statuses) {
+        mockFrontmatterPort.mockParsedResult({
+          frontmatter: {
+            title: 'Test Decision',
+            date: '2026-09-13',
+            status: input,
+            context: 'Test Context',
+          },
+          content: '## Context and Problem Statement\nTest',
+        });
+
+        const result = await useCase.execute('dummy');
+        expect(result.status).toBe(expected);
+      }
     });
 
     it('should handle optional frontmatter fields', async () => {
@@ -281,7 +316,7 @@ Test context
 Test rationale
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Test Decision',
           date: '2024-01-15',
@@ -292,7 +327,7 @@ Test rationale
           supersedes: 'ADR-001',
         },
         content: adrContent.split('---')[2],
-      } as ParsedFrontmatter);
+      });
 
       const metadata = await useCase.execute(adrContent);
 
@@ -326,7 +361,7 @@ Test
 Test
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Test Decision',
           date: '2024-01-15',
@@ -334,7 +369,7 @@ Test
           context: 'Test Session',
         },
         content,
-      } as ParsedFrontmatter);
+      });
 
       const metadata = await useCase.execute('---\ntitle: Test\n---\n' + content);
 
@@ -361,7 +396,7 @@ Also check [prototype 1](./prototypes/demo1) and [prototype 2](./prototypes/demo
 Test
 `;
 
-      (mockFrontmatterPort.parseFrontmatter as any).mockReturnValue({
+      mockFrontmatterPort.mockParsedResult({
         frontmatter: {
           title: 'Test Decision',
           date: '2024-01-15',
@@ -369,7 +404,7 @@ Test
           context: 'Test Session',
         },
         content,
-      } as ParsedFrontmatter);
+      });
 
       const metadata = await useCase.execute('---\ntitle: Test\n---\n' + content);
 

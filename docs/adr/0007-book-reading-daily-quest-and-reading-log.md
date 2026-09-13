@@ -1,7 +1,7 @@
 ---
 title: "ADR-0007: Book Reading Daily Quest, Active Reading Shelf, and Monthly Reading Archive"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-26
 tags: [architecture, gamification, daily-quests, reading-log, wisdom-xp, discipline-xp, clean-architecture]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, gamification, daily-quests, reading-log, wisdom-xp, discipl
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

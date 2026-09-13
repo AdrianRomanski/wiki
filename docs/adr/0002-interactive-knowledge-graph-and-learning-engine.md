@@ -1,7 +1,7 @@
 ---
 title: "ADR-0002: Interactive Knowledge Graph & Dual-Mode Learning Engine"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-25
 tags: [architecture, angular, signals, d3, knowledge-graph, learning-system, smart-container-ui]
 ---
@@ -9,7 +9,7 @@ tags: [architecture, angular, signals, d3, knowledge-graph, learning-system, sma
 # ADR-0002: Interactive Knowledge Graph & Dual-Mode Learning Engine
 
 ## Status
-**Accepted**
+**Implemented**
 
 ---
 

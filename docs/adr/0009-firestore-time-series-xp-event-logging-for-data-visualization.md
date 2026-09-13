@@ -1,7 +1,7 @@
 ---
 title: "ADR-0009: Firestore Time-Series XP Event Logging for Data Visualization"
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-28
 tags: [architecture, firestore, xp-engine, time-series, data-visualization, analytics, clean-architecture]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, firestore, xp-engine, time-series, data-visualization, anal
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

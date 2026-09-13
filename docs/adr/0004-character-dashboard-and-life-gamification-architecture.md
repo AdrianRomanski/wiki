@@ -1,7 +1,7 @@
 ---
 title: 'ADR-0004: Character Dashboard & Life Gamification Platform (Wiki as Character Brain)'
 type: adr
-status: accepted
+status: implemented
 date: 2026-08-25
 tags: [architecture, gamification, character-dashboard, character-brain, life-gamification, clean-architecture, wiki-core]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, gamification, character-dashboard, character-brain, life-ga
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 
