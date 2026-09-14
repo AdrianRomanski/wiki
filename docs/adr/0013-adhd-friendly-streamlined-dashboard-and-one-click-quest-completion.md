@@ -1,7 +1,7 @@
 ---
 title: "ADR-0013: ADHD-Friendly Streamlined Character Dashboard and Frictionless One-Click Quest Completion"
 type: adr
-status: accepted
+status: implemented
 date: 2026-09-13
 tags: [architecture, gamification, ux, accessibility, adhd-ergonomics, cognitive-load, one-click, character-dashboard, progressive-disclosure]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, gamification, ux, accessibility, adhd-ergonomics, cognitive
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

@@ -18,7 +18,7 @@ This directory contains Architecture Decision Records (ADRs) capturing significa
 | [ADR-0010](0010-daily-course-progression-and-agent-ingestion.md) | Daily Course Progression, Authenticated Web Scraping Ingestion, and Action-Based Learning Architecture | `Implemented` | 2026-08-29 | Gamification & Course Ingestion |
 | [ADR-0011](0011-firebase-only-course-data-persistence-and-repository-sanitization.md) | Firebase-Only Course Data Persistence, Transcripts & Exercise Storage, and Repository Sanitization | `Implemented` | 2026-08-31 | Cloud, Data Persistence & Security |
 | [ADR-0012](0012-adr-lifecycle-statuses-and-decision-workflow.md) | Architecture Decision Record Lifecycle Statuses and Decision Workflow | `Implemented` | 2026-09-13 | Governance & Workflow |
-| [ADR-0013](0013-adhd-friendly-streamlined-dashboard-and-one-click-quest-completion.md) | ADHD-Friendly Streamlined Character Dashboard and Frictionless One-Click Quest Completion | `Accepted` | 2026-09-13 | Gamification & UX / Accessibility |
+| [ADR-0013](0013-adhd-friendly-streamlined-dashboard-and-one-click-quest-completion.md) | ADHD-Friendly Streamlined Character Dashboard and Frictionless One-Click Quest Completion | `Implemented` | 2026-09-13 | Gamification & UX / Accessibility |
 | [ADR-0014](0014-elimination-of-redundant-dashboard-header-and-auth-card-clutter.md) | Elimination of Redundant Header Boilerplate and Auth Card Clutter in Character Dashboard | `Accepted` | 2026-09-13 | UI / UX & Minimalist Design |
 
 ---
