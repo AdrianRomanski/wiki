@@ -204,4 +204,30 @@ describe('CharacterDashboardComponent (ADR-0008 & ADR-0010)', () => {
       });
     });
   });
+
+  describe('ADR-0014: Elimination of Redundant Dashboard Header and Auth Card Clutter', () => {
+    it('should delegate login and logout actions from dashboard', () => {
+      const injector = createEnvironmentInjector([], null as unknown as EnvironmentInjector);
+      runInInjectionContext(injector, () => {
+        const component = new CharacterDashboardComponent();
+
+        let loggedOut = false;
+        component.authState.logout = async () => {
+          loggedOut = true;
+        };
+
+        component.onLogout();
+        expect(loggedOut).toBe(true);
+
+        let loginInitiated = false;
+        component.authState.loginWithGoogle = async () => {
+          loginInitiated = true;
+          return true;
+        };
+
+        component.onLogin();
+        expect(loginInitiated).toBe(true);
+      });
+    });
+  });
 });

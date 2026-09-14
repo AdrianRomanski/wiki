@@ -1,7 +1,7 @@
 ---
 title: "ADR-0014: Elimination of Redundant Header Boilerplate and Auth Card Clutter in Character Dashboard"
 type: adr
-status: accepted
+status: implemented
 date: 2026-09-13
 tags: [architecture, ui, ux, accessibility, adhd-ergonomics, character-dashboard, authentication, minimalist-design]
 ---
@@ -10,7 +10,7 @@ tags: [architecture, ui, ux, accessibility, adhd-ergonomics, character-dashboard
 
 ## Status
 
-**Accepted**
+**Implemented**
 
 ---
 

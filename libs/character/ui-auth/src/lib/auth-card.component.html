@@ -1,23 +1,5 @@
-<div class="auth-card" [class.authenticated]="authStatus() === 'authenticated'" [class.unauthorized]="authStatus() === 'unauthorized'">
-  @if (authStatus() === 'authenticated' && user(); as activeUser) {
-    <div class="auth-header">
-      <div class="user-info">
-        <div class="avatar-ring">
-          <span class="avatar-text">{{ activeUser.displayName[0] ? activeUser.displayName[0].toUpperCase() : 'U' }}</span>
-        </div>
-        <div class="user-details">
-          <div class="user-name">{{ activeUser.displayName }}</div>
-          <div class="user-email">{{ activeUser.email }}</div>
-        </div>
-      </div>
-
-      <div class="auth-badges">
-        <span class="badge level-badge">Level 1 Baseline</span>
-        <span class="badge status-badge">Permitted Account</span>
-        <button type="button" class="logout-btn" (click)="logoutRequested.emit()">Sign Out</button>
-      </div>
-    </div>
-  } @else if (authStatus() === 'unauthorized') {
+@if (authStatus() === 'unauthorized') {
+  <div class="auth-card unauthorized">
     <div class="unauthorized-banner" role="alert">
       <div class="banner-icon">⛔</div>
       <div class="banner-content">
@@ -28,7 +10,9 @@
       </div>
       <button type="button" class="retry-btn" (click)="loginRequested.emit()">Try Permitted Account</button>
     </div>
-  } @else {
+  </div>
+} @else if (authStatus() !== 'authenticated') {
+  <div class="auth-card">
     <div class="login-prompt">
       <div class="prompt-text">
         <div class="prompt-title">Sign In Required</div>
@@ -42,5 +26,5 @@
         }
       </button>
     </div>
-  }
-</div>
+  </div>
+}

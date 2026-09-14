@@ -26,6 +26,10 @@ Smart container feature package orchestrating the Character Dashboard view and b
     - `<character-course-curriculum-drawer>`: On-demand course syllabus accordion.
     - `<character-reading-shelf-drawer>`: Bookshelf library, inline Add Book form, and monthly completed archive.
     - `<character-xp-analytics-drawer>`: Collapsible time-series event audit log.
+- **Minimalist Navigation & Viewport Recovery (ADR-0014)**:
+  - Eliminated static header boilerplate and internal allowlist auth badges above the fold (~180px viewport recovery).
+  - Repositioned Sign Out to a sleek top utility bar (`.dashboard-top-bar`), allowing the Character Sheet and Daily Quests to immediately take center stage upon authentication.
+  - `<character-auth-card>` unmounts when authenticated and renders strictly for unauthenticated or access-denied states.
 
 ```html
 <character-dashboard></character-dashboard>

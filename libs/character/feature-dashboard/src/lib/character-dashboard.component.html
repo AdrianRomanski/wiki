@@ -1,17 +1,20 @@
 <section class="character-dashboard-container">
-  <header class="dashboard-header">
-    <h2>🎮 Character Dashboard</h2>
-    <p class="subtitle">ADHD-Friendly Habit Progression & Streamlined Life Gamification</p>
-  </header>
+  <!-- Unauthenticated / Unauthorized States (Full-width gate) -->
+  @if (authState.authStatus() !== 'authenticated') {
+    <character-auth-card
+      [user]="authState.user()"
+      [authStatus]="authState.authStatus()"
+      (loginRequested)="onLogin()"
+    ></character-auth-card>
+  } @else {
+    <!-- Authenticated View: Minimalist Top Utility Bar -->
+    <header class="dashboard-top-bar">
+      <div class="brand-subtle">LifeForge</div>
+      <button type="button" class="btn-signout" (click)="onLogout()">
+        Sign Out
+      </button>
+    </header>
 
-  <character-auth-card
-    [user]="authState.user()"
-    [authStatus]="authState.authStatus()"
-    (loginRequested)="onLogin()"
-    (logoutRequested)="onLogout()"
-  ></character-auth-card>
-
-  @if (authState.authStatus() === 'authenticated') {
     <div class="dashboard-grid">
       <div class="sheet-column">
         <character-sheet [character]="characterState.character()"></character-sheet>
